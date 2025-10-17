@@ -13,14 +13,16 @@ const (
 )
 
 var (
-	AppExeDir            string // 可执行文件目录
-	AppDataDir           string // 数据目录
-	AppLogDir            string // 日志目录
-	AppConfDir           string // 配置目录
-	AppTempDir           string // 临时目录
-	AppResourcesDir      string // 资源目录
-	AppResourcesFontsDir string // 资源目录-字体
-	AppBinDir            string // 可执行文件目录
+	AppExeDir             string // 可执行文件目录
+	AppDataDir            string // 数据目录
+	AppLogDir             string // 日志目录
+	AppConfDir            string // 配置目录
+	AppTempDir            string // 临时目录
+	AppBinDir             string // 可执行文件目录
+	AppResourcesDir       string // 资源目录
+	AppResourcesFontsDir  string // 资源目录-字体
+	AppResourcesMapsDir   string // 资源目录-地图
+	AppResourcesPlanesDir string // 资源目录-图片
 
 )
 
@@ -43,4 +45,6 @@ func init() {
 	clientDir := filepath.Dir(AppBinDir)
 	AppResourcesDir = filepath.Join(clientDir, "resources")
 	AppResourcesFontsDir = filepath.Join(AppResourcesDir, "fonts")
+	AppResourcesMapsDir = filepath.Join(AppResourcesDir, "maps")
+	AppResourcesPlanesDir = filepath.Join(AppResourcesDir, "planes")
 }
