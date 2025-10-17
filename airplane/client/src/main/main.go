@@ -3,8 +3,7 @@ package main
 import (
 	apccommon "airplaneClient/src/common"
 	apcgame "airplaneClient/src/game"
-	"fmt"
-	"github.com/hajimehoshi/ebiten"
+	"github.com/hajimehoshi/ebiten/v2"
 	"image"
 	"log"
 	"os"
@@ -12,8 +11,6 @@ import (
 )
 
 func main() {
-	fmt.Printf("Hello World!\n")
-
 	// 设置窗口大小和标题
 	ebiten.SetWindowSize(apccommon.WindowWidth, apccommon.WindowHeight)
 	ebiten.SetWindowTitle(apccommon.AppWindowTitle)
@@ -31,8 +28,12 @@ func main() {
 	}
 	ebiten.SetWindowIcon([]image.Image{icon})
 
+	// 创建并初始化游戏
+	game := &apcgame.Game{}
+	game.Init()
+
 	// 运行游戏
-	err = ebiten.RunGame(&apcgame.Game{})
+	err = ebiten.RunGame(game)
 	if err != nil {
 		log.Fatal(err)
 	}

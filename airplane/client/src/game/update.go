@@ -1,8 +1,13 @@
 package game
 
-import "github.com/hajimehoshi/ebiten"
+import (
+	apcui "airplaneClient/src/ui"
+	"github.com/hajimehoshi/ebiten/v2"
+)
 
-func (g *Game) Update(screen *ebiten.Image) error {
+func (g *Game) Update() error {
+	apcui.GUIMgr.Update()
+
 	g.debugMsg = ""
 	if ebiten.IsKeyPressed(ebiten.KeyLeft) {
 		g.debugMsg = "Left"
