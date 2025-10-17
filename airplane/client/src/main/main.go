@@ -2,25 +2,14 @@ package main
 
 import (
 	apccommon "airplaneClient/src/common"
+	apcgame "airplaneClient/src/game"
 	"fmt"
 	"github.com/hajimehoshi/ebiten"
 	"image"
-	_ "image/png"
 	"log"
 	"os"
 	"path/filepath"
 )
-
-type Game struct {
-}
-
-func (g *Game) Update(screen *ebiten.Image) error {
-	return nil
-}
-
-func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
-	return outsideWidth, outsideHeight
-}
 
 func main() {
 	fmt.Printf("Hello World!\n")
@@ -43,7 +32,7 @@ func main() {
 	ebiten.SetWindowIcon([]image.Image{icon})
 
 	// 运行游戏
-	err = ebiten.RunGame(&Game{})
+	err = ebiten.RunGame(&apcgame.Game{})
 	if err != nil {
 		log.Fatal(err)
 	}
