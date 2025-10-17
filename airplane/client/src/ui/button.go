@@ -1,6 +1,7 @@
 package ui
 
 import (
+	apcfont "airplaneClient/src/resources/font"
 	ebitenuiimage "github.com/ebitenui/ebitenui/image"
 	ebitenuiwidget "github.com/ebitenui/ebitenui/widget"
 	"github.com/hajimehoshi/ebiten/v2"
@@ -45,7 +46,7 @@ func NewButtonMgr() *ButtonMgr {
 }
 
 // AddButton 添加一个按钮
-func (p *ButtonMgr) AddButton(id string, x, y, width, height int, text string, callback func() (ButtonAction, error)) {
+func (p *ButtonMgr) AddButton(id string, x, y, width, height int, btnText string, callback func() (ButtonAction, error)) {
 	// 创建按钮
 	btn := ebitenuiwidget.NewButton(
 		ebitenuiwidget.ButtonOpts.WidgetOpts(
@@ -55,6 +56,10 @@ func (p *ButtonMgr) AddButton(id string, x, y, width, height int, text string, c
 			Idle:    ebitenuiimage.NewNineSliceColor(imgcolor.RGBA{R: 100, G: 100, B: 200, A: 255}),
 			Hover:   ebitenuiimage.NewNineSliceColor(imgcolor.RGBA{R: 120, G: 120, B: 220, A: 255}),
 			Pressed: ebitenuiimage.NewNineSliceColor(imgcolor.RGBA{R: 80, G: 80, B: 180, A: 255}),
+		}),
+		// 添加文字
+		ebitenuiwidget.ButtonOpts.Text(btnText, apcfont.GFaceButton, &ebitenuiwidget.ButtonTextColor{
+			Idle: imgcolor.White, // 白色文字
 		}),
 		ebitenuiwidget.ButtonOpts.ClickedHandler(
 			func(args *ebitenuiwidget.ButtonClickedEventArgs) {
@@ -85,28 +90,26 @@ func (p *ButtonMgr) AddButton(id string, x, y, width, height int, text string, c
 			},
 		),
 	)
-
 	// 手动设置按钮位置
 	btn.GetWidget().Rect.Min.X = x
 	btn.GetWidget().Rect.Min.Y = y
 	btn.GetWidget().Rect.Max.X = x + width
 	btn.GetWidget().Rect.Max.Y = y + height
-
 	// 保存按钮引用
 	p.buttons[id] = &ButtonWrapper{
+		id:       id,
 		button:   btn,
 		visible:  true,
 		callback: callback,
 	}
-
 	// 添加按钮到 GUI 管理器
 	GUIMgr.AddButton(btn)
 }
 
 // Update 更新 UI
-func (bm *ButtonMgr) Update() {
+func (p *ButtonMgr) Update() {
 }
 
 // Draw 绘制 UI
-func (bm *ButtonMgr) Draw(screen *ebiten.Image) {
+func (p *ButtonMgr) Draw(screen *ebiten.Image) {
 }
