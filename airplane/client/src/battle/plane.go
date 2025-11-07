@@ -7,6 +7,8 @@ import (
 	"image/color"
 )
 
+var planeWidth, planeHeight = 10, 30
+
 // Plane 飞机结构体
 type Plane struct {
 	x     float64 // X 坐标
@@ -19,7 +21,7 @@ type Plane struct {
 func NewPlane(x, y, speed float64) *Plane {
 	// todo menglc 加载实际的飞机图片
 
-	planeImg := ebiten.NewImage(50, 50)
+	planeImg := ebiten.NewImage(planeWidth, planeHeight)
 	planeImg.Fill(color.RGBA{R: 255, G: 255, B: 0, A: 255}) // 黄色飞机
 
 	return &Plane{
@@ -50,14 +52,14 @@ func (p *Plane) Update() {
 	if p.x < 0 {
 		p.x = 0
 	}
-	if p.x > float64(apccommon.ScreenWidth-50) {
-		p.x = float64(apccommon.ScreenWidth - 50)
+	if p.x > float64(apccommon.ScreenWidth-planeWidth) {
+		p.x = float64(apccommon.ScreenWidth - planeWidth)
 	}
 	if p.y < 0 {
 		p.y = 0
 	}
-	if p.y > float64(apccommon.ScreenHeight-50) {
-		p.y = float64(apccommon.ScreenHeight - 50)
+	if p.y > float64(apccommon.ScreenHeight-planeHeight) {
+		p.y = float64(apccommon.ScreenHeight - planeHeight)
 	}
 }
 

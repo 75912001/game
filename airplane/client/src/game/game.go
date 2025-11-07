@@ -16,9 +16,8 @@ const (
 )
 
 type Game struct {
-	debugMsg   string
-	clickCount int
-	state      GameState // 当前游戏状态
+	debugMsg string
+	state    GameState // 当前游戏状态
 
 	// 游戏对象
 	playerPlane *apbattle.Plane // 玩家飞机
