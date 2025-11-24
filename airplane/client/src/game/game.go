@@ -1,7 +1,7 @@
 package game
 
 import (
-	apbattle "airplaneClient/src/battle"
+	"airplaneClient/src/battle"
 	"airplaneClient/src/ui"
 )
 
@@ -20,7 +20,7 @@ type Game struct {
 	state    GameState // 当前游戏状态
 
 	// 游戏对象
-	playerPlane *apbattle.Plane // 玩家飞机
+	playerPlane *battle.Plane // 玩家飞机
 }
 
 func (p *Game) Init() {

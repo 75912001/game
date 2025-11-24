@@ -1,11 +1,11 @@
 package ui
 
 import (
-	apcfont "airplaneClient/src/resources/font"
+	resourcesfont "airplaneClient/src/resources/font"
 	ebitenuiimage "github.com/ebitenui/ebitenui/image"
 	ebitenuiwidget "github.com/ebitenui/ebitenui/widget"
-	"github.com/hajimehoshi/ebiten/v2"
-	imgcolor "image/color"
+	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
+	"image/color"
 	"log"
 )
 
@@ -53,13 +53,13 @@ func (p *ButtonMgr) AddButton(id string, x, y, width, height int, btnText string
 			ebitenuiwidget.WidgetOpts.MinSize(width, height),
 		),
 		ebitenuiwidget.ButtonOpts.Image(&ebitenuiwidget.ButtonImage{
-			Idle:    ebitenuiimage.NewNineSliceColor(imgcolor.RGBA{R: 100, G: 100, B: 200, A: 255}),
-			Hover:   ebitenuiimage.NewNineSliceColor(imgcolor.RGBA{R: 120, G: 120, B: 220, A: 255}),
-			Pressed: ebitenuiimage.NewNineSliceColor(imgcolor.RGBA{R: 80, G: 80, B: 180, A: 255}),
+			Idle:    ebitenuiimage.NewNineSliceColor(color.RGBA{R: 100, G: 100, B: 200, A: 255}),
+			Hover:   ebitenuiimage.NewNineSliceColor(color.RGBA{R: 120, G: 120, B: 220, A: 255}),
+			Pressed: ebitenuiimage.NewNineSliceColor(color.RGBA{R: 80, G: 80, B: 180, A: 255}),
 		}),
 		// 添加文字
-		ebitenuiwidget.ButtonOpts.Text(btnText, apcfont.GFaceButton, &ebitenuiwidget.ButtonTextColor{
-			Idle: imgcolor.White, // 白色文字
+		ebitenuiwidget.ButtonOpts.Text(btnText, resourcesfont.GFaceButton, &ebitenuiwidget.ButtonTextColor{
+			Idle: color.White, // 白色文字
 		}),
 		ebitenuiwidget.ButtonOpts.ClickedHandler(
 			func(args *ebitenuiwidget.ButtonClickedEventArgs) {
@@ -111,5 +111,5 @@ func (p *ButtonMgr) Update() {
 }
 
 // Draw 绘制 UI
-func (p *ButtonMgr) Draw(screen *ebiten.Image) {
+func (p *ButtonMgr) Draw(screen *ebitenv2.Image) {
 }

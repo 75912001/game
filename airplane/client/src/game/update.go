@@ -1,28 +1,24 @@
 package game
 
 import (
-	apbattle "airplaneClient/src/battle"
-	apcui "airplaneClient/src/ui"
-	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	"airplaneClient/src/battle"
+	"airplaneClient/src/ui"
+	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
+	ebitenv2inpututil "github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
 func (p *Game) Update() error {
-	apcui.GUIMgr.Update()
+	ui.GUIMgr.Update()
 
 	// 根据游戏状态执行不同的更新逻辑
 	switch p.state {
-	case StateMenu:
-		// 菜单状态下的更新逻辑
+	case StateMenu: // 菜单状态下的更新逻辑
 		p.updateMenu()
-	case StateBattling:
-		// 游戏进行中的更新逻辑
+	case StateBattling: // 游戏进行中的更新逻辑
 		p.updateBattling()
-	case StatePaused:
-		// 暂停状态下的更新逻辑
+	case StatePaused: // 暂停状态下的更新逻辑
 		p.updatePaused()
-	case StateGameOver:
-		// 游戏结束状态下的更新逻辑
+	case StateGameOver: // 游戏结束状态下的更新逻辑
 		p.updateGameOver()
 	}
 
@@ -49,7 +45,7 @@ func (p *Game) updateBattling() {
 	p.debugMsg = "游戏进行中"
 
 	// 按 ESC 暂停游戏
-	if inpututil.IsKeyJustPressed(ebiten.KeyEscape) {
+	if ebitenv2inpututil.IsKeyJustPressed(ebitenv2.KeyEscape) {
 		p.state = StatePaused
 	}
 }
@@ -57,7 +53,7 @@ func (p *Game) updateBattling() {
 // startGame 开始游戏,初始化游戏对象
 func (p *Game) startGame() {
 	// 创建玩家飞机,初始位置在屏幕下方中央
-	p.playerPlane = apbattle.NewPlane(375, 500, 2)
+	p.playerPlane = battle.NewPlane(1, 1, 375, 500, 2)
 }
 
 // updatePaused 暂停状态的更新
@@ -65,7 +61,7 @@ func (p *Game) updatePaused() {
 	p.debugMsg = "游戏暂停 - 按 ESC 继续"
 
 	// 按 ESC 继续游戏
-	if inpututil.IsKeyJustPressed(ebiten.KeyEscape) {
+	if ebitenv2inpututil.IsKeyJustPressed(ebitenv2.KeyEscape) {
 		p.state = StateBattling
 	}
 }

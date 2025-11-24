@@ -1,36 +1,36 @@
 package font
 
 import (
-	apccommon "airplaneClient/src/common"
+	"airplaneClient/src/common"
 	"bytes"
-	"github.com/hajimehoshi/ebiten/v2/text/v2"
+	textv2 "github.com/hajimehoshi/ebiten/v2/text/v2"
 	"log"
 	"os"
 	"path/filepath"
 )
 
-var GFace32 *text.Face
-var GFace20 *text.Face
-var GFace16 *text.Face
+var GFace32 *textv2.Face
+var GFace20 *textv2.Face
+var GFace16 *textv2.Face
 
-var GFaceButton *text.Face // 按钮
+var GFaceButton *textv2.Face // 按钮
 
 func init() {
 	// 加载中文字体
-	var fontSource *text.GoTextFaceSource
+	var fontSource *textv2.GoTextFaceSource
 	var err error
 	// 尝试从资源目录加载中文字体
-	chineseFontPath := filepath.Join(apccommon.AppResourcesFontsDir, "fangzheng_kaiti.ttf")
+	chineseFontPath := filepath.Join(common.AppResourcesFontsDir, "fangzheng_kaiti.ttf")
 	fontData, err := os.ReadFile(chineseFontPath)
 	if err != nil {
 		log.Fatal(err)
 	}
-	fontSource, err = text.NewGoTextFaceSource(bytes.NewReader(fontData))
+	fontSource, err = textv2.NewGoTextFaceSource(bytes.NewReader(fontData))
 	if err != nil {
 		log.Fatal(err)
 	}
 	{
-		var face text.Face = &text.GoTextFace{
+		var face textv2.Face = &textv2.GoTextFace{
 			Source: fontSource,
 			Size:   32, // 字体大小
 		}
@@ -38,14 +38,14 @@ func init() {
 	}
 	{ // 创建字体 Face
 		// 将 GoTextFace 转换为 *text.Face (指向接口的指针)
-		var face text.Face = &text.GoTextFace{
+		var face textv2.Face = &textv2.GoTextFace{
 			Source: fontSource,
 			Size:   20, // 字体大小
 		}
 		GFace20 = &face
 	}
 	{
-		var face text.Face = &text.GoTextFace{
+		var face textv2.Face = &textv2.GoTextFace{
 			Source: fontSource,
 			Size:   16, // 字体大小
 		}
