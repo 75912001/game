@@ -38,12 +38,16 @@ func (p *Game) updateBattling() {
 		p.startGame()
 	}
 
-	// 更新飞机
 	if p.playerPlane != nil {
+		// 更新飞机
 		p.playerPlane.Update()
+		// 用户按空格键发射子弹
+		if ebitenv2inpututil.IsKeyJustPressed(ebitenv2.KeySpace) {
+			bullet := p.playerPlane.Fire()
+			p.bullets = append(p.bullets, bullet)
+		}
 	}
 
-	p.debugMsg = "游戏进行中"
 	// 更新所有子弹
 	p.updateBullets()
 
@@ -75,6 +79,7 @@ func (p *Game) updatePaused() {
 func (p *Game) updateGameOver() {
 	p.debugMsg = "游戏结束"
 }
+
 // updateBullets 更新所有子弹
 func (p *Game) updateBullets() {
 	// 更新每颗子弹的位置

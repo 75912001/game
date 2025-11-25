@@ -44,6 +44,16 @@ func NewPlane(id, level uint32, x, y, speed float64) *Plane {
 	}
 }
 
+// Fire 发射一颗子弹
+func (p *Plane) Fire() *Bullet {
+	// 计算子弹初始位置 - 在飞机顶端中央
+	bulletX := p.x + p.imageWidth/2
+	bulletY := p.y
+
+	// 创建一颗向上移动的子弹 (id=1, level=1, speed=5)
+	return NewBullet(1, 1, bulletX, bulletY, 5, BulletDirectionUp, p)
+}
+
 // GetCurrentImage 获取当前飞机图像
 func (p *Plane) GetCurrentImage() *ebitenv2.Image {
 	return p.frames[p.currentFrameType]
