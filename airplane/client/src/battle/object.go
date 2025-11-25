@@ -2,6 +2,7 @@ package battle
 
 import (
 	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
+	"image"
 )
 
 type Object struct {
@@ -62,4 +63,33 @@ func (p *Object) GetImageWidth() float64 {
 // GetImageHeight 获取图像高度
 func (p *Object) GetImageHeight() float64 {
 	return p.imageHeight
+}
+
+// GetBounds 获取对象的边界矩形（基于图像大小）
+func (p *Object) GetBounds() image.Rectangle {
+	return image.Rect(
+		int(p.x),
+		int(p.y),
+		int(p.x+p.imageWidth),
+		int(p.y+p.imageHeight),
+	)
+}
+
+// GetColliderBounds 获取对象的碰撞体边界矩形
+func (p *Object) GetColliderBounds() image.Rectangle {
+	// 计算碰撞体的偏移量，使其居中
+	offsetX := (p.imageWidth - p.colliderWidth) / 2
+	offsetY := (p.imageHeight - p.colliderHeight) / 2
+
+	return image.Rect(
+		int(p.x+offsetX),
+		int(p.y+offsetY),
+		int(p.x+offsetX+p.colliderWidth),
+		int(p.y+offsetY+p.colliderHeight),
+	)
+}
+
+// CollidesWith 检测是否与另一个对象发生碰撞（使用碰撞体）
+func (p *Object) CollidesWith(other *Object) bool {
+	return p.GetColliderBounds().Overlaps(other.GetColliderBounds())
 }
