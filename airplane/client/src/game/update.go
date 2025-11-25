@@ -34,24 +34,24 @@ func (p *Game) updateMenu() {
 // updateBattling 游戏进行中的更新
 func (p *Game) updateBattling() {
 	// 首次进入游戏状态时,初始化飞机
-	if p.playerPlane == nil {
+	if p.userPlane == nil {
 		p.startGame()
 	}
 
-	if p.playerPlane != nil {
+	if p.userPlane != nil {
 		// 更新飞机
-		p.playerPlane.Update()
+		p.userPlane.Update()
 		// 用户按空格键发射子弹
 		if ebitenv2inpututil.IsKeyJustPressed(ebitenv2.KeySpace) {
-			bullet := p.playerPlane.Fire()
-			p.bullets = append(p.bullets, bullet)
+			bullet := p.userPlane.Fire()
+			p.userBullets = append(p.userBullets, bullet)
 		}
 	}
 
 	// 更新所有子弹
 	p.updateBullets()
 
-	p.debugMsg = fmt.Sprintf("游戏进行中 - 按空格发射子弹, hp:%v 当前子弹数: %v", p.playerPlane.GetHp(), len(p.bullets))
+	p.debugMsg = fmt.Sprintf("游戏进行中 - 按空格发射子弹, hp:%v 当前子弹数: %v", p.userPlane.GetHp(), len(p.userBullets))
 
 	// 按 ESC 暂停游戏
 	if ebitenv2inpututil.IsKeyJustPressed(ebitenv2.KeyEscape) {
@@ -62,7 +62,7 @@ func (p *Game) updateBattling() {
 // startGame 开始游戏,初始化游戏对象
 func (p *Game) startGame() {
 	// 创建玩家飞机,初始位置在屏幕下方中央
-	p.playerPlane = battle.NewPlane(1, 1, 375, 500, 2)
+	p.userPlane = battle.NewPlane(1, 1, 375, 500, 2)
 }
 
 // updatePaused 暂停状态的更新
