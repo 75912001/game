@@ -4,6 +4,7 @@ import (
 	"airplaneClient/src/battle"
 	"airplaneClient/src/common"
 	"airplaneClient/src/ui"
+	"fmt"
 	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
 	ebitenv2inpututil "github.com/hajimehoshi/ebiten/v2/inpututil"
 )
@@ -51,7 +52,7 @@ func (p *Game) updateBattling() {
 	// 更新所有子弹
 	p.updateBullets()
 
-	p.debugMsg = "游戏进行中 - 按空格发射子弹"
+	p.debugMsg = fmt.Sprintf("游戏进行中 - 按空格发射子弹, 当前子弹数: %v", len(p.bullets))
 
 	// 按 ESC 暂停游戏
 	if ebitenv2inpututil.IsKeyJustPressed(ebitenv2.KeyEscape) {
