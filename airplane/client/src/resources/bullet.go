@@ -10,22 +10,22 @@ import (
 	"path/filepath"
 )
 
-// GenPlaneName 生成-飞机-资源名称
-func GenPlaneName(id uint32, level uint32) string {
+// GenBulletName 生成-子弹-资源名称
+func GenBulletName(id uint32, level uint32) string {
 	return fmt.Sprintf("%03d.%03d.png", id, level)
 }
 
-// LoadPlaneFrames 加载-飞机-动画帧
+// LoadBulletFrames 加载-子弹-动画帧
 // 从一张包含多帧的图片中切分出每一帧
-func LoadPlaneFrames(id uint32, level uint32, frameCount uint32) (frames []*ebitenv2.Image, frameWidth float64, frameHeight float64, err error) {
+func LoadBulletFrames(id uint32, level uint32, frameCount uint32) (frames []*ebitenv2.Image, frameWidth float64, frameHeight float64, err error) {
 	// 构建图片路径
-	planeName := GenPlaneName(id, level)
-	planePath := filepath.Join(common.AppResourcesDir, "planes", planeName)
+	bulletName := GenBulletName(id, level)
+	bulletPath := filepath.Join(common.AppResourcesDir, "bullet", bulletName)
 
 	// 加载图片
-	img, _, err := ebitenv2ebitenutil.NewImageFromFile(planePath)
+	img, _, err := ebitenv2ebitenutil.NewImageFromFile(bulletPath)
 	if err != nil {
-		log.Printf("加载飞机图片失败:%v %v", planePath, err)
+		log.Printf("加载-子弹-图片失败:%v %v", bulletPath, err)
 		return nil, 0, 0, err
 	}
 
