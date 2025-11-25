@@ -47,6 +47,31 @@ func NewPlane(id, level uint32, x, y, speed float64) *Plane {
 	}
 }
 
+// NewEnemyPlane 创建一个敌机（单帧，向下移动）
+func NewEnemyPlane(id, level uint32, x, y, speed float64) *Plane {
+	// 敌机只加载1帧图像
+	frames, imageWidth, imageHeight, err := resources.LoadEnemyPlaneFrames(id, level, 1)
+	if err != nil {
+		panic(err)
+	}
+	return &Plane{
+		Object: newObject(id, level,
+			imageWidth,
+			imageHeight,
+			imageWidth*0.6,  // 碰撞体宽度为图像宽度的60%
+			imageHeight*0.6, // 碰撞体高度为图像高度的60%
+			x,
+			y,
+			speed,
+			frames,
+		),
+		hp:               10, // 敌机HP为10
+		currentFrameType: 0,  // 只有一帧
+		flipHorizontal:   false,
+		frameCounter:     0,
+	}
+}
+
 // Fire 发射一颗子弹
 func (p *Plane) Fire() *Bullet {
 	// 计算子弹初始位置 - 在飞机顶端中央
