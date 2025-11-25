@@ -25,7 +25,7 @@ func NewBullet(id, level uint32, x, y, speed, direction float64, owner *Plane) *
 			imageHeight,
 			imageWidth*0.3,  // 碰撞体宽度为图像宽度的30%
 			imageHeight*0.3, // 碰撞体高度为图像高度的30%
-			x,
+			x-imageWidth/2,
 			y,
 			speed,
 			frames,

@@ -114,13 +114,14 @@ func (p *Plane) Draw(screen *ebitenv2.Image) {
 
 		screen.DrawImage(p.GetCurrentImage(), op)
 
+		ui.Printf(screen, 10, 10, fmt.Sprintf("使用方向键或WASD移动飞机 x:%v y:%v", p.GetX(), p.GetY()))
 	} else { // 敌人
 		op := &ebitenv2.DrawImageOptions{}
 		op.GeoM.Translate(p.GetX(), p.GetY())
 		screen.DrawImage(p.GetFrames()[0], op)
 
 	}
-	ui.Printf(screen, 10, 10, fmt.Sprintf("使用方向键或WASD移动飞机 x:%v y:%v", p.GetX(), p.GetY()))
+
 	// 绘制调试边界
 	p.DrawDebugBounds(screen)
 
