@@ -20,7 +20,8 @@ type Game struct {
 	state    GameState // 当前游戏状态
 
 	// 游戏对象
-	playerPlane *battle.Plane // 玩家飞机
+	playerPlane *battle.Plane    // 玩家飞机
+	bullets     []*battle.Bullet // 子弹列表
 }
 
 func (p *Game) Init() {

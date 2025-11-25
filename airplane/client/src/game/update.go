@@ -2,6 +2,7 @@ package game
 
 import (
 	"airplaneClient/src/battle"
+	"airplaneClient/src/common"
 	"airplaneClient/src/ui"
 	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
 	ebitenv2inpututil "github.com/hajimehoshi/ebiten/v2/inpututil"
@@ -43,6 +44,10 @@ func (p *Game) updateBattling() {
 	}
 
 	p.debugMsg = "游戏进行中"
+	// 更新所有子弹
+	p.updateBullets()
+
+	p.debugMsg = "游戏进行中 - 按空格发射子弹"
 
 	// 按 ESC 暂停游戏
 	if ebitenv2inpututil.IsKeyJustPressed(ebitenv2.KeyEscape) {
@@ -69,4 +74,20 @@ func (p *Game) updatePaused() {
 // updateGameOver 游戏结束状态的更新
 func (p *Game) updateGameOver() {
 	p.debugMsg = "游戏结束"
+}
+// updateBullets 更新所有子弹
+func (p *Game) updateBullets() {
+	// 更新每颗子弹的位置
+	for _, bullet := range p.bullets {
+		bullet.Update()
+	}
+
+	// 移除飞出屏幕的子弹
+	validBullets := make([]*battle.Bullet, 0, len(p.bullets))
+	for _, bullet := range p.bullets {
+		if !bullet.IsOutOfScreen(common.ScreenWidth, common.ScreenHeight) {
+			validBullets = append(validBullets, bullet)
+		}
+	}
+	p.bullets = validBullets
 }

@@ -1,6 +1,8 @@
 package battle
 
-import ebitenv2 "github.com/hajimehoshi/ebiten/v2"
+import (
+	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
+)
 
 type Object struct {
 	id    uint32 // ID
@@ -40,4 +42,24 @@ func newObject(id, level uint32,
 
 		frames: frames,
 	}
+}
+
+// GetX 获取X坐标
+func (p *Object) GetX() float64 {
+	return p.x
+}
+
+// GetY 获取Y坐标
+func (p *Object) GetY() float64 {
+	return p.y
+}
+
+// GetImageWidth 获取图像宽度
+func (p *Object) GetImageWidth() float64 {
+	return p.imageWidth
+}
+
+// GetImageHeight 获取图像高度
+func (p *Object) GetImageHeight() float64 {
+	return p.imageHeight
 }

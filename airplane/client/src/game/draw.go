@@ -20,6 +20,11 @@ func (p *Game) Draw(screen *ebitenv2.Image) {
 	case StateMenu: // 菜单状态下绘制 UI
 		ui.GUIMgr.Draw(screen)
 	case StateBattling: // 游戏进行中,绘制飞机等游戏对象
+		// 绘制所有子弹
+		for _, bullet := range p.bullets {
+			bullet.Draw(screen)
+		}
+		// 绘制飞机
 		if p.playerPlane != nil {
 			p.playerPlane.Draw(screen)
 		}
