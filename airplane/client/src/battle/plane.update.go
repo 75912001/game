@@ -109,5 +109,8 @@ func (p *Plane) Draw(screen *ebitenv2.Image) {
 
 	screen.DrawImage(p.GetCurrentImage(), op)
 
+	// 绘制调试边界
+	p.DrawDebugBounds(screen)
+
 	ui.Printf(screen, 10, 10, fmt.Sprintf("使用方向键或WASD移动飞机 x:%v y:%v", p.x, p.y))
 }
