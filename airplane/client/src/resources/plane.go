@@ -15,6 +15,11 @@ func GenPlaneName(id uint32, level uint32) string {
 	return fmt.Sprintf("%03d.%03d.png", id, level)
 }
 
+// GenEnemyPlaneName 生成-敌机-资源名称
+func GenEnemyPlaneName(id uint32, level uint32) string {
+	return fmt.Sprintf("enemy.%03d.%03d.png", id, level)
+}
+
 // LoadPlaneFrames 加载-飞机-动画帧
 // 从一张包含多帧的图片中切分出每一帧
 func LoadPlaneFrames(id uint32, level uint32, frameCount uint32) (frames []*ebitenv2.Image, frameWidth float64, frameHeight float64, err error) {
