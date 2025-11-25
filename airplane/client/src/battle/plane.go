@@ -1,6 +1,7 @@
 package battle
 
 import (
+	"airplaneClient/src/common"
 	"airplaneClient/src/resources"
 	resourcescommon "airplaneClient/src/resources/common"
 	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
@@ -8,7 +9,7 @@ import (
 
 // Plane 飞机结构体
 type Plane struct {
-	*Object
+	*common.Object
 
 	hp uint32
 
@@ -19,7 +20,7 @@ type Plane struct {
 }
 
 // NewPlane 创建一个新飞机
-func NewPlane(id, level uint32, x, y, speed float64) *Plane {
+func NewPlane(id, level uint32, isBelongsToUser bool, x, y, speed float64) *Plane {
 	// 加载飞机图片的4帧动画
 	// 001.001.png 包含4帧:
 	// 帧0-直飞(正), 帧1-微右倾, 帧2-右倾, 帧3-大右倾
@@ -30,7 +31,8 @@ func NewPlane(id, level uint32, x, y, speed float64) *Plane {
 		panic(err)
 	}
 	return &Plane{
-		Object: newObject(id, level,
+		Object: common.NewObject(id, level,
+			isBelongsToUser,
 			imageWidth,
 			imageHeight,
 			imageWidth*0.6,  // 碰撞体宽度为图像宽度的60%
@@ -48,14 +50,15 @@ func NewPlane(id, level uint32, x, y, speed float64) *Plane {
 }
 
 // NewEnemyPlane 创建一个敌机（单帧，向下移动）
-func NewEnemyPlane(id, level uint32, x, y, speed float64) *Plane {
+func NewEnemyPlane(id, level uint32, isBelongsToUser bool, x, y, speed float64) *Plane {
 	// 敌机只加载1帧图像
 	frames, imageWidth, imageHeight, err := resources.LoadEnemyPlaneFrames(id, level, 1)
 	if err != nil {
 		panic(err)
 	}
 	return &Plane{
-		Object: newObject(id, level,
+		Object: common.NewObject(id, level,
+			isBelongsToUser,
 			imageWidth,
 			imageHeight,
 			imageWidth*0.6,  // 碰撞体宽度为图像宽度的60%
@@ -75,14 +78,14 @@ func NewEnemyPlane(id, level uint32, x, y, speed float64) *Plane {
 // Fire 发射一颗子弹
 func (p *Plane) Fire() *Bullet {
 	// 计算子弹初始位置 - 在飞机顶端中央
-	bulletX := p.x + p.imageWidth/2
-	bulletY := p.y
+	bulletX := p.GetX() + p.GetImageWidth()/2
+	bulletY := p.GetY()
 
 	// 创建一颗向上移动的子弹 (id=1, level=1, speed=5)
-	return NewBullet(1, 1, bulletX, bulletY, 1, BulletDirectionUp, p)
+	return NewBullet(1, 1, !p.IsEnemy(), bulletX, bulletY, 1, BulletDirectionUp, p)
 }
 
 // GetCurrentImage 获取当前飞机图像
 func (p *Plane) GetCurrentImage() *ebitenv2.Image {
-	return p.frames[p.currentFrameType]
+	return p.GetFrames()[p.currentFrameType]
 }

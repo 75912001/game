@@ -1,4 +1,4 @@
-package battle
+package common
 
 import (
 	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
@@ -10,6 +10,8 @@ import (
 type Object struct {
 	id    uint32 // ID
 	level uint32 // 等级
+
+	isBelongsToUser bool // 是否属于用户
 
 	imageWidth  float64 // 图像-宽
 	imageHeight float64 // 图像-高
@@ -31,12 +33,14 @@ type Object struct {
 	debugDrawImageBounds bool
 }
 
-func newObject(id, level uint32,
+func NewObject(id, level uint32, isBelongsToUser bool,
 	imageWidth, imageHeight, colliderWidth, colliderHeight float64,
 	x, y, speed float64, frames []*ebitenv2.Image) *Object {
 	return &Object{
 		id:    id,
 		level: level,
+
+		isBelongsToUser: isBelongsToUser,
 
 		imageWidth:  imageWidth,
 		imageHeight: imageHeight,
@@ -53,6 +57,10 @@ func newObject(id, level uint32,
 		debugDrawCollider:    true,
 		debugDrawImageBounds: true,
 	}
+}
+
+func (p *Object) IsEnemy() bool {
+	return !p.isBelongsToUser
 }
 
 // GetX 获取X坐标
@@ -73,6 +81,11 @@ func (p *Object) GetImageWidth() float64 {
 // GetImageHeight 获取图像高度
 func (p *Object) GetImageHeight() float64 {
 	return p.imageHeight
+}
+
+// GetFrames 获取帧图像
+func (p *Object) GetFrames() []*ebitenv2.Image {
+	return p.frames
 }
 
 // GetBounds 获取对象的边界矩形（基于图像大小）
