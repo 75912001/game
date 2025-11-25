@@ -10,6 +10,8 @@ import (
 type Plane struct {
 	*Object
 
+	hp uint32
+
 	currentFrameType resourcescommon.PlaneFrameType // 当前帧类型
 	flipHorizontal   bool                           // 是否水平镜像(用于左倾)
 
@@ -38,6 +40,7 @@ func NewPlane(id, level uint32, x, y, speed float64) *Plane {
 			speed,
 			frames,
 		),
+		hp:               100,
 		currentFrameType: resourcescommon.PlaneFrameTypeStraight,
 		flipHorizontal:   false, // 默认不镜像
 		frameCounter:     0,
@@ -51,10 +54,14 @@ func (p *Plane) Fire() *Bullet {
 	bulletY := p.y
 
 	// 创建一颗向上移动的子弹 (id=1, level=1, speed=5)
-	return NewBullet(1, 1, bulletX, bulletY, 5, BulletDirectionUp, p)
+	return NewBullet(1, 1, bulletX, bulletY, 1, BulletDirectionUp, p)
 }
 
 // GetCurrentImage 获取当前飞机图像
 func (p *Plane) GetCurrentImage() *ebitenv2.Image {
 	return p.frames[p.currentFrameType]
+}
+
+func (p *Plane) GetHp() uint32 {
+	return p.hp
 }
