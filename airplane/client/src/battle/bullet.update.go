@@ -17,4 +17,7 @@ func (b *Bullet) Draw(screen *ebitenv2.Image) {
 	op := &ebitenv2.DrawImageOptions{}
 	op.GeoM.Translate(b.x, b.y)
 	screen.DrawImage(b.frames[0], op)
+
+	// 绘制调试边界
+	b.DrawDebugBounds(screen)
 }
