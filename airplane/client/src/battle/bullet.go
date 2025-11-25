@@ -48,3 +48,7 @@ func (b *Bullet) IsOutOfScreen(screenWidth, screenHeight float64) bool {
 	return b.x < -b.imageWidth || screenWidth < b.x ||
 		b.y < -b.imageHeight || screenHeight < b.y
 }
+
+func (b *Bullet) GetDamage() uint32 {
+	return b.damage
+}
