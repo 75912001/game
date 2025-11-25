@@ -20,17 +20,17 @@ func (p *Game) Draw(screen *ebitenv2.Image) {
 	case StateMenu: // 菜单状态下绘制 UI
 		ui.GUIMgr.Draw(screen)
 	case StateBattling: // 游戏进行中,绘制飞机等游戏对象
-		// 绘制所有子弹
-		for _, bullet := range p.bullets {
+		// 绘制-用户-子弹
+		for _, bullet := range p.userBullets {
 			bullet.Draw(screen)
 		}
-		// 绘制飞机
-		if p.playerPlane != nil {
-			p.playerPlane.Draw(screen)
+		// 绘制-用户-飞机
+		if p.userPlane != nil {
+			p.userPlane.Draw(screen)
 		}
 	case StatePaused: // 暂停状态,绘制游戏对象和暂停提示
-		if p.playerPlane != nil {
-			p.playerPlane.Draw(screen)
+		if p.userPlane != nil {
+			p.userPlane.Draw(screen)
 		}
 		// 使用中文字体显示暂停信息
 		ui.Printf(screen, 280, 280, "*** 游戏暂停 ***")
