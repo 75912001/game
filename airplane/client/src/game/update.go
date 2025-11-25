@@ -52,7 +52,7 @@ func (p *Game) updateBattling() {
 	// 更新所有子弹
 	p.updateBullets()
 
-	p.debugMsg = fmt.Sprintf("游戏进行中 - 按空格发射子弹, 当前子弹数: %v", len(p.bullets))
+	p.debugMsg = fmt.Sprintf("游戏进行中 - 按空格发射子弹, hp:%v 当前子弹数: %v", p.playerPlane.GetHp(), len(p.bullets))
 
 	// 按 ESC 暂停游戏
 	if ebitenv2inpututil.IsKeyJustPressed(ebitenv2.KeyEscape) {

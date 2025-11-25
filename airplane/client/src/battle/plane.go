@@ -61,7 +61,3 @@ func (p *Plane) Fire() *Bullet {
 func (p *Plane) GetCurrentImage() *ebitenv2.Image {
 	return p.frames[p.currentFrameType]
 }
-
-func (p *Plane) GetHp() uint32 {
-	return p.hp
-}
