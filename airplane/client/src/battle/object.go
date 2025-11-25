@@ -2,7 +2,9 @@ package battle
 
 import (
 	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
+	ebitenv2vector "github.com/hajimehoshi/ebiten/v2/vector"
 	"image"
+	"image/color"
 )
 
 type Object struct {
@@ -21,6 +23,12 @@ type Object struct {
 	speed float64 // 移动速度
 
 	frames []*ebitenv2.Image // 动画帧
+
+	//------------------------------------------------------------
+	// 是否画出碰撞体边界(调试用) 红色
+	debugDrawCollider bool
+	// 是否画出图像边界(调试用) 蓝色
+	debugDrawImageBounds bool
 }
 
 func newObject(id, level uint32,
@@ -41,7 +49,9 @@ func newObject(id, level uint32,
 
 		speed: speed,
 
-		frames: frames,
+		frames:               frames,
+		debugDrawCollider:    true,
+		debugDrawImageBounds: true,
 	}
 }
 
@@ -92,4 +102,37 @@ func (p *Object) GetColliderBounds() image.Rectangle {
 // CollidesWith 检测是否与另一个对象发生碰撞（使用碰撞体）
 func (p *Object) CollidesWith(other *Object) bool {
 	return p.GetColliderBounds().Overlaps(other.GetColliderBounds())
+}
+
+// DrawDebugBounds 绘制调试边界
+func (p *Object) DrawDebugBounds(screen *ebitenv2.Image) {
+	// 绘制图像边界（蓝色）
+	if p.debugDrawImageBounds {
+		bounds := p.GetBounds()
+		ebitenv2vector.StrokeRect(
+			screen,
+			float32(bounds.Min.X),
+			float32(bounds.Min.Y),
+			float32(bounds.Dx()),
+			float32(bounds.Dy()),
+			1,                                      // 线宽
+			color.RGBA{R: 0, G: 0, B: 255, A: 255}, // 蓝色
+			false,
+		)
+	}
+
+	// 绘制碰撞体边界（红色）
+	if p.debugDrawCollider {
+		colliderBounds := p.GetColliderBounds()
+		ebitenv2vector.StrokeRect(
+			screen,
+			float32(colliderBounds.Min.X),
+			float32(colliderBounds.Min.Y),
+			float32(colliderBounds.Dx()),
+			float32(colliderBounds.Dy()),
+			1,                                      // 线宽
+			color.RGBA{R: 255, G: 0, B: 0, A: 255}, // 红色
+			false,
+		)
+	}
 }
