@@ -3,7 +3,6 @@ package battle
 import (
 	"airplaneClient/src/common"
 	"airplaneClient/src/resources"
-	"math"
 )
 
 type Bullet struct {
@@ -13,18 +12,15 @@ type Bullet struct {
 	damage    uint32  // 伤害值
 }
 
-const BulletDirectionUp = 3.0 * math.Pi / 2.0 // 子弹-方向-上
-const BulletDirectionDown = math.Pi / 2.0     // 子弹-方向-下
-
 // NewBullet 创建一个新子弹
-func NewBullet(id, level uint32, isBelongsToUser bool, x, y, speed, direction float64, owner *Plane) *Bullet {
+func NewBullet(id, level uint32, x, y, speed, direction float64, owner *Plane) *Bullet {
 	frames, imageWidth, imageHeight, err := resources.LoadBulletFrames(id, level, 1)
 	if err != nil {
 		panic(err)
 	}
 	return &Bullet{
 		Object: common.NewObject(id, level,
-			isBelongsToUser,
+			owner.IsEnemy(),
 			imageWidth,
 			imageHeight,
 			imageWidth*0.3,  // 碰撞体宽度为图像宽度的30%

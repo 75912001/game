@@ -8,16 +8,15 @@ import (
 // Update 更新子弹位置
 func (b *Bullet) Update() {
 	// 根据方向更新位置
-	b.x += math.Cos(b.direction) * b.speed
-	b.y += math.Sin(b.direction) * b.speed
+	b.SetX(b.GetX() + math.Cos(b.direction)*b.GetSpeed())
+	b.SetY(b.GetY() + math.Sin(b.direction)*b.GetSpeed())
 }
 
 // Draw 绘制子弹
 func (b *Bullet) Draw(screen *ebitenv2.Image) {
 	op := &ebitenv2.DrawImageOptions{}
-	op.GeoM.Translate(b.x, b.y)
-	screen.DrawImage(b.frames[0], op)
-
+	op.GeoM.Translate(b.GetX(), b.GetY())
+	screen.DrawImage(b.GetFrames()[0], op)
 	// 绘制调试边界
 	b.DrawDebugBounds(screen)
 }

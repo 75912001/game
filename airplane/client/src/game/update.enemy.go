@@ -13,7 +13,7 @@ var enemySpawnCounter = 0
 func (p *Game) updateEnemyPlanes() {
 	// 更新每架敌机的位置
 	for _, plane := range p.enemyPlanes {
-		plane.UpdateEnemy()
+		plane.Update()
 	}
 
 	// 移除飞出屏幕或被摧毁的敌机
@@ -43,7 +43,7 @@ func (p *Game) spawnEnemyPlane() {
 		y := -50.0 // 从屏幕上方生成
 
 		// 创建敌机 (id=1, level=1, speed=1缓慢向下)
-		enemy := battle.NewEnemyPlane(1, 1, x, y, 1)
+		enemy := battle.NewPlane(1, 1, true, x, y, 1)
 		p.enemyPlanes = append(p.enemyPlanes, enemy)
 	}
 }

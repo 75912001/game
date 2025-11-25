@@ -1,0 +1,24 @@
+package common
+
+import (
+	"image"
+)
+
+// GetColliderBounds 获取对象的碰撞体边界矩形
+func (p *Object) GetColliderBounds() image.Rectangle {
+	// 计算碰撞体的偏移量，使其居中
+	offsetX := (p.imageWidth - p.colliderWidth) / 2
+	offsetY := (p.imageHeight - p.colliderHeight) / 2
+
+	return image.Rect(
+		int(p.x+offsetX),
+		int(p.y+offsetY),
+		int(p.x+offsetX+p.colliderWidth),
+		int(p.y+offsetY+p.colliderHeight),
+	)
+}
+
+// CollidesWith 检测是否与另一个对象发生碰撞（使用碰撞体）
+func (p *Object) CollidesWith(other *Object) bool {
+	return p.GetColliderBounds().Overlaps(other.GetColliderBounds())
+}

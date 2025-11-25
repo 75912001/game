@@ -30,7 +30,7 @@ func (p *Game) Draw(screen *ebitenv2.Image) {
 		}
 		// 绘制-敌人-飞机
 		for _, plane := range p.enemyPlanes {
-			plane.DrawEnemy(screen)
+			plane.Draw(screen)
 		}
 		// 绘制-敌人-子弹
 		for _, bullet := range p.enemyBullets {

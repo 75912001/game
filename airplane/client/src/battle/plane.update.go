@@ -10,41 +10,45 @@ import (
 
 // Update 更新飞机状态
 func (p *Plane) Update() {
-	// 检测移动方向
-	currentMoveDir := 0 // x轴方向上: -1:左移, 0:不动, 1:右移
-	if ebitenv2.IsKeyPressed(ebitenv2.KeyLeft) || ebitenv2.IsKeyPressed(ebitenv2.KeyA) {
-		p.x -= p.speed
-		currentMoveDir = -1
-	}
-	if ebitenv2.IsKeyPressed(ebitenv2.KeyRight) || ebitenv2.IsKeyPressed(ebitenv2.KeyD) {
-		p.x += p.speed
-		currentMoveDir = 1
-	}
-	if ebitenv2.IsKeyPressed(ebitenv2.KeyUp) || ebitenv2.IsKeyPressed(ebitenv2.KeyW) {
-		p.y -= p.speed
-	}
-	if ebitenv2.IsKeyPressed(ebitenv2.KeyDown) || ebitenv2.IsKeyPressed(ebitenv2.KeyS) {
-		p.y += p.speed
-	}
+	if !p.IsEnemy() { // 用户
+		// 检测移动方向
+		currentMoveDir := 0 // x轴方向上: -1:左移, 0:不动, 1:右移
+		if ebitenv2.IsKeyPressed(ebitenv2.KeyLeft) || ebitenv2.IsKeyPressed(ebitenv2.KeyA) {
+			p.SetX(p.GetX() - p.GetSpeed())
+			currentMoveDir = -1
+		}
+		if ebitenv2.IsKeyPressed(ebitenv2.KeyRight) || ebitenv2.IsKeyPressed(ebitenv2.KeyD) {
+			p.SetX(p.GetX() + p.GetSpeed())
+			currentMoveDir = 1
+		}
+		if ebitenv2.IsKeyPressed(ebitenv2.KeyUp) || ebitenv2.IsKeyPressed(ebitenv2.KeyW) {
+			p.SetY(p.GetY() - p.GetSpeed())
+		}
+		if ebitenv2.IsKeyPressed(ebitenv2.KeyDown) || ebitenv2.IsKeyPressed(ebitenv2.KeyS) {
+			p.SetY(p.GetY() + p.GetSpeed())
+		}
 
-	// 边界检测 - x
-	if p.x < 0 {
-		p.x = 0
-	}
-	if (common.ScreenWidth - p.imageWidth) < p.x {
-		p.x = common.ScreenWidth - p.imageWidth
-	}
+		// 边界检测 - x
+		if p.GetX() < 0 {
+			p.SetX(0)
+		}
+		if (common.ScreenWidth - p.GetImageWidth()) < p.GetX() {
+			p.SetX(common.ScreenWidth - p.GetImageWidth())
+		}
 
-	// 边界检测 - y
-	if p.y < 0 {
-		p.y = 0
+		// 边界检测 - y
+		if p.GetY() < 0 {
+			p.SetY(0)
+		}
+		if (common.ScreenHeight - p.GetImageHeight()) < p.GetY() {
+			p.SetY(common.ScreenHeight - p.GetImageHeight())
+		}
+		// 更新动画帧
+		p.updateFrame(currentMoveDir)
+	} else { // 敌人
+		// 自动向下移动
+		p.SetY(p.GetY() + p.GetSpeed())
 	}
-	if (common.ScreenHeight - p.imageHeight) < p.y {
-		p.y = common.ScreenHeight - p.imageHeight
-	}
-
-	// 更新动画帧
-	p.updateFrame(currentMoveDir)
 }
 
 // updateFrame 更新动画帧
@@ -94,23 +98,30 @@ func (p *Plane) updateFrame(currentMoveDir int) {
 
 // Draw 绘制飞机
 func (p *Plane) Draw(screen *ebitenv2.Image) {
-	op := &ebitenv2.DrawImageOptions{}
+	if !p.IsEnemy() { // 用户
+		op := &ebitenv2.DrawImageOptions{}
 
-	// 如果需要水平镜像（向左倾斜）
-	if p.flipHorizontal {
-		// 先水平翻转
-		op.GeoM.Scale(-1, 1)
-		// 翻转后需要调整X坐标（因为翻转会改变原点位置）
-		op.GeoM.Translate(p.x+p.imageWidth, p.y)
-	} else {
-		// 正常绘制
-		op.GeoM.Translate(p.x, p.y)
+		// 如果需要水平镜像（向左倾斜）
+		if p.flipHorizontal {
+			// 先水平翻转
+			op.GeoM.Scale(-1, 1)
+			// 翻转后需要调整X坐标（因为翻转会改变原点位置）
+			op.GeoM.Translate(p.GetX()+p.GetImageWidth(), p.GetY())
+		} else {
+			// 正常绘制
+			op.GeoM.Translate(p.GetX(), p.GetY())
+		}
+
+		screen.DrawImage(p.GetCurrentImage(), op)
+
+	} else { // 敌人
+		op := &ebitenv2.DrawImageOptions{}
+		op.GeoM.Translate(p.GetX(), p.GetY())
+		screen.DrawImage(p.GetFrames()[0], op)
+
 	}
-
-	screen.DrawImage(p.GetCurrentImage(), op)
-
+	ui.Printf(screen, 10, 10, fmt.Sprintf("使用方向键或WASD移动飞机 x:%v y:%v", p.GetX(), p.GetY()))
 	// 绘制调试边界
 	p.DrawDebugBounds(screen)
 
-	ui.Printf(screen, 10, 10, fmt.Sprintf("使用方向键或WASD移动飞机 x:%v y:%v", p.x, p.y))
 }
