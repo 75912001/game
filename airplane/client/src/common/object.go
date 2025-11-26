@@ -91,21 +91,23 @@ func (p *Object) GetScale() float64 {
 	return p.scale
 }
 
-// GetScaleImageWidth 获取图像宽度-缩放后
-func (p *Object) GetScaleImageWidth() float64 {
+// GetImageWidth 获取图像宽度-缩放后
+func (p *Object) GetImageWidth() float64 {
 	return p.imageWidth * p.scale
 }
 
-func (p *Object) GetImageWidth() float64 {
+// GetRawImageWidth 获取图像宽度-原始大小
+func (p *Object) GetRawImageWidth() float64 {
 	return p.imageWidth
 }
 
-// GetScaleImageHeight 获取图像高度-缩放后
-func (p *Object) GetScaleImageHeight() float64 {
+// GetImageHeight 获取图像高度-缩放后
+func (p *Object) GetImageHeight() float64 {
 	return p.imageHeight * p.scale
 }
 
-func (p *Object) GetImageHeight() float64 {
+// GetRawImageHeight 获取图像高度-原始大小
+func (p *Object) GetRawImageHeight() float64 {
 	return p.imageHeight
 }
 
@@ -114,20 +116,12 @@ func (p *Object) GetFrames() []*ebitenv2.Image {
 	return p.frames
 }
 
-func (p *Object) GetScaleColliderWidth() float64 {
-	return p.colliderWidth * p.scale
-}
-
-func (p *Object) GetScaleColliderHeight() float64 {
-	return p.colliderHeight * p.scale
-}
-
-// GetBounds 获取对象的边界矩形（基于缩放后的图像大小）
+// GetBounds 获取对象的边界矩形-缩放后
 func (p *Object) GetBounds() image.Rectangle {
 	return image.Rect(
 		int(p.x),
 		int(p.y),
-		int(p.x+p.GetScaleImageWidth()),
-		int(p.y+p.GetScaleImageHeight()),
+		int(p.x+p.GetImageWidth()),
+		int(p.y+p.GetImageHeight()),
 	)
 }
