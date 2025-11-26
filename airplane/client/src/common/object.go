@@ -86,6 +86,11 @@ func (p *Object) GetSpeed() float64 {
 	return p.speed
 }
 
+// GetScale 获取缩放比例
+func (p *Object) GetScale() float64 {
+	return p.scale
+}
+
 // GetScaleImageWidth 获取图像宽度-缩放后
 func (p *Object) GetScaleImageWidth() float64 {
 	return p.imageWidth * p.scale
@@ -104,14 +109,17 @@ func (p *Object) GetImageHeight() float64 {
 	return p.imageHeight
 }
 
-// GetScale 获取缩放比例
-func (p *Object) GetScale() float64 {
-	return p.scale
-}
-
 // GetFrames 获取帧图像
 func (p *Object) GetFrames() []*ebitenv2.Image {
 	return p.frames
+}
+
+func (p *Object) GetScaleColliderWidth() float64 {
+	return p.colliderWidth * p.scale
+}
+
+func (p *Object) GetScaleColliderHeight() float64 {
+	return p.colliderHeight * p.scale
 }
 
 // GetBounds 获取对象的边界矩形（基于缩放后的图像大小）

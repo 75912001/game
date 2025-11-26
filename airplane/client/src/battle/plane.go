@@ -48,7 +48,8 @@ func NewPlane(id, level uint32, isEnemy bool, x, y, speed, scale float64) *Plane
 		hp = 5
 		currentFrameType = resourcescommon.PlaneFrameTypeStraight
 	}
-
+	imageWidth *= scale
+	imageHeight *= scale
 	return &Plane{
 		Object: common.NewObject(id, level,
 			isEnemy,
