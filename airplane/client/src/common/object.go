@@ -17,12 +17,13 @@ type Object struct {
 	colliderWidth  float64 // 碰撞体-宽
 	colliderHeight float64 // 碰撞体-高
 
-	scale float64 // 缩放比例(1.0为原始大小)
-
 	x float64 // x 坐标
 	y float64 // y 坐标
 
-	speed float64 // 移动速度
+	speed   float64 // 移动速度
+	scale   float64 // 缩放比例(1.0为原始大小)
+	hp      uint32  // 生命值
+	defense uint32  // 防御力
 
 	frames []*ebitenv2.Image // 动画帧
 
@@ -51,8 +52,10 @@ func NewObject(id, level uint32, isEnemy bool,
 		x: x,
 		y: y,
 
-		speed: speed,
-		scale: scale,
+		speed:   speed,
+		scale:   scale,
+		hp:      100,
+		defense: 0,
 
 		frames:               frames,
 		debugDrawCollider:    true,
@@ -109,6 +112,14 @@ func (p *Object) GetImageHeight() float64 {
 // GetRawImageHeight 获取图像高度-原始大小
 func (p *Object) GetRawImageHeight() float64 {
 	return p.imageHeight
+}
+
+func (p *Object) GetHp() uint32 {
+	return p.hp
+}
+
+func (p *Object) SetHp(hp uint32) {
+	p.hp = hp
 }
 
 // GetFrames 获取帧图像

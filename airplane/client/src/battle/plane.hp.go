@@ -1,18 +1,18 @@
 package battle
 
 func (p *Plane) GetHp() uint32 {
-	return p.hp
+	return p.GetHp()
 }
 
 func (p *Plane) IsDestroyed() bool {
-	return p.hp == 0
+	return p.GetHp() == 0
 }
 
 // TakeDamage 飞机受到伤害
 func (p *Plane) TakeDamage(damage uint32) {
-	if damage < p.hp {
-		p.hp -= damage
+	if damage < p.GetHp() {
+		p.SetHp(p.GetHp() - damage)
 	} else {
-		p.hp = 0
+		p.SetHp(0)
 	}
 }

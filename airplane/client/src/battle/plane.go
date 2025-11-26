@@ -61,7 +61,6 @@ func NewPlane(id, level uint32, isEnemy bool, x, y, speed, scale float64) *Plane
 			scale, // 缩放比例
 			frames,
 		),
-		hp:               hp,
 		currentFrameType: currentFrameType,
 		flipHorizontal:   false, // 默认不镜像
 		frameCounter:     0,
