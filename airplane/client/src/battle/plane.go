@@ -20,7 +20,7 @@ type Plane struct {
 }
 
 // NewPlane 创建-飞机
-func NewPlane(id, level uint32, isEnemy bool, x, y, speed float64) *Plane {
+func NewPlane(id, level uint32, isEnemy bool, x, y, speed, scale float64) *Plane {
 	var frames []*ebitenv2.Image
 	var imageWidth float64
 	var imageHeight float64
@@ -59,6 +59,7 @@ func NewPlane(id, level uint32, isEnemy bool, x, y, speed float64) *Plane {
 			x,
 			y,
 			speed,
+			scale, // 缩放比例
 			frames,
 		),
 		hp:               hp,

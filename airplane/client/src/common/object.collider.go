@@ -6,9 +6,11 @@ import (
 
 // GetColliderBounds 获取对象的碰撞体边界矩形
 func (p *Object) GetColliderBounds() image.Rectangle {
-	// 计算碰撞体的偏移量，使其居中
-	offsetX := (p.imageWidth - p.colliderWidth) / 2
-	offsetY := (p.imageHeight - p.colliderHeight) / 2
+	// 计算碰撞体的偏移量，使其居中在缩放后的图像中
+	scaledImageWidth := p.GetScaleImageWidth()
+	scaledImageHeight := p.GetScaleImageHeight()
+	offsetX := (scaledImageWidth - p.colliderWidth) / 2
+	offsetY := (scaledImageHeight - p.colliderHeight) / 2
 
 	return image.Rect(
 		int(p.x+offsetX),

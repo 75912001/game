@@ -28,6 +28,7 @@ func NewBullet(id, level uint32, x, y, speed, direction float64, owner *Plane) *
 			x-imageWidth/2,
 			y,
 			speed,
+			1.0, // 子弹使用原始大小
 			frames,
 		),
 		direction: direction,

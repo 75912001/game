@@ -68,7 +68,7 @@ func (p *Game) updateBattling() {
 // startGame 开始游戏,初始化游戏对象
 func (p *Game) startGame() {
 	// 创建玩家飞机,初始位置在屏幕下方中央
-	p.userPlane = battle.NewPlane(1, 1, false, 375, 500, 5)
+	p.userPlane = battle.NewPlane(1, 1, false, 375, 500, 5, 0.5)
 }
 
 // updatePaused 暂停状态的更新

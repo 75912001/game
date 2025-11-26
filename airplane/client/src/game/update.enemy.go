@@ -42,8 +42,8 @@ func (p *Game) spawnEnemyPlane() {
 		x := float64(rand.Intn(int(common.ScreenWidth - 50)))
 		y := -50.0 // 从屏幕上方生成
 
-		// 创建敌机 (id=1, level=1, speed=1缓慢向下)
-		enemy := battle.NewPlane(1, 1, true, x, y, 1)
+		// 创建敌机 (id=1, level=1, speed=1缓慢向下, scale=0.8小一点)
+		enemy := battle.NewPlane(1, 1, true, x, y, 1, 0.2)
 		p.enemyPlanes = append(p.enemyPlanes, enemy)
 	}
 }

@@ -17,6 +17,8 @@ type Object struct {
 	colliderWidth  float64 // 碰撞体-宽
 	colliderHeight float64 // 碰撞体-高
 
+	scale float64 // 缩放比例(1.0为原始大小)
+
 	x float64 // x 坐标
 	y float64 // y 坐标
 
@@ -33,7 +35,7 @@ type Object struct {
 
 func NewObject(id, level uint32, isEnemy bool,
 	imageWidth, imageHeight, colliderWidth, colliderHeight float64,
-	x, y, speed float64, frames []*ebitenv2.Image) *Object {
+	x, y, speed, scale float64, frames []*ebitenv2.Image) *Object {
 	return &Object{
 		id:    id,
 		level: level,
@@ -50,6 +52,7 @@ func NewObject(id, level uint32, isEnemy bool,
 		y: y,
 
 		speed: speed,
+		scale: scale,
 
 		frames:               frames,
 		debugDrawCollider:    true,
@@ -83,14 +86,27 @@ func (p *Object) GetSpeed() float64 {
 	return p.speed
 }
 
-// GetImageWidth 获取图像宽度
+// GetScaleImageWidth 获取图像宽度-缩放后
+func (p *Object) GetScaleImageWidth() float64 {
+	return p.imageWidth * p.scale
+}
+
 func (p *Object) GetImageWidth() float64 {
 	return p.imageWidth
 }
 
-// GetImageHeight 获取图像高度
+// GetScaleImageHeight 获取图像高度-缩放后
+func (p *Object) GetScaleImageHeight() float64 {
+	return p.imageHeight * p.scale
+}
+
 func (p *Object) GetImageHeight() float64 {
 	return p.imageHeight
+}
+
+// GetScale 获取缩放比例
+func (p *Object) GetScale() float64 {
+	return p.scale
 }
 
 // GetFrames 获取帧图像
@@ -98,12 +114,12 @@ func (p *Object) GetFrames() []*ebitenv2.Image {
 	return p.frames
 }
 
-// GetBounds 获取对象的边界矩形（基于图像大小）
+// GetBounds 获取对象的边界矩形（基于缩放后的图像大小）
 func (p *Object) GetBounds() image.Rectangle {
 	return image.Rect(
 		int(p.x),
 		int(p.y),
-		int(p.x+p.imageWidth),
-		int(p.y+p.imageHeight),
+		int(p.x+p.GetScaleImageWidth()),
+		int(p.y+p.GetScaleImageHeight()),
 	)
 }

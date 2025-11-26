@@ -98,9 +98,10 @@ func (p *Plane) updateFrame(currentMoveDir int) {
 
 // Draw 绘制飞机
 func (p *Plane) Draw(screen *ebitenv2.Image) {
+	op := &ebitenv2.DrawImageOptions{}
+	// 应用缩放
+	op.GeoM.Scale(p.GetScale(), p.GetScale())
 	if !p.IsEnemy() { // 用户
-		op := &ebitenv2.DrawImageOptions{}
-
 		// 如果需要水平镜像（向左倾斜）
 		if p.flipHorizontal {
 			// 先水平翻转
@@ -116,13 +117,10 @@ func (p *Plane) Draw(screen *ebitenv2.Image) {
 
 		ui.Printf(screen, 10, 10, fmt.Sprintf("使用方向键或WASD移动飞机 x:%v y:%v", p.GetX(), p.GetY()))
 	} else { // 敌人
-		op := &ebitenv2.DrawImageOptions{}
 		op.GeoM.Translate(p.GetX(), p.GetY())
 		screen.DrawImage(p.GetFrames()[0], op)
-
 	}
 
 	// 绘制调试边界
 	p.DrawDebugBounds(screen)
-
 }
