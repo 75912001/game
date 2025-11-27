@@ -49,3 +49,11 @@ func init() {
 	AppResourcesMapsDir = filepath.Join(AppResourcesDir, "maps")
 	AppResourcesPlanesDir = filepath.Join(AppResourcesDir, "planes")
 }
+
+// Rect 矩形
+type Rect struct {
+	X      int `json:"x"` // x 坐标
+	Y      int `json:"y"` // y 坐标
+	Width  int `json:"w"` // 宽度
+	Height int `json:"h"` // 高度
+}
