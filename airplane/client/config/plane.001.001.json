@@ -1,6 +1,6 @@
 {"frames": {
 
-"plane.001.001.body.001":
+"plane.001.001.body.000":
 {
 	"frame": {"x":1,"y":304,"w":259,"h":435},
 	"rotated": false,
@@ -9,7 +9,7 @@
 	"sourceSize": {"w":259,"h":435},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"plane.001.001.leftwing.001":
+"plane.001.001.leftwing.000":
 {
 	"frame": {"x":1,"y":155,"w":270,"h":147},
 	"rotated": false,
@@ -18,7 +18,7 @@
 	"sourceSize": {"w":270,"h":147},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"plane.001.001.nose.001":
+"plane.001.001.nose.000":
 {
 	"frame": {"x":1,"y":1,"w":320,"h":152},
 	"rotated": false,
