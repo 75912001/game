@@ -8,9 +8,9 @@ type PlaneKey struct {
 type PlanePartType uint32
 
 const (
-	PlanePartTypeNose      PlanePartType = iota // 机头
-	PlanePartTypeBody                           // 机身
-	PlanePartTypeWingLeft                       // 机翼-左
-	PlanePartTypeWingRight                      // 机翼-右
-	PlanePartTypeMax                            // 最大值
+	PlanePartTypeNose     PlanePartType = iota // 机头
+	PlanePartTypeBody                          // 机身
+	PlanePartTypeLeftWing                      // 机翼-左
+	//PlanePartTypeRightWing                      // 机翼-右
+	PlanePartTypeMax // 最大值
 )
