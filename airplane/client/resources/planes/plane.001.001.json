@@ -1,0 +1,48 @@
+{"frames": {
+
+"plane.001.001.body.001.png":
+{
+	"frame": {"x":639,"y":1,"w":222,"h":435},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":24,"y":0,"w":222,"h":435},
+	"sourceSize": {"w":259,"h":435},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"plane.001.001.leftwing.001.png":
+{
+	"frame": {"x":1,"y":589,"w":270,"h":142},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":2,"w":270,"h":142},
+	"sourceSize": {"w":270,"h":147},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"plane.001.001.nose.001.png":
+{
+	"frame": {"x":639,"y":438,"w":302,"h":152},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":0,"w":302,"h":152},
+	"sourceSize": {"w":320,"h":152},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"plane.001.001.png":
+{
+	"frame": {"x":1,"y":1,"w":636,"h":586},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":636,"h":586},
+	"sourceSize": {"w":636,"h":586},
+	"pivot": {"x":0.5,"y":0.5}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "plane.001.001.png",
+	"format": "RGBA8888",
+	"size": {"w":942,"h":732},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:8da71bf79ec3fed6499149f2d2c8314a:0d702cd34ba4b2f21c95959ccac1ba1d:9188773c443ad959481ae2b7956eeb36$"
+}
+}
