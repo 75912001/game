@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	err := config.GetPlaneMgr().Load()
+	err := config.GPlaneMgr.Load()
 	if err != nil {
 		panic(err)
 	}
