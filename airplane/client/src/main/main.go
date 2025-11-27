@@ -1,8 +1,9 @@
 package main
 
 import (
-	common "airplaneClient/src/common"
-	game "airplaneClient/src/game"
+	"airplaneClient/src/common"
+	"airplaneClient/src/config"
+	"airplaneClient/src/game"
 	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
 	"image"
 	"log"
@@ -11,6 +12,10 @@ import (
 )
 
 func main() {
+	err := config.GetPlaneMgr().Load()
+	if err != nil {
+		panic(err)
+	}
 	// 设置窗口大小和标题
 	ebitenv2.SetWindowSize(common.WindowWidth, common.WindowHeight)
 	ebitenv2.SetWindowTitle(common.AppWindowTitle)
