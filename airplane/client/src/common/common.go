@@ -43,6 +43,7 @@ func init() {
 	}
 	AppBinDir = filepath.Dir(AppExeDir)
 	clientDir := filepath.Dir(AppBinDir)
+	AppConfDir = filepath.Join(clientDir, "config")
 	AppResourcesDir = filepath.Join(clientDir, "resources")
 	AppResourcesFontsDir = filepath.Join(AppResourcesDir, "fonts")
 	AppResourcesMapsDir = filepath.Join(AppResourcesDir, "maps")
