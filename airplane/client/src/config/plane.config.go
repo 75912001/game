@@ -84,6 +84,12 @@ func loadPlane(planeKey common.PlaneKey, configPlane *ConfigPlane) (err error) {
 				return fmt.Errorf("帧名称重复: %s", partFileName)
 			}
 			partMap[common.PlanePartTypeLeftWing][uint32(partIdx)] = partData
+		case "rightwing":
+			_, ok := partMap[common.PlanePartTypeRightWing][uint32(partIdx)]
+			if ok { // partIdx 重复
+				return fmt.Errorf("帧名称重复: %s", partFileName)
+			}
+			partMap[common.PlanePartTypeRightWing][uint32(partIdx)] = partData
 		default:
 			return fmt.Errorf("帧名称包含未知部件: %s", partFileName)
 		}
