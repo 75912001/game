@@ -7,5 +7,5 @@ import (
 
 type Plane struct {
 	common.PlaneKey
-	PartsFrames [common.PlanePartTypeMax][]*ebitenv2.Image // 各部件-动画帧
+	PartsFramesData [common.PlanePartTypeMax][]*ebitenv2.Image // 各部件-动画帧
 }
