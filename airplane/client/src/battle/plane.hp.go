@@ -1,7 +1,7 @@
 package battle
 
 func (p *Plane) GetHp() uint32 {
-	return p.GetHp()
+	return p.Object.GetHp()
 }
 
 func (p *Plane) IsDestroyed() bool {
