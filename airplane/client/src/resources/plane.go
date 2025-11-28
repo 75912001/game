@@ -12,12 +12,7 @@ import (
 
 // GenPlaneName 生成-飞机-资源名称
 func GenPlaneName(id uint32, level uint32) string {
-	return fmt.Sprintf("%03d.%03d.png", id, level)
-}
-
-// GenEnemyPlaneName 生成-敌机-资源名称
-func GenEnemyPlaneName(id uint32, level uint32) string {
-	return fmt.Sprintf("enemy.%03d.%03d.png", id, level)
+	return fmt.Sprintf("plane.%03d.%03d.png", id, level)
 }
 
 // LoadPlaneFrames 加载-飞机-动画帧
