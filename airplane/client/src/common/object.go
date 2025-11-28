@@ -37,6 +37,12 @@ type Object struct {
 func NewObject(id, level uint32, isEnemy bool,
 	imageWidth, imageHeight, colliderWidth, colliderHeight float64,
 	x, y, speed, scale float64, frames []*ebitenv2.Image) *Object {
+	var hp uint32
+	if isEnemy {
+		hp = 2
+	} else {
+		hp = 100
+	}
 	return &Object{
 		id:    id,
 		level: level,
@@ -54,7 +60,7 @@ func NewObject(id, level uint32, isEnemy bool,
 
 		speed:   speed,
 		scale:   scale,
-		hp:      100,
+		hp:      hp,
 		defense: 0,
 
 		frames:               frames,
