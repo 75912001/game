@@ -13,12 +13,12 @@ var GPlaneMgr = newPlaneMgr()
 
 // PlaneMgr 飞机配置管理器
 type PlaneMgr struct {
-	Plane map[common.PlaneKey]*Plane // key: common.PlaneKey
+	PlanesData map[common.PlaneKey]*Plane // key: common.PlaneKey
 }
 
 func newPlaneMgr() *PlaneMgr {
 	return &PlaneMgr{
-		Plane: make(map[common.PlaneKey]*Plane),
+		PlanesData: make(map[common.PlaneKey]*Plane),
 	}
 }
 
@@ -68,5 +68,5 @@ func (p *PlaneMgr) Load() error {
 }
 
 func (p *PlaneMgr) GetPlane(planeKey common.PlaneKey) *Plane {
-	return p.Plane[planeKey]
+	return p.PlanesData[planeKey]
 }
