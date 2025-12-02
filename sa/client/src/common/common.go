@@ -13,16 +13,16 @@ const (
 )
 
 var (
-	AppExeDir      string // 可执行文件目录
-	AppDataDir     string // 数据目录
-	AppLogDir      string // 日志目录
-	AppCfgDir      string // 配置目录
-	AppTempDir     string // 临时目录
-	AppBinDir      string // 可执行文件目录
-	AppResDir      string // 资源目录
-	AppResFontsDir string // 资源目录-字体
-	AppResMapsDir  string // 资源目录-地图
-	AppResRolesDir string // 资源目录-角色
+	AppExeDir     string // 可执行文件目录
+	AppDataDir    string // 数据目录
+	AppLogDir     string // 日志目录
+	AppCfgDir     string // 配置目录
+	AppTempDir    string // 临时目录
+	AppBinDir     string // 可执行文件目录
+	AppResDir     string // 资源目录
+	AppResFontDir string // 资源目录-字体
+	AppResMapDir  string // 资源目录-地图
+	AppResRoleDir string // 资源目录-角色
 
 )
 
@@ -45,7 +45,7 @@ func init() {
 	clientDir := filepath.Dir(AppBinDir)
 	AppCfgDir = filepath.Join(clientDir, "cfg")
 	AppResDir = filepath.Join(clientDir, "res")
-	AppResFontsDir = filepath.Join(AppResDir, "fonts")
-	AppResMapsDir = filepath.Join(AppResDir, "maps")
-	AppResRolesDir = filepath.Join(AppResDir, "roles")
+	AppResFontDir = filepath.Join(AppResDir, "font")
+	AppResMapDir = filepath.Join(AppResDir, "map")
+	AppResRoleDir = filepath.Join(AppResDir, "role")
 }
