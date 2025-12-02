@@ -1,13 +1,7 @@
 package common
 
-type ElementalType uint32 // 元素类型
-
-const (
-	ElementalTypeUnknow ElementalType = iota // 无
-	ElementalTypeEarth                       // 土
-	ElementalTypeWater                       // 水
-	ElementalTypeFire                        // 火
-	ElementalTypeWind                        // 风
+import (
+	"saClient/src/proto"
 )
 
 // Elemental 元素属性对象，总共10点可分配
@@ -54,15 +48,15 @@ func (e *Elemental) Get() (earth, water, fire, wind uint32) {
 }
 
 // GetByType 按元素类型获取属性值
-func (e *Elemental) GetByType(elementalType ElementalType) uint32 {
+func (e *Elemental) GetByType(elementalType proto.ElementalType) uint32 {
 	switch elementalType {
-	case ElementalTypeEarth:
+	case proto.ElementalType_ElementalType_Earth:
 		return e.earth
-	case ElementalTypeWater:
+	case proto.ElementalType_ElementalType_Water:
 		return e.water
-	case ElementalTypeFire:
+	case proto.ElementalType_ElementalType_Fire:
 		return e.fire
-	case ElementalTypeWind:
+	case proto.ElementalType_ElementalType_Wind:
 		return e.wind
 	default:
 	}
