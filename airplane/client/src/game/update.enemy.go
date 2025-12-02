@@ -32,6 +32,9 @@ func (p *Game) updateEnemyPlanes() {
 
 // spawnEnemyPlane 生成敌机
 func (p *Game) spawnEnemyPlane() {
+	if true {
+		return
+	}
 	enemySpawnCounter++
 
 	// 每240帧（约4秒）生成一架敌机
