@@ -17,14 +17,10 @@ func GenPlaneName(id uint32, level uint32) string {
 
 // LoadPlaneFrames 加载-飞机-动画帧
 // 从一张包含多帧的图片中切分出每一帧
-func LoadPlaneFrames(id uint32, level uint32, isEnemy bool, frameCount uint32) (frames []*ebitenv2.Image, frameWidth float64, frameHeight float64, err error) {
+func LoadPlaneFrames(id uint32, level uint32, frameCount uint32) (frames []*ebitenv2.Image, frameWidth float64, frameHeight float64, err error) {
 	// 构建图片路径
 	var planeName string
-	if !isEnemy { // 用户
-		planeName = GenPlaneName(id, level)
-	} else { // 敌人
-		planeName = GenEnemyPlaneName(id, level)
-	}
+	planeName = GenPlaneName(id, level)
 	planePath := filepath.Join(common.AppResourcesDir, "planes", planeName)
 
 	// 加载图片

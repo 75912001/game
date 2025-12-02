@@ -120,9 +120,10 @@ func loadPlane(planeKey common.PlaneKey, configPlane *ConfigPlane) (err error) {
 		return fmt.Errorf("裁剪飞机帧失败: %v", err)
 	}
 
-	GPlaneMgr.Plane[planeKey] = &Plane{
-		PlaneKey:    planeKey,
-		PartsFrames: partsFrames,
+	GPlaneMgr.PlanesData[planeKey] = &Plane{
+		PlaneKey:        planeKey,
+		PartsFramesData: partsFrames,
+		PartsFramesInfo: configPlanePart,
 	}
 	return nil
 }

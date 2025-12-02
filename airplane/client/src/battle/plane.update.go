@@ -102,19 +102,12 @@ func (p *Plane) Draw(screen *ebitenv2.Image) {
 	// 应用缩放
 	op.GeoM.Scale(p.GetScale(), p.GetScale())
 	if !p.IsEnemy() { // 用户
-		// 如果需要水平镜像（向左倾斜）
-		if p.flipHorizontal {
-			// 先水平翻转
-			op.GeoM.Scale(-1, 1)
-			// 翻转后需要调整X坐标（因为翻转会改变原点位置）
-			op.GeoM.Translate(p.GetX()+p.GetImageWidth(), p.GetY())
-		} else {
-			// 正常绘制
-			op.GeoM.Translate(p.GetX(), p.GetY())
+		// 正常绘制
+		op.GeoM.Translate(p.GetX(), p.GetY())
+
+		for _, planePart := range p.part {
+			screen.DrawImage(planePart.frames[planePart.framesIdx], op)
 		}
-
-		screen.DrawImage(p.GetCurrentImage(), op)
-
 		ui.Printf(screen, 10, 10, fmt.Sprintf("使用方向键或WASD移动飞机 x:%v y:%v", p.GetX(), p.GetY()))
 	} else { // 敌人
 		op.GeoM.Translate(p.GetX(), p.GetY())
