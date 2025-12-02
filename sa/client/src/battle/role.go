@@ -5,7 +5,7 @@ import (
 	"saClient/src/proto"
 )
 
-type User struct {
+type Role struct {
 	object *common.Object
 	record *proto.RoleRecord // 角色-记录
 
