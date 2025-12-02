@@ -1,6 +1,8 @@
 package common
 
-import ebitenv2 "github.com/hajimehoshi/ebiten/v2"
+import (
+	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
+)
 
 type Image struct {
 	resType ResType
