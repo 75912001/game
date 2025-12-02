@@ -3,20 +3,21 @@ package common
 type ElementalType uint32 // 元素类型
 
 const (
-	ElementalTypeEarth ElementalType = 1 // 土
-	ElementalTypeWater ElementalType = 2 // 水
-	ElementalTypeFire  ElementalType = 3 // 火
-	ElementalTypeWind  ElementalType = 4 // 风
+	ElementalTypeUnknow ElementalType = iota // 无
+	ElementalTypeEarth                       // 土
+	ElementalTypeWater                       // 水
+	ElementalTypeFire                        // 火
+	ElementalTypeWind                        // 风
 )
 
 // Elemental 元素属性对象，总共10点可分配
 // 只能分配给相邻的两个属性或单个属性
 // 相邻关系：土-水、水-火、火-风、风-土（循环）
 type Elemental struct {
-	earth uint32 // 土
-	water uint32 // 水
-	fire  uint32 // 火
-	wind  uint32 // 风
+	earth uint32 // 土-数值
+	water uint32 // 水-数值
+	fire  uint32 // 火-数值
+	wind  uint32 // 风-数值
 }
 
 // NewElemental 创建新的元素属性对象
@@ -63,6 +64,7 @@ func (e *Elemental) GetByType(elementalType ElementalType) uint32 {
 		return e.fire
 	case ElementalTypeWind:
 		return e.wind
+	default:
 	}
 	return 0
 }
