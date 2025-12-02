@@ -10,6 +10,11 @@ message RoleRecord {
   uint32 ID = 1; // ID
   string Name = 2; // 名称
 
+  uint32 Earth = 40; // 元素类型-土
+  uint32 Water = 41; // 元素类型-水
+  uint32 Fire = 42; // 元素类型-火
+  uint32 Wind = 43; // 元素类型-风
+
   uint64 Exp = 50; // 经验值
   uint32 Attack = 51; // 攻
   uint32 Defense = 52; // 防
