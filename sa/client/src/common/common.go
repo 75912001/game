@@ -27,11 +27,11 @@ var (
 )
 
 const (
-	WindowWidth  = 1024
-	WindowHeight = 800
+	WindowWidth  = 1920
+	WindowHeight = 1080
 
-	ScreenWidth  = 1024
-	ScreenHeight = 800
+	ScreenWidth  = 1920
+	ScreenHeight = 1080
 )
 
 func init() {
