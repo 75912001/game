@@ -7,11 +7,11 @@ import (
 )
 
 func (p *Game) Draw(screen *ebitenv2.Image) {
-	// 填充灰色背景
+	// 填充绿色背景
 	screen.Fill(color.RGBA{
-		R: 128,
-		G: 128,
-		B: 128,
+		R: 0,
+		G: 255,
+		B: 0,
 		A: 255,
 	})
 
