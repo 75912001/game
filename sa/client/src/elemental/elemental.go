@@ -76,7 +76,7 @@ func Validate(earth, water, fire, wind uint32) error {
 
 	// 如果是2个属性，验证是否相邻
 	if nonZeroCount == 2 {
-		if !isAdjacent() {
+		if !isAdjacent(earth, water, fire, wind) {
 			return &Error{Message: "两个属性必须相邻（土-水、水-火、火-风、风-土）"}
 		}
 	}
