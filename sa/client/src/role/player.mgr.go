@@ -4,12 +4,12 @@ import (
 	"saClient/src/common"
 )
 
-type Mgr struct {
+type PlayerMgr struct {
 	players map[common.UID]*Role
 }
 
-func NewMgr() *Mgr {
-	return &Mgr{
+func NewPlayerMgr() *PlayerMgr {
+	return &PlayerMgr{
 		players: make(map[common.UID]*Role),
 	}
 }
