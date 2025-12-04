@@ -31,6 +31,11 @@ enum AssetIDRoleBase {
   AssetIDRoleBase_CreateTimestamp = 4; // 角色基础-创建时间戳
   AssetIDRoleBase_LastLoginTimestamp = 5; // 角色基础-上次登录时间戳
   AssetIDRoleBase_LastLogoutTimestamp = 6; // 角色基础-上次登出时间戳
+  AssetIDRoleBase_MapID = 7; // 角色基础-所在地图ID
+  AssetIDRoleBase_X = 8; // 角色当前位置X
+  AssetIDRoleBase_Y = 9; // 角色当前位置Y
+  AssetIDRoleBase_Direction = 10; // 角色当前位置朝向
+  AssetIDRoleBase_Pose = 11; // 角色基础-姿势 0:站立 1:坐下
 
   AssetIDRoleBase_ElementalEarth = 101; // 角色基础-元素属性-土
   AssetIDRoleBase_ElementalWater = 102; // 角色基础-元素属性-水
