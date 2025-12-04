@@ -1,4 +1,4 @@
-package cfg
+package res
 
 import (
 	"saClient/src/common"
