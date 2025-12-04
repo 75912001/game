@@ -7,7 +7,7 @@ import (
 
 type Game struct {
 	state State // 当前游戏状态
-	user  *role.Role
+	role  *role.Role
 }
 
 func (p *Game) Init() {
