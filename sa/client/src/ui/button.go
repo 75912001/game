@@ -4,12 +4,14 @@ import (
 	ebitenuiimage "github.com/ebitenui/ebitenui/image"
 	ebitenuiwidget "github.com/ebitenui/ebitenui/widget"
 	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
-	"image/color"
+	imagecolor "image/color"
 	"log"
 	resfont "saClient/src/res/font"
 )
 
 var GUIButtonMgr *ButtonMgr
+
+type ButtonAction uint32
 
 // 按钮动作
 const (
@@ -18,8 +20,6 @@ const (
 	ButtonActionShow                        // 显示
 	ButtonActionDestroy                     // 销毁
 )
-
-type ButtonAction uint32
 
 func init() {
 	GUIButtonMgr = NewButtonMgr()
@@ -53,13 +53,13 @@ func (p *ButtonMgr) AddButton(id string, x, y, width, height int, btnText string
 			ebitenuiwidget.WidgetOpts.MinSize(width, height),
 		),
 		ebitenuiwidget.ButtonOpts.Image(&ebitenuiwidget.ButtonImage{
-			Idle:    ebitenuiimage.NewNineSliceColor(color.RGBA{R: 100, G: 100, B: 200, A: 255}),
-			Hover:   ebitenuiimage.NewNineSliceColor(color.RGBA{R: 120, G: 120, B: 220, A: 255}),
-			Pressed: ebitenuiimage.NewNineSliceColor(color.RGBA{R: 80, G: 80, B: 180, A: 255}),
+			Idle:    ebitenuiimage.NewNineSliceColor(imagecolor.RGBA{R: 100, G: 100, B: 200, A: 255}),
+			Hover:   ebitenuiimage.NewNineSliceColor(imagecolor.RGBA{R: 120, G: 120, B: 220, A: 255}),
+			Pressed: ebitenuiimage.NewNineSliceColor(imagecolor.RGBA{R: 80, G: 80, B: 180, A: 255}),
 		}),
 		// 添加文字
 		ebitenuiwidget.ButtonOpts.Text(btnText, resfont.GFaceButton, &ebitenuiwidget.ButtonTextColor{
-			Idle: color.White, // 白色文字
+			Idle: imagecolor.White, // 白色文字
 		}),
 		ebitenuiwidget.ButtonOpts.ClickedHandler(
 			func(args *ebitenuiwidget.ButtonClickedEventArgs) {

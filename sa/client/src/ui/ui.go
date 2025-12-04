@@ -5,7 +5,7 @@ import (
 	ebitenuiimage "github.com/ebitenui/ebitenui/image"
 	ebitenuiwidget "github.com/ebitenui/ebitenui/widget"
 	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
-	imgcolor "image/color"
+	imagecolor "image/color"
 )
 
 var GUIMgr *UIMgr
@@ -19,11 +19,11 @@ type UIMgr struct {
 }
 
 func NewUIMgr() *UIMgr {
-	// 创建根容器，不使用布局管理器（允许手动定位）
+	// 创建根容器,不使用布局管理器(允许手动定位)
 	return &UIMgr{
 		ui: &ebitenui.UI{
 			Container: ebitenuiwidget.NewContainer(
-				ebitenuiwidget.ContainerOpts.BackgroundImage(ebitenuiimage.NewNineSliceColor(imgcolor.Transparent)),
+				ebitenuiwidget.ContainerOpts.BackgroundImage(ebitenuiimage.NewNineSliceColor(imagecolor.Transparent)),
 			),
 		},
 	}
