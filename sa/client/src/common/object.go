@@ -10,6 +10,5 @@ type Object struct {
 
 	Point proto.Point
 
-	// 是否画出图像边界(调试用) 蓝色
-	debugDrawImageBounds bool
+	debugDrawImageBounds bool // 是否画出图像边界(调试用)
 }
