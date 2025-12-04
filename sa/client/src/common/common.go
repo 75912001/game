@@ -34,6 +34,8 @@ const (
 	ScreenHeight = WindowHeight
 )
 
+type UID uint64 // 用户id
+
 func init() {
 	var err error
 	// 获取可执行文件所在目录
