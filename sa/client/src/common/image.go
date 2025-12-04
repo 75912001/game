@@ -6,13 +6,9 @@ import (
 )
 
 type Image struct {
-	resType proto.ResType
-
-	resMajorID uint32 // 资源大类ID
-	resMinorID uint32 // 资源小类ID
-
-	width  uint32 // 宽度
-	height uint32 // 高度
+	assetType proto.AssetType // 资源类型
+	assetID   uint32          // 资源ID
+	*proto.Image
 
 	frames []*ebitenv2.Image // 动画帧
 }

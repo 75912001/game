@@ -7,9 +7,10 @@ import (
 )
 
 const (
-	AppVersion     = "0.0.1"
-	AppName        = "saClient"
-	AppWindowTitle = "SA Game"
+	AppVersion     = "0.0.1"          // 版本号
+	AppVersionDesc = "SA Game v0.0.1" // 版本描述
+	AppName        = "SA"             // 应用名称
+	AppWindowTitle = "SA Game"        // 窗口标题
 )
 
 var (
@@ -23,15 +24,14 @@ var (
 	AppResFontDir string // 资源目录-字体
 	AppResMapDir  string // 资源目录-地图
 	AppResRoleDir string // 资源目录-角色
-
 )
 
 const (
 	WindowWidth  = 1920
 	WindowHeight = 1080
 
-	ScreenWidth  = 1920
-	ScreenHeight = 1080
+	ScreenWidth  = WindowWidth
+	ScreenHeight = WindowHeight
 )
 
 func init() {
@@ -43,7 +43,9 @@ func init() {
 	}
 	AppBinDir = filepath.Dir(AppExeDir)
 	clientDir := filepath.Dir(AppBinDir)
+	// 配置
 	AppCfgDir = filepath.Join(clientDir, "cfg")
+	// 资源
 	AppResDir = filepath.Join(clientDir, "res")
 	AppResFontDir = filepath.Join(AppResDir, "font")
 	AppResMapDir = filepath.Join(AppResDir, "map")
