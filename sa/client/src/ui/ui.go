@@ -15,7 +15,8 @@ func init() {
 }
 
 type UIMgr struct {
-	ui *ebitenui.UI // UI实例
+	ui       *ebitenui.UI // UI实例
+	debugMsg string       // 调试信息
 }
 
 func NewUIMgr() *UIMgr {
@@ -47,4 +48,11 @@ func (p *UIMgr) Update() {
 // Draw 绘制 UI
 func (p *UIMgr) Draw(screen *ebitenv2.Image) {
 	p.ui.Draw(screen)
+	if p.debugMsg != "" {
+		Printf(screen, 0, 0, p.debugMsg)
+	}
+}
+
+func (p *UIMgr) SetDebugMsg(msg string) {
+	p.debugMsg = msg
 }
