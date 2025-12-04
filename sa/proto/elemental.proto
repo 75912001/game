@@ -1,0 +1,22 @@
+syntax="proto3";
+
+package pb;
+
+option go_package = "saClient/proto";
+
+// 元素类型
+enum ElementalType {
+    ElementalType_Unknow = 0; // 无
+    ElementalType_Earth = 1; // 元素类型-土
+    ElementalType_Water = 2; // 元素类型-水
+    ElementalType_Fire = 3; // 元素类型-火
+    ElementalType_Wind = 4; // 元素类型-风
+}
+
+// 元素
+message Elemental {
+  uint32 Earth = 1; // 土
+  uint32 Water = 2; // 水
+  uint32 Fire = 3; // 火
+  uint32 Wind = 4; // 风
+ }
