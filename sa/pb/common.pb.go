@@ -20,115 +20,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// 资源类型
-type ResType int32
-
-const (
-	ResType_ResType_Unknow ResType = 0 // 无
-	ResType_ResType_Role   ResType = 1 // 资源类型-角色
-	ResType_ResType_Map    ResType = 2 // 资源类型-地图
-	ResType_ResType_Item   ResType = 3 // 资源类型-物品
-)
-
-// Enum value maps for ResType.
-var (
-	ResType_name = map[int32]string{
-		0: "ResType_Unknow",
-		1: "ResType_Role",
-		2: "ResType_Map",
-		3: "ResType_Item",
-	}
-	ResType_value = map[string]int32{
-		"ResType_Unknow": 0,
-		"ResType_Role":   1,
-		"ResType_Map":    2,
-		"ResType_Item":   3,
-	}
-)
-
-func (x ResType) Enum() *ResType {
-	p := new(ResType)
-	*p = x
-	return p
-}
-
-func (x ResType) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (ResType) Descriptor() protoreflect.EnumDescriptor {
-	return file_common_proto_enumTypes[0].Descriptor()
-}
-
-func (ResType) Type() protoreflect.EnumType {
-	return &file_common_proto_enumTypes[0]
-}
-
-func (x ResType) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use ResType.Descriptor instead.
-func (ResType) EnumDescriptor() ([]byte, []int) {
-	return file_common_proto_rawDescGZIP(), []int{0}
-}
-
-// 元素类型
-type ElementalType int32
-
-const (
-	ElementalType_ElementalType_Unknow ElementalType = 0 // 无
-	ElementalType_ElementalType_Earth  ElementalType = 1 // 元素类型-土
-	ElementalType_ElementalType_Water  ElementalType = 2 // 元素类型-水
-	ElementalType_ElementalType_Fire   ElementalType = 3 // 元素类型-火
-	ElementalType_ElementalType_Wind   ElementalType = 4 // 元素类型-风
-)
-
-// Enum value maps for ElementalType.
-var (
-	ElementalType_name = map[int32]string{
-		0: "ElementalType_Unknow",
-		1: "ElementalType_Earth",
-		2: "ElementalType_Water",
-		3: "ElementalType_Fire",
-		4: "ElementalType_Wind",
-	}
-	ElementalType_value = map[string]int32{
-		"ElementalType_Unknow": 0,
-		"ElementalType_Earth":  1,
-		"ElementalType_Water":  2,
-		"ElementalType_Fire":   3,
-		"ElementalType_Wind":   4,
-	}
-)
-
-func (x ElementalType) Enum() *ElementalType {
-	p := new(ElementalType)
-	*p = x
-	return p
-}
-
-func (x ElementalType) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (ElementalType) Descriptor() protoreflect.EnumDescriptor {
-	return file_common_proto_enumTypes[1].Descriptor()
-}
-
-func (ElementalType) Type() protoreflect.EnumType {
-	return &file_common_proto_enumTypes[1]
-}
-
-func (x ElementalType) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use ElementalType.Descriptor instead.
-func (ElementalType) EnumDescriptor() ([]byte, []int) {
-	return file_common_proto_rawDescGZIP(), []int{1}
-}
-
+// 键值对 key:uint32 value:uint32
 type KV struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -184,6 +76,134 @@ func (x *KV) GetValue() uint32 {
 	return 0
 }
 
+// 矩形
+type Rect struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	X      float32 `protobuf:"fixed32,1,opt,name=X,proto3" json:"X,omitempty"`
+	Y      float32 `protobuf:"fixed32,2,opt,name=Y,proto3" json:"Y,omitempty"`
+	Width  float32 `protobuf:"fixed32,3,opt,name=Width,proto3" json:"Width,omitempty"`
+	Height float32 `protobuf:"fixed32,4,opt,name=Height,proto3" json:"Height,omitempty"`
+}
+
+func (x *Rect) Reset() {
+	*x = Rect{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_common_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Rect) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Rect) ProtoMessage() {}
+
+func (x *Rect) ProtoReflect() protoreflect.Message {
+	mi := &file_common_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Rect.ProtoReflect.Descriptor instead.
+func (*Rect) Descriptor() ([]byte, []int) {
+	return file_common_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *Rect) GetX() float32 {
+	if x != nil {
+		return x.X
+	}
+	return 0
+}
+
+func (x *Rect) GetY() float32 {
+	if x != nil {
+		return x.Y
+	}
+	return 0
+}
+
+func (x *Rect) GetWidth() float32 {
+	if x != nil {
+		return x.Width
+	}
+	return 0
+}
+
+func (x *Rect) GetHeight() float32 {
+	if x != nil {
+		return x.Height
+	}
+	return 0
+}
+
+// 图像
+type Image struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Width  uint32 `protobuf:"varint,2,opt,name=Width,proto3" json:"Width,omitempty"`   // 宽度
+	Height uint32 `protobuf:"varint,3,opt,name=Height,proto3" json:"Height,omitempty"` // 高度
+}
+
+func (x *Image) Reset() {
+	*x = Image{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_common_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Image) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Image) ProtoMessage() {}
+
+func (x *Image) ProtoReflect() protoreflect.Message {
+	mi := &file_common_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Image.ProtoReflect.Descriptor instead.
+func (*Image) Descriptor() ([]byte, []int) {
+	return file_common_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *Image) GetWidth() uint32 {
+	if x != nil {
+		return x.Width
+	}
+	return 0
+}
+
+func (x *Image) GetHeight() uint32 {
+	if x != nil {
+		return x.Height
+	}
+	return 0
+}
+
 var File_common_proto protoreflect.FileDescriptor
 
 var file_common_proto_rawDesc = []byte{
@@ -191,22 +211,17 @@ var file_common_proto_rawDesc = []byte{
 	0x70, 0x62, 0x22, 0x2c, 0x0a, 0x02, 0x4b, 0x56, 0x12, 0x10, 0x0a, 0x03, 0x4b, 0x65, 0x79, 0x18,
 	0x01, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x03, 0x4b, 0x65, 0x79, 0x12, 0x14, 0x0a, 0x05, 0x56, 0x61,
 	0x6c, 0x75, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x05, 0x56, 0x61, 0x6c, 0x75, 0x65,
-	0x2a, 0x52, 0x0a, 0x07, 0x52, 0x65, 0x73, 0x54, 0x79, 0x70, 0x65, 0x12, 0x12, 0x0a, 0x0e, 0x52,
-	0x65, 0x73, 0x54, 0x79, 0x70, 0x65, 0x5f, 0x55, 0x6e, 0x6b, 0x6e, 0x6f, 0x77, 0x10, 0x00, 0x12,
-	0x10, 0x0a, 0x0c, 0x52, 0x65, 0x73, 0x54, 0x79, 0x70, 0x65, 0x5f, 0x52, 0x6f, 0x6c, 0x65, 0x10,
-	0x01, 0x12, 0x0f, 0x0a, 0x0b, 0x52, 0x65, 0x73, 0x54, 0x79, 0x70, 0x65, 0x5f, 0x4d, 0x61, 0x70,
-	0x10, 0x02, 0x12, 0x10, 0x0a, 0x0c, 0x52, 0x65, 0x73, 0x54, 0x79, 0x70, 0x65, 0x5f, 0x49, 0x74,
-	0x65, 0x6d, 0x10, 0x03, 0x2a, 0x8b, 0x01, 0x0a, 0x0d, 0x45, 0x6c, 0x65, 0x6d, 0x65, 0x6e, 0x74,
-	0x61, 0x6c, 0x54, 0x79, 0x70, 0x65, 0x12, 0x18, 0x0a, 0x14, 0x45, 0x6c, 0x65, 0x6d, 0x65, 0x6e,
-	0x74, 0x61, 0x6c, 0x54, 0x79, 0x70, 0x65, 0x5f, 0x55, 0x6e, 0x6b, 0x6e, 0x6f, 0x77, 0x10, 0x00,
-	0x12, 0x17, 0x0a, 0x13, 0x45, 0x6c, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x61, 0x6c, 0x54, 0x79, 0x70,
-	0x65, 0x5f, 0x45, 0x61, 0x72, 0x74, 0x68, 0x10, 0x01, 0x12, 0x17, 0x0a, 0x13, 0x45, 0x6c, 0x65,
-	0x6d, 0x65, 0x6e, 0x74, 0x61, 0x6c, 0x54, 0x79, 0x70, 0x65, 0x5f, 0x57, 0x61, 0x74, 0x65, 0x72,
-	0x10, 0x02, 0x12, 0x16, 0x0a, 0x12, 0x45, 0x6c, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x61, 0x6c, 0x54,
-	0x79, 0x70, 0x65, 0x5f, 0x46, 0x69, 0x72, 0x65, 0x10, 0x03, 0x12, 0x16, 0x0a, 0x12, 0x45, 0x6c,
-	0x65, 0x6d, 0x65, 0x6e, 0x74, 0x61, 0x6c, 0x54, 0x79, 0x70, 0x65, 0x5f, 0x57, 0x69, 0x6e, 0x64,
-	0x10, 0x04, 0x42, 0x10, 0x5a, 0x0e, 0x73, 0x61, 0x43, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x2f, 0x70,
-	0x72, 0x6f, 0x74, 0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x22, 0x50, 0x0a, 0x04, 0x52, 0x65, 0x63, 0x74, 0x12, 0x0c, 0x0a, 0x01, 0x58, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x02, 0x52, 0x01, 0x58, 0x12, 0x0c, 0x0a, 0x01, 0x59, 0x18, 0x02, 0x20, 0x01, 0x28,
+	0x02, 0x52, 0x01, 0x59, 0x12, 0x14, 0x0a, 0x05, 0x57, 0x69, 0x64, 0x74, 0x68, 0x18, 0x03, 0x20,
+	0x01, 0x28, 0x02, 0x52, 0x05, 0x57, 0x69, 0x64, 0x74, 0x68, 0x12, 0x16, 0x0a, 0x06, 0x48, 0x65,
+	0x69, 0x67, 0x68, 0x74, 0x18, 0x04, 0x20, 0x01, 0x28, 0x02, 0x52, 0x06, 0x48, 0x65, 0x69, 0x67,
+	0x68, 0x74, 0x22, 0x35, 0x0a, 0x05, 0x49, 0x6d, 0x61, 0x67, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x57,
+	0x69, 0x64, 0x74, 0x68, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x05, 0x57, 0x69, 0x64, 0x74,
+	0x68, 0x12, 0x16, 0x0a, 0x06, 0x48, 0x65, 0x69, 0x67, 0x68, 0x74, 0x18, 0x03, 0x20, 0x01, 0x28,
+	0x0d, 0x52, 0x06, 0x48, 0x65, 0x69, 0x67, 0x68, 0x74, 0x42, 0x10, 0x5a, 0x0e, 0x73, 0x61, 0x43,
+	0x6c, 0x69, 0x65, 0x6e, 0x74, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f,
+	0x74, 0x6f, 0x33,
 }
 
 var (
@@ -221,12 +236,11 @@ func file_common_proto_rawDescGZIP() []byte {
 	return file_common_proto_rawDescData
 }
 
-var file_common_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_common_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_common_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_common_proto_goTypes = []any{
-	(ResType)(0),       // 0: pb.ResType
-	(ElementalType)(0), // 1: pb.ElementalType
-	(*KV)(nil),         // 2: pb.KV
+	(*KV)(nil),    // 0: pb.KV
+	(*Rect)(nil),  // 1: pb.Rect
+	(*Image)(nil), // 2: pb.Image
 }
 var file_common_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -254,20 +268,43 @@ func file_common_proto_init() {
 				return nil
 			}
 		}
+		file_common_proto_msgTypes[1].Exporter = func(v any, i int) any {
+			switch v := v.(*Rect); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_common_proto_msgTypes[2].Exporter = func(v any, i int) any {
+			switch v := v.(*Image); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_common_proto_rawDesc,
-			NumEnums:      2,
-			NumMessages:   1,
+			NumEnums:      0,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_common_proto_goTypes,
 		DependencyIndexes: file_common_proto_depIdxs,
-		EnumInfos:         file_common_proto_enumTypes,
 		MessageInfos:      file_common_proto_msgTypes,
 	}.Build()
 	File_common_proto = out.File
