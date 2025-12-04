@@ -8,21 +8,3 @@ message KV {
   uint32 Key = 1;
   uint32 Value = 2;
 }
-
-// 资源类型
-enum ResType{
-  ResType_Unknow = 0; // 无
-  ResType_Role = 1; // 资源类型-角色
-  ResType_Map = 2; // 资源类型-地图
-  ResType_Item = 3; // 资源类型-物品
-}
-
-// 元素类型
-enum ElementalType {
-    ElementalType_Unknow = 0; // 无
-    ElementalType_Earth = 1; // 元素类型-土
-    ElementalType_Water = 2; // 元素类型-水
-    ElementalType_Fire = 3; // 元素类型-火
-    ElementalType_Wind = 4; // 元素类型-风
-}
-
