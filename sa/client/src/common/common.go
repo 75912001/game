@@ -34,7 +34,9 @@ const (
 	ScreenHeight = WindowHeight
 )
 
-type UID uint64 // 用户id
+type AssetID uint32    // 资产ID
+type AssetCount uint64 // 资产数量
+type UID uint64        // 用户ID
 
 func init() {
 	var err error
