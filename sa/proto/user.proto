@@ -4,7 +4,6 @@ package pb;
 
 option go_package = "saClient/proto";
 
-import "common.proto";
 import "asset.proto";
 import "event.proto";
 
