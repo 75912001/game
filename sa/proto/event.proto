@@ -1,0 +1,19 @@
+syntax="proto3";
+
+package pb;
+
+option go_package = "saClient/proto";
+
+// 事件-主要
+message EventPrimary{
+  uint64 PrimaryID = 1; // 事件-主要ID
+  map<uint64, EventSecondary> EventElementMap= 2; // 事件元素表 key: 事件-次要ID
+}
+
+// 事件-次要
+message EventSecondary{
+  uint64 SecondaryID = 1; // 事件副ID
+  int64 timestamp = 2; // 事件时间戳
+  repeated uint64 Data = 3; // 事件数据-根据事件类型不同含义不同
+  repeated string StrData = 4; // 事件字符串数据-根据事件类型不同含义不同
+}
