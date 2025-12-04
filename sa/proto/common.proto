@@ -9,3 +9,17 @@ message KV {
   uint32 Key = 1;
   uint32 Value = 2;
 }
+
+// 矩形
+message Rect {
+  float X = 1;
+  float Y = 2;
+  float Width = 3;
+  float Height = 4;
+}
+
+// 图像
+message Image {
+  uint32 Width = 2; // 宽度
+  uint32 Height = 3; // 高度
+}
