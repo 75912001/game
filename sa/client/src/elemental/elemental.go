@@ -8,8 +8,8 @@ import "saClient/src/proto"
 
 func Get(assetRoleBaseMap map[uint32]uint64) (earth, water, fire, wind uint32) {
 	return GetEarth(assetRoleBaseMap), GetWater(assetRoleBaseMap), GetFire(assetRoleBaseMap), GetWind(assetRoleBaseMap)
-
 }
+
 func GetEarth(assetRoleBaseMap map[uint32]uint64) uint32 {
 	value, ok := assetRoleBaseMap[uint32(proto.AssetIDRoleBase_AssetIDRoleBase_ElementalEarth)]
 	if ok {
