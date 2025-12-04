@@ -1,6 +1,7 @@
 package elemental
 
 import (
+	"fmt"
 	"saClient/src/common"
 	"saClient/src/proto"
 )
@@ -54,7 +55,7 @@ func Validate(earth, water, fire, wind common.AssetQuantity) error {
 
 	// 验证总和是否为10
 	if total != 10 {
-		return &Error{Message: "元素总和必须为10点"}
+		return fmt.Errorf("元素总和必须为10点")
 	}
 
 	// 统计有值的属性数量
@@ -74,13 +75,13 @@ func Validate(earth, water, fire, wind common.AssetQuantity) error {
 
 	// 只能有1个或2个属性有值
 	if nonZeroCount > 2 {
-		return &Error{Message: "只能分配给1个或2个相邻的属性"}
+		return fmt.Errorf("只能分配给1个或2个相邻的属性")
 	}
 
 	// 如果是2个属性，验证是否相邻
 	if nonZeroCount == 2 {
 		if !isAdjacent(earth, water, fire, wind) {
-			return &Error{Message: "两个属性必须相邻（土-水、水-火、火-风、风-土）"}
+			return fmt.Errorf("两个属性必须相邻(土-水,水-火,火-风,风-土)")
 		}
 	}
 
