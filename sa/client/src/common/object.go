@@ -6,7 +6,7 @@ import (
 
 type Object struct {
 	image    *Image
-	frameIdx int // 当前帧索引
+	frameIdx uint32 // 当前帧索引
 
 	Point proto.Point
 

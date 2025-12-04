@@ -7,7 +7,7 @@ import (
 
 type Image struct {
 	assetType proto.AssetType // 资源类型
-	assetID   uint32          // 资源ID
+	assetID   AssetID         // 资源ID
 	*proto.Image
 
 	frames []*ebitenv2.Image // 动画帧
