@@ -12,14 +12,19 @@ message KV {
 
 // 矩形
 message Rect {
-  float X = 1;
-  float Y = 2;
-  float Width = 3;
-  float Height = 4;
+  Point Pos = 1; // 位置
+  uint32 Width = 3; // 宽度
+  uint32 Height = 4; // 高度
 }
 
 // 图像
 message Image {
   uint32 Width = 2; // 宽度
   uint32 Height = 3; // 高度
+}
+
+// 坐标点
+message Point {
+  uint32 X = 1; // X坐标
+  uint32 Y = 2; // Y坐标
 }
