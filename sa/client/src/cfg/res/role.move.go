@@ -1,4 +1,4 @@
-package cfg
+package res
 
 import (
 	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
