@@ -11,6 +11,14 @@ import (
 )
 
 func main() {
+	err := LoadCfg()
+	if err != nil {
+		panic(err)
+	}
+	err = CheckCfg()
+	if err != nil {
+		panic(err)
+	}
 	// 设置窗口大小和标题
 	ebitenv2.SetWindowSize(common.WindowWidth, common.WindowHeight)
 	ebitenv2.SetWindowTitle(common.AppWindowTitle)
