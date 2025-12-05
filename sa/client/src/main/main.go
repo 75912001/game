@@ -28,7 +28,7 @@ func main() {
 	ebitenv2.SetWindowTitle(common.AppWindowTitle)
 
 	// 使用标准库加载图标
-	windowIconPath := filepath.Join(common.AppResDir, "window.icon.png")
+	windowIconPath := filepath.Join(common.AppResSystemDir, "window.icon.png")
 	iconFile, err := os.Open(windowIconPath)
 	if err != nil {
 		log.Fatal(err)
