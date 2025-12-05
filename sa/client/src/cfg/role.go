@@ -53,8 +53,8 @@ func (p *RoleMgr) Load() error {
 	}
 	// 加载每个角色
 	for _, role := range config.Roles {
-		if 1000101 != role.ID {
-			continue // todo menglc 仅加载测试角色
+		if 1000101 != role.ID { // todo menglc 仅加载测试角色
+			continue
 		}
 		if role.ID < common.AssetID(proto.AssetIDRange_AssetIDRange_Role_Start) || common.AssetID(proto.AssetIDRange_AssetIDRange_Role_End) < role.ID {
 			return fmt.Errorf("角色ID超出范围: %d", role.ID)
