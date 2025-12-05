@@ -21,6 +21,29 @@ enum AssetType {
   AssetType_NPC = 5; // NPC [5000001,5999999]
 }
 
+// 资产ID-数值范围
+enum AssetIDRange {
+  AssetIDRange_Unknow = 0; // 未知范围
+
+  AssetIDRange_RoleBase_Start = 1; // 角色基础-开始
+  AssetIDRange_RoleBase_End = 1000000; // 角色基础-结束
+
+  AssetIDRange_Role_Start = 1000001; // 角色-开始
+  AssetIDRange_Role_End = 1999999; // 角色-结束
+
+  AssetIDRange_Map_Start = 2000001; // 地图-开始
+  AssetIDRange_Map_End = 2999999; // 地图-结束
+
+  AssetIDRange_Item_Start = 3000001; // 物品-开始
+  AssetIDRange_Item_End = 3999999; // 物品-结束
+
+  AssetIDRange_Pet_Start = 4000001; // 宠物-开始
+  AssetIDRange_Pet_End = 4999999; // 宠物-结束
+
+  AssetIDRange_NPC_Start = 5000001; // NPC-开始
+  AssetIDRange_NPC_End = 5999999; // NPC-结束
+}
+
 // 资产ID-角色基础 [1,1000000]
 enum AssetIDRoleBase {
   AssetIDRoleBase_Unknow = 0; // 角色基础-未知
@@ -36,6 +59,7 @@ enum AssetIDRoleBase {
   AssetIDRoleBase_Y = 9; // 角色当前位置Y
   AssetIDRoleBase_Direction = 10; // 角色当前位置朝向
   AssetIDRoleBase_Pose = 11; // 角色基础-姿势 0:站立 1:坐下
+  AssetIDRoleBase_AvailablePoint = 12; // 角色基础-可用点数-升级后获得的可用点数
 
   AssetIDRoleBase_ElementalEarth = 101; // 角色基础-元素属性-土
   AssetIDRoleBase_ElementalWater = 102; // 角色基础-元素属性-水
@@ -48,29 +72,5 @@ enum AssetIDRoleBase {
   AssetIDRoleBase_BasicHP = 204; // 角色基础-生命
 }
 
-// 资产ID-角色 [1000001,1999999]
-enum AssetIDRole {
-  AssetIDRole_Unknow = 0; // 角色-未知
-
-  AssetIDRole_Leon_Red = 1000101; // 角色-男性-里昂-红 带坚毅感，适合战士、领头类角色
-  AssetIDRole_Allen_Blue = 1000201; // 角色-男性-艾伦-蓝 经典百搭，适合正直型角色（如骑士、主力输出）
-  AssetIDRole_Kai_Green = 1000301; // 角色-男性-凯-绿 简短有力，适配敏捷型角色（如刺客、游侠）
-  AssetIDRole_Ian_Purple = 1000401; // 角色-男性-伊恩-紫 温和中带沉稳，适配法师、辅助型角色
-  AssetIDRole_Colin_Yellow = 1000501; // 角色-男性-科林-黄 轻快灵动，适合斥候、年轻冒险者
-  AssetIDRole_Jasper_White = 1000601; // 角色-男性-贾斯珀-白 带复古奇幻感，适配牧师、术士类角色
-  AssetIDRole_Marcus_Black = 1000701; // 角色-男性-马库斯-黑 厚重有气场，适合坦克、队长类角色
-  AssetIDRole_Samuel_Silver = 1000801; // 角色-男性-塞缪尔-银 温润可靠，适配治疗、后勤类角色
-  AssetIDRole_Toby_Orange = 1000901; // 角色-男性-托比-橙 活泼亲民，适合新手引导、伙伴类角色
-
-  AssetIDRole_Lilian_Pink = 1500101; // 角色-女性-莉莉安-粉 柔美清新，适合牧师、治疗型角色
-  AssetIDRole_Ella_Red = 1500201; // 角色-女性-艾拉-红 简洁灵动，适配敏捷型刺客、游侠
-  AssetIDRole_Evelyn_Purple = 1500301; // 角色-女性-伊芙琳-紫 优雅带神秘感，适合法师、术士类角色
-  AssetIDRole_Sophia_Blue = 1500401; // 角色-女性-索菲娅-蓝 温润知性，适配辅助、策略型角色
-  AssetIDRole_Claire_Silver = 1500501; // 角色-女性-克莱尔-银 干练利落，适合战士、女骑士类角色
-  AssetIDRole_Mila_Yellow = 1500601; // 角色-女性-米拉-黄 轻快可爱，适合新手伙伴、俏皮型角色
-  AssetIDRole_Nora_Gold = 1500701; // 角色-女性-诺拉-金 沉稳大气，适配领主、资深冒险者
-  AssetIDRole_Sierra_Green = 1500801; // 角色-女性-塞拉-绿 带自然感，适合德鲁伊、森林游侠
-  AssetIDRole_Valerie_White = 1500901; // 角色-女性-瓦莱丽-白 坚毅有力量，适合近战输出、守护型角色
-}
 
 

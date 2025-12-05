@@ -28,3 +28,18 @@ message Point {
   uint32 X = 1; // X坐标
   uint32 Y = 2; // Y坐标
 }
+
+// 角色朝向
+enum RoleDirection {
+  RoleDirection_Unknow = 0; // 未知方向
+  RoleDirection_Up = 1; // 上
+  RoleDirection_UpRight = 2; // 右上
+  RoleDirection_Right = 3; // 右
+  RoleDirection_DownRight = 4; // 右下
+  RoleDirection_Down = 5; // 下
+  RoleDirection_DownLeft = 6; // 左下
+  RoleDirection_Left = 7; // 左
+  RoleDirection_UpLeft = 8; // 左上
+  RoleDirection_Max = 9; // 方向最大值
+}
+
