@@ -1,0 +1,151 @@
+{
+  "meta": {
+    "describe": "资产ID-角色 [1000001,1999999]"
+  },
+  "roles": [
+    {
+      "id": 1000101,
+      "name": "Leon",
+      "nameCN": "里昂",
+      "gender": "male",
+      "color": "red",
+      "description": "带坚毅感,适合战士,领头类角色"
+    },
+    {
+      "id": 1000201,
+      "name": "Allen",
+      "nameCN": "艾伦",
+      "gender": "male",
+      "color": "blue",
+      "description": "经典百搭,适合正直型角色(如骑士,主力输出)"
+    },
+    {
+      "id": 1000301,
+      "name": "Kai",
+      "nameCN": "凯",
+      "gender": "male",
+      "color": "green",
+      "description": "简短有力,适配敏捷型角色(如刺客,游侠)"
+    },
+    {
+      "id": 1000401,
+      "name": "Ian",
+      "nameCN": "伊恩",
+      "gender": "male",
+      "color": "purple",
+      "description": "温和中带沉稳,适配法师,辅助型角色"
+    },
+    {
+      "id": 1000501,
+      "name": "Colin",
+      "nameCN": "科林",
+      "gender": "male",
+      "color": "yellow",
+      "description": "轻快灵动,适合斥候,年轻冒险者"
+    },
+    {
+      "id": 1000601,
+      "name": "Jasper",
+      "nameCN": "贾斯珀",
+      "gender": "male",
+      "color": "white",
+      "description": "带复古奇幻感,适配牧师,术士类角色"
+    },
+    {
+      "id": 1000701,
+      "name": "Marcus",
+      "nameCN": "马库斯",
+      "gender": "male",
+      "color": "black",
+      "description": "厚重有气场,适合坦克,队长类角色"
+    },
+    {
+      "id": 1000801,
+      "name": "Samuel",
+      "nameCN": "塞缪尔",
+      "gender": "male",
+      "color": "silver",
+      "description": "温润可靠,适配治疗,后勤类角色"
+    },
+    {
+      "id": 1000901,
+      "name": "Toby",
+      "nameCN": "托比",
+      "gender": "male",
+      "color": "orange",
+      "description": "活泼亲民,适合新手引导,伙伴类角色"
+    },
+    {
+      "id": 1500101,
+      "name": "Lilian",
+      "nameCN": "莉莉安",
+      "gender": "female",
+      "color": "pink",
+      "description": "柔美清新,适合牧师,治疗型角色"
+    },
+    {
+      "id": 1500201,
+      "name": "Ella",
+      "nameCN": "艾拉",
+      "gender": "female",
+      "color": "red",
+      "description": "简洁灵动,适配敏捷型刺客,游侠"
+    },
+    {
+      "id": 1500301,
+      "name": "Evelyn",
+      "nameCN": "伊芙琳",
+      "gender": "female",
+      "color": "purple",
+      "description": "优雅带神秘感,适合法师,术士类角色"
+    },
+    {
+      "id": 1500401,
+      "name": "Sophia",
+      "nameCN": "索菲娅",
+      "gender": "female",
+      "color": "blue",
+      "description": "温润知性,适配辅助,策略型角色"
+    },
+    {
+      "id": 1500501,
+      "name": "Claire",
+      "nameCN": "克莱尔",
+      "gender": "female",
+      "color": "silver",
+      "description": "干练利落,适合战士,女骑士类角色"
+    },
+    {
+      "id": 1500601,
+      "name": "Mila",
+      "nameCN": "米拉",
+      "gender": "female",
+      "color": "yellow",
+      "description": "轻快可爱,适合新手伙伴,俏皮型角色"
+    },
+    {
+      "id": 1500701,
+      "name": "Nora",
+      "nameCN": "诺拉",
+      "gender": "female",
+      "color": "gold",
+      "description": "沉稳大气,适配领主,资深冒险者"
+    },
+    {
+      "id": 1500801,
+      "name": "Sierra",
+      "nameCN": "塞拉",
+      "gender": "female",
+      "color": "green",
+      "description": "带自然感,适合德鲁伊,森林游侠"
+    },
+    {
+      "id": 1500901,
+      "name": "Valerie",
+      "nameCN": "瓦莱丽",
+      "gender": "female",
+      "color": "white",
+      "description": "坚毅有力量,适合近战输出,守护型角色"
+    }
+  ]
+}
