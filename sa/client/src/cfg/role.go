@@ -21,7 +21,7 @@ type Role struct {
 
 var GRoleMgr = newRoleMgr()
 
-// RoleMgr 角色配置管理器
+// RoleMgr 配置管理器
 type RoleMgr struct {
 	roles map[common.AssetID]*Role // key: 角色ID
 }
@@ -32,8 +32,8 @@ func newRoleMgr() *RoleMgr {
 	}
 }
 
-// Load 加载角色配置文件
-func (m *RoleMgr) Load() error {
+// Load 加载配置文件
+func (p *RoleMgr) Load() error {
 	// 构建配置文件路径
 	cfgPath := filepath.Join(common.AppCfgDir, "role.json")
 
@@ -57,24 +57,30 @@ func (m *RoleMgr) Load() error {
 			return fmt.Errorf("角色ID超出范围: %d", role.ID)
 		}
 		// 检查是否重复
-		if _, exists := m.roles[role.ID]; exists {
+		if _, exists := p.roles[role.ID]; exists {
 			return fmt.Errorf("角色ID重复: %d", role.ID)
 		}
-		m.roles[role.ID] = role
+		p.roles[role.ID] = role
 	}
 	return nil
 }
 
-func (m *RoleMgr) Check() error {
+// Check 检查配置
+func (p *RoleMgr) Check() error {
 	return nil
 }
 
-// GetRole 获取角色信息
-func (m *RoleMgr) GetRole(id common.AssetID) *Role {
-	return m.roles[id]
+// Assemble 组装配置
+func (p *RoleMgr) Assemble() error {
+	return nil
 }
 
-// GetRoleCount 获取角色数量
-func (m *RoleMgr) GetRoleCount() uint32 {
-	return uint32(len(m.roles))
+// GetRole 获取信息
+func (p *RoleMgr) GetRole(id common.AssetID) *Role {
+	return p.roles[id]
+}
+
+// GetRoleCount 获取数量
+func (p *RoleMgr) GetRoleCount() uint32 {
+	return uint32(len(p.roles))
 }
