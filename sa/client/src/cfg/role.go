@@ -42,37 +42,29 @@ func (m *RoleMgr) Load() error {
 		return fmt.Errorf("读取角色配置文件失败: %v", err)
 	}
 
+	// 定义中间结构用于JSON解析
+	var config struct {
+		Roles []*Role `json:"roles"`
+	}
+
 	// 解析JSON
-	var mgr RoleMgr
-	err = json.Unmarshal(data, &mgr)
+	err = json.Unmarshal(data, &config)
 	if err != nil {
 		return fmt.Errorf("解析角色配置文件失败: %v", err)
 	}
 
 	// 加载每个角色
-	for _, role := range mgr.roles {
+	for _, role := range config.Roles {
 		if role.ID == 0 {
 			return fmt.Errorf("角色ID不能为0")
 		}
 
-		assetID := role.ID
-
 		// 检查是否重复
-		if _, exists := m.roles[assetID]; exists {
+		if _, exists := m.roles[role.ID]; exists {
 			return fmt.Errorf("角色ID重复: %d", role.ID)
 		}
 
-		// 创建角色信息
-		roleInfo := &Role{
-			ID:          assetID,
-			Name:        role.Name,
-			NameCN:      role.NameCN,
-			Gender:      role.Gender,
-			Color:       role.Color,
-			Description: role.Description,
-		}
-
-		m.roles[assetID] = roleInfo
+		m.roles[role.ID] = role
 	}
 
 	return nil
@@ -84,6 +76,6 @@ func (m *RoleMgr) GetRole(id common.AssetID) *Role {
 }
 
 // GetRoleCount 获取角色数量
-func (m *RoleMgr) GetRoleCount() int {
-	return len(m.roles)
+func (m *RoleMgr) GetRoleCount() uint32 {
+	return uint32(len(m.roles))
 }
