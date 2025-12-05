@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"saClient/src/cfg/res"
 	"saClient/src/common"
 	"saClient/src/proto"
 )
@@ -17,6 +18,7 @@ type Role struct {
 	Gender      string         `json:"gender"`      // 性别
 	Color       string         `json:"color"`       // 颜色
 	Description string         `json:"description"` // 描述
+	resRole     *res.Role      // 角色资源
 }
 
 var GRoleMgr = newRoleMgr()
