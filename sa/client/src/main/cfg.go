@@ -1,6 +1,9 @@
 package main
 
-import "saClient/src/cfg"
+import (
+	"saClient/src/cfg"
+	cfgres "saClient/src/cfg/res"
+)
 
 // LoadCfg 加载配置
 func LoadCfg() error {
@@ -9,6 +12,10 @@ func LoadCfg() error {
 		return err
 	}
 	err = cfg.GRoleBaseMgr.Load()
+	if err != nil {
+		return err
+	}
+	err = cfgres.GRoleMgr.Load()
 	if err != nil {
 		return err
 	}
@@ -25,6 +32,10 @@ func CheckCfg() error {
 	if err != nil {
 		return err
 	}
+	err = cfgres.GRoleMgr.Check()
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -35,6 +46,10 @@ func AssembleCfg() error {
 		return err
 	}
 	err = cfg.GRoleBaseMgr.Assemble()
+	if err != nil {
+		return err
+	}
+	err = cfgres.GRoleMgr.Assemble()
 	if err != nil {
 		return err
 	}
