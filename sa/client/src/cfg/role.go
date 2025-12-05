@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"saClient/src/common"
+	"saClient/src/proto"
 )
 
 // Role 角色信息
@@ -41,32 +42,30 @@ func (m *RoleMgr) Load() error {
 	if err != nil {
 		return fmt.Errorf("读取角色配置文件失败: %v", err)
 	}
-
 	// 定义中间结构用于JSON解析
 	var config struct {
 		Roles []*Role `json:"roles"`
 	}
-
 	// 解析JSON
 	err = json.Unmarshal(data, &config)
 	if err != nil {
 		return fmt.Errorf("解析角色配置文件失败: %v", err)
 	}
-
 	// 加载每个角色
 	for _, role := range config.Roles {
-		if role.ID == 0 {
-			return fmt.Errorf("角色ID不能为0")
+		if role.ID < common.AssetID(proto.AssetIDRange_AssetIDRange_Role_Start) || common.AssetID(proto.AssetIDRange_AssetIDRange_Role_End) < role.ID {
+			return fmt.Errorf("角色ID超出范围: %d", role.ID)
 		}
-
 		// 检查是否重复
 		if _, exists := m.roles[role.ID]; exists {
 			return fmt.Errorf("角色ID重复: %d", role.ID)
 		}
-
 		m.roles[role.ID] = role
 	}
+	return nil
+}
 
+func (m *RoleMgr) Check() error {
 	return nil
 }
 
