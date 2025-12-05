@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"saClient/src/common"
+	"saClient/src/proto"
 	"strconv"
 )
 
@@ -49,25 +50,25 @@ func (p *RoleMgr) Load() error {
 			return fmt.Errorf("读取角色目录 %s 失败: %v", roleDirName, err)
 		}
 		// 匹配 role.${roleID}.${action}.${arg}.json 格式的文件 例如 `role.1000101.move.up.json`
-		pattern := regexp.MustCompile(`^role\.(\d+)\.([^.]+)\.([^.]+)\.json$`)
+		pattern := regexp.MustCompile(fmt.Sprintf(`^%v\.%v\.([^.]+)\.([^.]+)\.json$`, GetNameByAssetType(proto.AssetType_AssetType_Role), roleID))
 		for _, roleFile := range roleFiles {
 			if roleFile.IsDir() { // 目录
 				continue
 			}
-			fileName := roleFile.Name()
-			matches := pattern.FindStringSubmatch(fileName)
-			if matches == nil { // 不匹配格式
+			jsonFileName := roleFile.Name()
+			if !pattern.MatchString(jsonFileName) { // 不匹配格式
 				continue
 			}
+			imageFilePath := filepath.Join(roleDirPath, jsonFileName[:len(jsonFileName)-len(filepath.Ext(jsonFileName))]+".png")
 			// 加载配置文件
-			filePath := filepath.Join(roleDirPath, fileName)
-			config, err := loadConfig(filePath)
+			jsonFilePath := filepath.Join(roleDirPath, jsonFileName)
+			roleJson, err := loadJson(jsonFilePath)
 			if err != nil {
-				return fmt.Errorf("加载配置文件 %s 失败: %v", fileName, err)
+				return fmt.Errorf("加载配置文件 %s 失败: %v", jsonFileName, err)
 			}
-			err = loadRole(roleID, config)
+			err = loadRoleImage(roleID, imageFilePath, roleJson)
 			if err != nil {
-				return fmt.Errorf("加载角色 %s 失败: %v", fileName, err)
+				return fmt.Errorf("加载角色 %s 失败: %v", jsonFileName, err)
 			}
 		}
 	}
