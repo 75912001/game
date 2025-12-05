@@ -62,7 +62,7 @@ func (p *RoleMgr) Load() error {
 			imageFilePath := filepath.Join(roleDirPath, jsonFileName[:len(jsonFileName)-len(filepath.Ext(jsonFileName))]+".png")
 			// 加载配置文件
 			jsonFilePath := filepath.Join(roleDirPath, jsonFileName)
-			roleJson, err := loadJson(jsonFilePath)
+			roleJson, err := loadRoleJson(jsonFilePath)
 			if err != nil {
 				return fmt.Errorf("加载配置文件 %s 失败: %v", jsonFileName, err)
 			}
