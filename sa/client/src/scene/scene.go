@@ -15,6 +15,7 @@ type Scene struct {
 	decorationMgr *DecorationMgr // 装饰物-管理器
 	sceneMap      *Map           // 地图
 	plantMgr      *PlantMgr      // 植物-管理器
+	itemMgr       *ItemMgr       // 物品-管理器
 }
 
 type Mgr struct {
