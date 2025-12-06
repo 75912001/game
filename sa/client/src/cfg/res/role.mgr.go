@@ -50,7 +50,7 @@ func (p *RoleMgr) Load() error {
 			return fmt.Errorf("读取角色目录 %s 失败: %v", roleDirName, err)
 		}
 		// 匹配 role.${roleID}.${action}.${arg}.json 格式的文件 例如 `role.1000101.move.up.json`
-		pattern := regexp.MustCompile(fmt.Sprintf(`^%v\.%v\.([^.]+)\.([^.]+)\.json$`, GetNameByAssetType(proto.AssetType_AssetType_Role), roleID))
+		pattern := regexp.MustCompile(fmt.Sprintf(`^%v\.%v\.([^.]+)\.([^.]+)\.json$`, common.GetNameByAssetType(proto.AssetType_AssetType_Role), roleID))
 		for _, roleFile := range roleFiles {
 			if roleFile.IsDir() { // 目录
 				continue
