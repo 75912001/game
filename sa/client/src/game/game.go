@@ -1,13 +1,13 @@
 package game
 
 import (
-	"saClient/src/role"
+	"saClient/src/scene"
 	"saClient/src/ui"
 )
 
 type Game struct {
-	state State // 当前游戏状态
-	role  *role.Role
+	state State        // 当前游戏状态
+	scene *scene.Scene // 当前场景
 }
 
 func (p *Game) Init() {
