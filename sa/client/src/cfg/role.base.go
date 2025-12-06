@@ -3,13 +3,14 @@ package cfg
 import (
 	"encoding/json"
 	"fmt"
-	xmap "github.com/75912001/xlib/map"
-	xruntime "github.com/75912001/xlib/runtime"
-	"github.com/pkg/errors"
 	"os"
 	"path/filepath"
 	"saClient/src/common"
 	"saClient/src/proto"
+
+	xmap "github.com/75912001/xlib/map"
+	xruntime "github.com/75912001/xlib/runtime"
+	"github.com/pkg/errors"
 )
 
 // RoleBase 角色基础属性
@@ -17,7 +18,6 @@ type RoleBase struct {
 	ID          common.AssetID `json:"id"`          // 属性ID
 	Name        string         `json:"name"`        // 英文名称
 	NameCN      string         `json:"nameCN"`      // 中文名称
-	Category    string         `json:"category"`    // 类别 primary/basic
 	Description string         `json:"description"` // 描述
 }
 

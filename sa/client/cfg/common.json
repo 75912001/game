@@ -1,4 +1,8 @@
 {
+  "meta": {
+    "describe": "全局配置",
+    "note": "任何修改此文件的行为都需要通知客户端和服务端开发人员"
+  },
   "roleCountMaxDescribe" : "允许创建的最大角色数",
   "roleCountMax": 5,
   "roleRebirthCountDescribe" : "允许转生的最大次数",

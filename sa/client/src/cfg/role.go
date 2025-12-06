@@ -16,8 +16,7 @@ import (
 // Role 角色信息
 type Role struct {
 	ID          common.AssetID `json:"id"`          // 角色ID
-	Name        string         `json:"name"`        // 英文名称
-	NameCN      string         `json:"nameCN"`      // 中文名称
+	Name        string         `json:"name"`        // 名称
 	Gender      string         `json:"gender"`      // 性别
 	Color       string         `json:"color"`       // 颜色
 	Description string         `json:"description"` // 描述

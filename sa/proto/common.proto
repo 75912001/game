@@ -53,3 +53,14 @@ enum RoleAction {
   RoleAction_Die = 6; // 死亡
   RoleAction_Max = 7; // 动作最大值
 }
+
+// 宠物-稀有度
+enum PetRarity {
+  Rarity_Unknow = 0; // 未知
+  Rarity_Common = 1; // 普通-白色
+  Rarity_Rare = 2; // 稀有-绿色
+  Rarity_Epic = 3; // 史诗-紫色
+  Rarity_Legendary = 4; // 传说-橙色
+  Rarity_Mythic = 5; // 神话-红色
+  Rarity_Max = 6; // 稀有度最大值
+}
