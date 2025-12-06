@@ -1,0 +1,6 @@
+{
+  "roleCountMaxDescribe" : "允许创建的最大角色数",
+  "roleCountMax": 5,
+  "roleRebirthCountDescribe" : "允许转生的最大次数",
+  "roleRebirthCountMax": 5
+}
