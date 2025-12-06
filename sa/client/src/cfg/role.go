@@ -18,7 +18,9 @@ type Role struct {
 	Gender      string         `json:"gender"`      // 性别
 	Color       string         `json:"color"`       // 颜色
 	Description string         `json:"description"` // 描述
-	resRole     *res.Role      // 角色资源
+
+	releBase *RoleBase // 基础属性
+	resRole  *res.Role // 角色资源
 }
 
 var GRoleMgr = newRoleMgr()
@@ -72,20 +74,40 @@ func (p *RoleMgr) Load() error {
 
 // Check 检查配置
 func (p *RoleMgr) Check() error {
+	for _, role := range p.roles { // 检查每个角色的基础属性和资源是否存在
+		// 基础属性
+		roleBase := GRoleBaseMgr.Get(role.ID)
+		if roleBase == nil {
+			return fmt.Errorf("角色ID %d 的基础属性不存在", role.ID)
+		}
+		// 资源
+		resRole := res.GRoleMgr.Get(role.ID)
+		if resRole == nil {
+			return fmt.Errorf("角色ID %d 的资源不存在", role.ID)
+		}
+	}
 	return nil
 }
 
 // Assemble 组装配置
 func (p *RoleMgr) Assemble() error {
+	for _, role := range p.roles { // 检查每个角色的基础属性和资源是否存在
+		// 基础属性
+		roleBase := GRoleBaseMgr.Get(role.ID)
+		role.releBase = roleBase
+		// 资源
+		resRole := res.GRoleMgr.Get(role.ID)
+		role.resRole = resRole
+	}
 	return nil
 }
 
-// GetRole 获取信息
-func (p *RoleMgr) GetRole(id common.AssetID) *Role {
+// Get 获取信息
+func (p *RoleMgr) Get(id common.AssetID) *Role {
 	return p.roles[id]
 }
 
-// GetRoleCount 获取数量
-func (p *RoleMgr) GetRoleCount() uint32 {
+// GetCount 获取数量
+func (p *RoleMgr) GetCount() uint32 {
 	return uint32(len(p.roles))
 }

@@ -74,12 +74,12 @@ func (p *RoleBaseMgr) Assemble() error {
 	return nil
 }
 
-// GetRoleBase 获取基础属性信息
-func (p *RoleBaseMgr) GetRoleBase(id common.AssetID) *RoleBase {
+// Get 获取基础属性信息
+func (p *RoleBaseMgr) Get(id common.AssetID) *RoleBase {
 	return p.roleBases[id]
 }
 
-// GetRoleBaseCount 获取基础属性数量
-func (p *RoleBaseMgr) GetRoleBaseCount() uint32 {
+// GetCount 获取基础属性数量
+func (p *RoleBaseMgr) GetCount() uint32 {
 	return uint32(len(p.roleBases))
 }
