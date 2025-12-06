@@ -11,8 +11,8 @@ import (
 
 // Common 通用配置
 type Common struct {
-	RoleCountMax   int `json:"roleCountMax"`        // 允许创建的最大角色数
-	RoleRebirthMax int `json:"roleRebirthCountMax"` // 允许转生的最大次数
+	RoleCountMax   uint32 `json:"roleCountMax"`        // 允许创建的最大角色数
+	RoleRebirthMax uint32 `json:"roleRebirthCountMax"` // 允许转生的最大次数
 }
 
 var GCommon = &Common{}
