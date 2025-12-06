@@ -106,7 +106,7 @@ type roleFrameData struct {
 	spriteInfo *RoleImageSprite
 }
 
-// roleCutFrames 角色-裁剪-帧
+// 角色-裁剪-帧
 func roleCutFrames(role *Role, imageFilePath string, directionFrames map[proto.RoleDirection][]*roleFrameData) error {
 	// 加载图片
 	img, _, err := ebitenv2ebitenutil.NewImageFromFile(imageFilePath)
@@ -115,7 +115,7 @@ func roleCutFrames(role *Role, imageFilePath string, directionFrames map[proto.R
 		return err
 	}
 	// 裁剪每个方向的帧
-	for dir, frames := range directionFrames {
+	for direction, frames := range directionFrames {
 		// 裁剪并存储帧
 		for _, fd := range frames {
 			subImg := img.SubImage(image.Rect(
@@ -126,14 +126,13 @@ func roleCutFrames(role *Role, imageFilePath string, directionFrames map[proto.R
 			)).(*ebitenv2.Image)
 			switch fd.roleAction {
 			case proto.RoleAction_RoleAction_Move:
-				role.Move.Frames[dir] = subImg
-				role.Move.FrameInfo[dir] = append(role.Move.FrameInfo[dir], fd.spriteInfo)
+				role.Move.Frames[direction] = append(role.Move.Frames[direction], subImg)
+				role.Move.FrameInfo[direction] = append(role.Move.FrameInfo[direction], fd.spriteInfo)
 			default:
 				return fmt.Errorf("未实现的角色动作裁剪: %v", fd.roleAction)
 			}
 		}
 	}
-
 	return nil
 }
 
