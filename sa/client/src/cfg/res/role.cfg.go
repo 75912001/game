@@ -24,14 +24,6 @@ type RoleImageSprite struct {
 	Frame *Rect `json:"frame"` // 在大图中的位置和尺寸
 }
 
-// Rect 矩形
-type Rect struct {
-	X      int `json:"x"` // x 坐标
-	Y      int `json:"y"` // y 坐标
-	Width  int `json:"w"` // 宽度
-	Height int `json:"h"` // 高度
-}
-
 // 加载单个配置文件
 func loadRoleJson(filePath string) (*RoleJson, error) {
 	data, err := os.ReadFile(filePath)
@@ -60,7 +52,7 @@ func loadRoleImage(roleID common.AssetID, imageFilePath string, roleJson *RoleJs
 	}
 
 	// 按方向分组帧信息
-	directionFrames := make(map[proto.RoleDirection][]*frameData)
+	directionFrames := make(map[proto.RoleDirection][]*roleFrameData)
 
 	for frameFileName, spriteData := range roleJson.Frames {
 		// 解析帧名称: role.${roleID}.${action}.${arg}.${frameIndex}
@@ -85,7 +77,7 @@ func loadRoleImage(roleID common.AssetID, imageFilePath string, roleJson *RoleJs
 			if err != nil {
 				return fmt.Errorf("解析帧索引失败: %s, %v", frameFileName, err)
 			}
-			directionFrames[roleDirection] = append(directionFrames[roleDirection], &frameData{
+			directionFrames[roleDirection] = append(directionFrames[roleDirection], &roleFrameData{
 				index:      idx,
 				roleAction: roleAction,
 				spriteInfo: spriteData,
@@ -94,13 +86,12 @@ func loadRoleImage(roleID common.AssetID, imageFilePath string, roleJson *RoleJs
 			return fmt.Errorf("帧名称包含未实现动作: %s", action)
 		}
 	}
-	for _, frames := range directionFrames {
-		// 按帧索引排序
+	for _, frames := range directionFrames { // 按帧索引排序
 		sortFrames(frames)
 	}
 	// 如果有帧数据，需要加载图片并裁剪
 	if len(directionFrames) > 0 {
-		err = cutRoleFrames(role, imageFilePath, directionFrames)
+		err = roleCutFrames(role, imageFilePath, directionFrames)
 		if err != nil {
 			return fmt.Errorf("裁剪角色帧失败: %v", err)
 		}
@@ -108,15 +99,15 @@ func loadRoleImage(roleID common.AssetID, imageFilePath string, roleJson *RoleJs
 	return nil
 }
 
-// frameData 帧数据(用于排序)
-type frameData struct {
+// roleFrameData 角色-帧数据(用于排序)
+type roleFrameData struct {
 	index      int
 	roleAction proto.RoleAction
 	spriteInfo *RoleImageSprite
 }
 
-// cutRoleFrames 裁剪角色帧
-func cutRoleFrames(role *Role, imageFilePath string, directionFrames map[proto.RoleDirection][]*frameData) error {
+// roleCutFrames 角色-裁剪-帧
+func roleCutFrames(role *Role, imageFilePath string, directionFrames map[proto.RoleDirection][]*roleFrameData) error {
 	// 加载图片
 	img, _, err := ebitenv2ebitenutil.NewImageFromFile(imageFilePath)
 	if err != nil {
@@ -147,7 +138,7 @@ func cutRoleFrames(role *Role, imageFilePath string, directionFrames map[proto.R
 }
 
 // sortFrames 按帧索引排序
-func sortFrames(frames []*frameData) {
+func sortFrames(frames []*roleFrameData) {
 	for i := 0; i < len(frames)-1; i++ {
 		for j := i + 1; j < len(frames); j++ {
 			if frames[i].index > frames[j].index {

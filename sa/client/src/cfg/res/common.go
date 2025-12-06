@@ -5,6 +5,14 @@ import (
 	"strings"
 )
 
+// Rect 矩形
+type Rect struct {
+	X      int `json:"x"` // x 坐标
+	Y      int `json:"y"` // y 坐标
+	Width  int `json:"w"` // 宽度
+	Height int `json:"h"` // 高度
+}
+
 // GetNameByAssetType 根据资产类型获取资源名称
 // 例如: 枚举 AssetType_AssetType_Role 的字符串为 "AssetType_Role" 返回 "role"
 func GetNameByAssetType(assetType proto.AssetType) string {
