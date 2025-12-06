@@ -56,5 +56,8 @@ else
     echo "⚠️  文件复制失败"
 fi
 
+# 清理临时生成的文件夹
+rm -rf ${OutputDir}
+
 # 任意键继续
 read -n 1 -s -r -p "按任意键继续..."

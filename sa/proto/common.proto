@@ -43,3 +43,13 @@ enum RoleDirection {
   RoleDirection_Max = 9; // 方向最大值
 }
 
+enum RoleAction {
+  RoleAction_Unknow = 0; // 未知动作
+  RoleAction_Idle = 1; // 待机
+  RoleAction_Stand = 2; // 站立
+  RoleAction_Move = 3; // 移动
+  RoleAction_Attack = 4; // 攻击
+  RoleAction_Hurt = 5; // 受伤
+  RoleAction_Die = 6; // 死亡
+  RoleAction_Max = 7; // 动作最大值
+}
