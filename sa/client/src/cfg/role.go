@@ -8,9 +8,9 @@ import (
 	"github.com/pkg/errors"
 	"os"
 	"path/filepath"
-	"saClient/src/cfg/res"
 	"saClient/src/common"
 	"saClient/src/proto"
+	"saClient/src/res"
 )
 
 // Role 角色信息
