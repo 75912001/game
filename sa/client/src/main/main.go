@@ -31,21 +31,21 @@ func main() {
 	windowIconPath := filepath.Join(common.AppResSystemDir, "window.icon.png")
 	iconFile, err := os.Open(windowIconPath)
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 	icon, _, err := image.Decode(iconFile)
 	_ = iconFile.Close()
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 	ebitenv2.SetWindowIcon([]image.Image{icon})
 
 	// 创建并初始化游戏
-	_game := &game.Game{}
-	_game.Init()
+	gameObject := &game.Game{}
+	gameObject.Init()
 
 	// 运行游戏
-	err = ebitenv2.RunGame(_game)
+	err = ebitenv2.RunGame(gameObject)
 	if err != nil {
 		log.Fatal(err)
 	}
