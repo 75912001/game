@@ -37,7 +37,7 @@ const (
 
 type AssetID uint32       // 资产ID
 type AssetQuantity uint64 // 资产数量
-type UID uint64           // 用户ID
+type RoleID uint64        // 角色ID
 
 type AssetMap map[AssetID]AssetQuantity // 资产映射
 
