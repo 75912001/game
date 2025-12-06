@@ -82,3 +82,8 @@ func (p *RoleMgr) Check() error {
 func (p *RoleMgr) Assemble() error {
 	return nil
 }
+
+// Get 获取角色信息
+func (p *RoleMgr) Get(roleID common.AssetID) *Role {
+	return p.Roles[roleID]
+}
