@@ -3,7 +3,6 @@ package font
 import (
 	"bytes"
 	textv2 "github.com/hajimehoshi/ebiten/v2/text/v2"
-	"log"
 	"os"
 	"path/filepath"
 	"saClient/src/common"
@@ -23,11 +22,11 @@ func init() {
 	chineseFontPath := filepath.Join(common.AppResFontDir, "fangzheng_kaiti.ttf")
 	fontData, err := os.ReadFile(chineseFontPath)
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 	fontSource, err = textv2.NewGoTextFaceSource(bytes.NewReader(fontData))
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 	{
 		var face textv2.Face = &textv2.GoTextFace{
