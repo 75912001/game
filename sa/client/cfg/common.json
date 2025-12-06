@@ -2,5 +2,9 @@
   "roleCountMaxDescribe" : "允许创建的最大角色数",
   "roleCountMax": 5,
   "roleRebirthCountDescribe" : "允许转生的最大次数",
-  "roleRebirthCountMax": 5
+  "roleRebirthCountMax": 5,
+  "roleDefaultMoveSpeedDescribe": "角色默认移动速度",
+  "roleDefaultMoveSpeed": 2.0,
+  "roleDefaultScaleDescribe": "角色默认缩放比例",
+  "roleDefaultScale": 1.0
 }
