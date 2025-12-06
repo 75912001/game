@@ -2,6 +2,9 @@ package res
 
 import (
 	"fmt"
+	xmap "github.com/75912001/xlib/map"
+	xruntime "github.com/75912001/xlib/runtime"
+	"github.com/pkg/errors"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -14,21 +17,21 @@ var GRoleMgr = newRoleMgr()
 
 // RoleMgr 角色配置管理器
 type RoleMgr struct {
-	Roles map[common.AssetID]*Role // key: 角色ID
+	Roles *xmap.MapMgr[common.AssetID, *Role]
 }
 
 func newRoleMgr() *RoleMgr {
 	return &RoleMgr{
-		Roles: make(map[common.AssetID]*Role),
+		Roles: xmap.NewMapMgr[common.AssetID, *Role](),
 	}
 }
 
 // Load 加载角色res配置文件
 func (p *RoleMgr) Load() error {
-	// 读取目录下所有文件
+	// 读取目录下所有文件-role
 	roleDirectories, err := os.ReadDir(common.AppResRoleDir)
 	if err != nil {
-		return fmt.Errorf("读取角色配置目录失败: %v", err)
+		return errors.WithMessagef(err, "读取角色配置目录失败: %v %v", common.AppResRoleDir, xruntime.Location())
 	}
 	for _, roleDir := range roleDirectories {
 		if !roleDir.IsDir() { // 非目录
@@ -39,7 +42,7 @@ func (p *RoleMgr) Load() error {
 		{
 			id64, err := strconv.ParseUint(roleDirName, 10, 32)
 			if err != nil {
-				return fmt.Errorf("解析角色目录名称 %s 为 ID 失败: %v", roleDirName, err)
+				return errors.WithMessagef(err, "解析角色目录名称 %s 为 ID 失败: %v", roleDirName, xruntime.Location())
 			}
 			roleID = common.AssetID(id64)
 		}
@@ -47,16 +50,16 @@ func (p *RoleMgr) Load() error {
 		roleDirPath := filepath.Join(common.AppResRoleDir, roleDirName)
 		roleFiles, err := os.ReadDir(roleDirPath)
 		if err != nil {
-			return fmt.Errorf("读取角色目录 %s 失败: %v", roleDirName, err)
+			return errors.WithMessagef(err, "读取角色目录 %s 失败: %v", roleDirPath, xruntime.Location())
 		}
-		// 匹配 role.${roleID}.${action}.${arg}.json 格式的文件 例如 `role.1000101.move.up.json`
-		pattern := regexp.MustCompile(fmt.Sprintf(`^%v\.%v\.([^.]+)\.([^.]+)\.json$`, common.GetNameByAssetType(proto.AssetType_AssetType_Role), roleID))
+		// 匹配 role.${roleID}.${arg}.${data}.json 格式的文件 例如 `role.1000101.move.up.json`
+		rolePattern := regexp.MustCompile(fmt.Sprintf(`^%v\.%v\.([^.]+)\.([^.]+)\.json$`, common.GetNameByAssetType(proto.AssetType_AssetType_Role), roleID))
 		for _, roleFile := range roleFiles {
 			if roleFile.IsDir() { // 目录
 				continue
 			}
 			jsonFileName := roleFile.Name()
-			if !pattern.MatchString(jsonFileName) { // 不匹配格式
+			if !rolePattern.MatchString(jsonFileName) { // 不匹配格式
 				continue
 			}
 			imageFilePath := filepath.Join(roleDirPath, jsonFileName[:len(jsonFileName)-len(filepath.Ext(jsonFileName))]+".png")
@@ -64,11 +67,11 @@ func (p *RoleMgr) Load() error {
 			jsonFilePath := filepath.Join(roleDirPath, jsonFileName)
 			roleJson, err := loadRoleJson(jsonFilePath)
 			if err != nil {
-				return fmt.Errorf("加载配置文件 %s 失败: %v", jsonFileName, err)
+				return errors.WithMessagef(err, "加载配置文件失败 %s %v", jsonFileName, xruntime.Location())
 			}
 			err = loadRoleImage(roleID, imageFilePath, roleJson)
 			if err != nil {
-				return fmt.Errorf("加载角色 %s 失败: %v", jsonFileName, err)
+				return errors.WithMessagef(err, "加载角色失败 %v %v", roleID, xruntime.Location())
 			}
 		}
 	}
@@ -81,9 +84,4 @@ func (p *RoleMgr) Check() error {
 
 func (p *RoleMgr) Assemble() error {
 	return nil
-}
-
-// Get 获取角色信息
-func (p *RoleMgr) Get(roleID common.AssetID) *Role {
-	return p.Roles[roleID]
 }

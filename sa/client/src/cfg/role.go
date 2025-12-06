@@ -3,6 +3,9 @@ package cfg
 import (
 	"encoding/json"
 	"fmt"
+	xmap "github.com/75912001/xlib/map"
+	xruntime "github.com/75912001/xlib/runtime"
+	"github.com/pkg/errors"
 	"os"
 	"path/filepath"
 	"saClient/src/cfg/res"
@@ -19,7 +22,7 @@ type Role struct {
 	Color       string         `json:"color"`       // 颜色
 	Description string         `json:"description"` // 描述
 
-	releBase *RoleBase // 基础属性
+	roleBase *RoleBase // 基础属性
 	resRole  *res.Role // 角色资源
 }
 
@@ -27,12 +30,12 @@ var GRoleMgr = newRoleMgr()
 
 // RoleMgr 配置管理器
 type RoleMgr struct {
-	roles map[common.AssetID]*Role // key: 角色ID
+	Roles *xmap.MapMgr[common.AssetID, *Role] // key: 角色ID
 }
 
 func newRoleMgr() *RoleMgr {
 	return &RoleMgr{
-		roles: make(map[common.AssetID]*Role),
+		Roles: xmap.NewMapMgr[common.AssetID, *Role](),
 	}
 }
 
@@ -40,11 +43,10 @@ func newRoleMgr() *RoleMgr {
 func (p *RoleMgr) Load() error {
 	// 构建配置文件路径
 	cfgPath := filepath.Join(common.AppCfgDir, "role.json")
-
 	// 读取配置文件
 	data, err := os.ReadFile(cfgPath)
 	if err != nil {
-		return fmt.Errorf("读取角色配置文件失败: %v", err)
+		return errors.WithMessagef(err, "读取角色配置文件失败: %v %v", cfgPath, xruntime.Location())
 	}
 	// 定义中间结构用于JSON解析
 	var config struct {
@@ -53,7 +55,7 @@ func (p *RoleMgr) Load() error {
 	// 解析JSON
 	err = json.Unmarshal(data, &config)
 	if err != nil {
-		return fmt.Errorf("解析角色配置文件失败: %v", err)
+		return errors.WithMessagef(err, "解析角色配置文件失败: %v %v", cfgPath, err)
 	}
 	// 加载每个角色
 	for _, role := range config.Roles {
@@ -61,53 +63,49 @@ func (p *RoleMgr) Load() error {
 			continue
 		}
 		if role.ID < common.AssetID(proto.AssetIDRange_AssetIDRange_Role_Start) || common.AssetID(proto.AssetIDRange_AssetIDRange_Role_End) < role.ID {
-			return fmt.Errorf("角色ID超出范围: %d", role.ID)
+			return fmt.Errorf("角色ID超出范围: %d %v", role.ID, xruntime.Location())
 		}
-		// 检查是否重复
-		if _, exists := p.roles[role.ID]; exists {
-			return fmt.Errorf("角色ID重复: %d", role.ID)
+		ok := p.Roles.AddIfNotExist(role.ID, role)
+		if !ok { // 添加失败
+			return fmt.Errorf("添加角色失败,角色已存在: %v %v", role.ID, xruntime.Location())
 		}
-		p.roles[role.ID] = role
 	}
 	return nil
 }
 
 // Check 检查配置
 func (p *RoleMgr) Check() error {
-	for _, role := range p.roles { // 检查每个角色的基础属性和资源是否存在
-		// 基础属性
-		roleBase := GRoleBaseMgr.Get(role.ID)
-		if roleBase == nil {
-			return fmt.Errorf("角色ID %d 的基础属性不存在", role.ID)
-		}
-		// 资源
-		resRole := res.GRoleMgr.Get(role.ID)
-		if resRole == nil {
-			return fmt.Errorf("角色ID %d 的资源不存在", role.ID)
-		}
-	}
-	return nil
+	var err error
+	p.Roles.Foreach( // 检查每个角色的基础属性和资源是否存在
+		func(id common.AssetID, role *Role) bool {
+			// 基础属性
+			roleBase := GRoleBaseMgr.RoleBases.Get(role.ID)
+			if roleBase == nil {
+				err = fmt.Errorf("角色ID %d 的基础属性不存在", role.ID)
+				return false
+			}
+			// 资源
+			resRole := res.GRoleMgr.Roles.Get(role.ID)
+			if resRole == nil {
+				err = fmt.Errorf("角色ID %d 的资源不存在", role.ID)
+				return false
+			}
+			return true
+		},
+	)
+	return err
 }
 
 // Assemble 组装配置
 func (p *RoleMgr) Assemble() error {
-	for _, role := range p.roles { // 检查每个角色的基础属性和资源是否存在
-		// 基础属性
-		roleBase := GRoleBaseMgr.Get(role.ID)
-		role.releBase = roleBase
-		// 资源
-		resRole := res.GRoleMgr.Get(role.ID)
-		role.resRole = resRole
-	}
+	p.Roles.Foreach(
+		func(id common.AssetID, role *Role) bool {
+			// 基础属性
+			role.roleBase = GRoleBaseMgr.RoleBases.Get(role.ID)
+			// 资源
+			role.resRole = res.GRoleMgr.Roles.Get(role.ID)
+			return true
+		},
+	)
 	return nil
-}
-
-// Get 获取信息
-func (p *RoleMgr) Get(id common.AssetID) *Role {
-	return p.roles[id]
-}
-
-// GetCount 获取数量
-func (p *RoleMgr) GetCount() uint32 {
-	return uint32(len(p.roles))
 }

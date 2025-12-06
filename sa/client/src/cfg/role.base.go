@@ -3,6 +3,9 @@ package cfg
 import (
 	"encoding/json"
 	"fmt"
+	xmap "github.com/75912001/xlib/map"
+	xruntime "github.com/75912001/xlib/runtime"
+	"github.com/pkg/errors"
 	"os"
 	"path/filepath"
 	"saClient/src/common"
@@ -22,12 +25,12 @@ var GRoleBaseMgr = newRoleBaseMgr()
 
 // RoleBaseMgr 角色基础属性配置管理器
 type RoleBaseMgr struct {
-	roleBases map[common.AssetID]*RoleBase // key: 角色基础属性ID
+	RoleBases *xmap.MapMgr[common.AssetID, *RoleBase] // key: 角色基础属性ID
 }
 
 func newRoleBaseMgr() *RoleBaseMgr {
 	return &RoleBaseMgr{
-		roleBases: make(map[common.AssetID]*RoleBase),
+		RoleBases: xmap.NewMapMgr[common.AssetID, *RoleBase](),
 	}
 }
 
@@ -38,7 +41,7 @@ func (p *RoleBaseMgr) Load() error {
 	// 读取配置文件
 	data, err := os.ReadFile(cfgPath)
 	if err != nil {
-		return fmt.Errorf("读取角色基础属性配置文件失败: %v", err)
+		return errors.WithMessagef(err, "读取角色基础属性配置文件失败: %v %v", cfgPath, xruntime.Location())
 	}
 	// 定义中间结构用于JSON解析
 	var config struct {
@@ -47,19 +50,17 @@ func (p *RoleBaseMgr) Load() error {
 	// 解析JSON
 	err = json.Unmarshal(data, &config)
 	if err != nil {
-		return fmt.Errorf("解析角色基础属性配置文件失败: %v", err)
+		return errors.WithMessagef(err, "解析角色基础属性配置文件失败: %v %v", cfgPath, xruntime.Location())
 	}
-
 	// 加载每个基础属性
 	for _, roleBase := range config.RoleBase {
 		if roleBase.ID < common.AssetID(proto.AssetIDRange_AssetIDRange_RoleBase_Start) || common.AssetID(proto.AssetIDRange_AssetIDRange_RoleBase_End) < roleBase.ID {
-			return fmt.Errorf("角色基础属性ID超出范围: %d", roleBase.ID)
+			return fmt.Errorf("角色基础属性ID超出范围: %d %v", roleBase.ID, xruntime.Location())
 		}
-		// 检查是否重复
-		if _, exists := p.roleBases[roleBase.ID]; exists {
-			return fmt.Errorf("角色基础属性ID重复: %d", roleBase.ID)
+		ok := p.RoleBases.AddIfNotExist(roleBase.ID, roleBase)
+		if !ok { // 添加失败
+			return fmt.Errorf("添加角色基础属性失败,属性已存在: %d %v", roleBase.ID, xruntime.Location())
 		}
-		p.roleBases[roleBase.ID] = roleBase
 	}
 	return nil
 }
@@ -72,14 +73,4 @@ func (p *RoleBaseMgr) Check() error {
 // Assemble 组装数据
 func (p *RoleBaseMgr) Assemble() error {
 	return nil
-}
-
-// Get 获取基础属性信息
-func (p *RoleBaseMgr) Get(id common.AssetID) *RoleBase {
-	return p.roleBases[id]
-}
-
-// GetCount 获取基础属性数量
-func (p *RoleBaseMgr) GetCount() uint32 {
-	return uint32(len(p.roleBases))
 }
