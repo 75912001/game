@@ -11,8 +11,10 @@ import (
 
 // Common 通用配置
 type Common struct {
-	RoleCountMax   uint32 `json:"roleCountMax"`        // 允许创建的最大角色数
-	RoleRebirthMax uint32 `json:"roleRebirthCountMax"` // 允许转生的最大次数
+	RoleCountMax         uint32  `json:"roleCountMax"`         // 允许创建的最大角色数
+	RoleRebirthMax       uint32  `json:"roleRebirthCountMax"`  // 允许转生的最大次数
+	RoleDefaultMoveSpeed float32 `json:"roleDefaultMoveSpeed"` // 角色默认移动速度
+	RoleDefaultScale     float32 `json:"roleDefaultScale"`     // 角色默认缩放比例
 }
 
 var GCommon = &Common{}
