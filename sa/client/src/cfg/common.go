@@ -2,11 +2,12 @@ package cfg
 
 import (
 	"encoding/json"
-	xruntime "github.com/75912001/xlib/runtime"
-	"github.com/pkg/errors"
 	"os"
 	"path/filepath"
 	"saClient/src/common"
+
+	xruntime "github.com/75912001/xlib/runtime"
+	"github.com/pkg/errors"
 )
 
 // Common 通用配置

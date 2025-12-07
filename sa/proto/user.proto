@@ -12,3 +12,10 @@ message RoleRecord {
   map<uint32, uint64> AssetRoleBaseMap = 10; // 资产表 key: 资产ID-角色基础 AssetIDRoleBase value: 数值
   map<uint64, EventPrimary> EventRecordMap = 1000; // 事件记录表 key: 事件-主要ID
 }
+
+message PetRecord {
+  uint32 AssetIDPet = 1; // 资产ID-宠物
+  string Name = 2; // 名称
+  map<uint32, uint64> AssetRoleBaseMap = 10; // 资产表 key: 资产ID-角色基础 AssetIDRoleBase value: 数值
+  map<uint64, EventPrimary> EventRecordMap = 1000; // 事件记录表 key: 事件-主要ID
+}
