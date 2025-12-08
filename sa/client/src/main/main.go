@@ -44,7 +44,7 @@ func main() {
 	ebitenv2.SetWindowIcon([]image.Image{icon})
 
 	// 创建并初始化游戏
-	gameObject := &game.Game{}
+	gameObject := game.NewGame()
 	gameObject.Init()
 
 	// 运行游戏
