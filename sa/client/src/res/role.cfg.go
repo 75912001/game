@@ -54,7 +54,7 @@ func loadRoleImage(roleID common.AssetID, imageFilePath string, roleJson *RoleJs
 		}
 	}
 	// 按方向分组帧信息
-	directionFrames := make(map[proto.RoleDirection][]*roleFrameData)
+	directionFrames := make(map[proto.AssetDirection][]*roleFrameData)
 	for frameFileName, spriteData := range roleJson.Frames { // 解析帧名称: role.${roleID}.${arg}.${data}.${frameIndex}
 		args := strings.Split(frameFileName, ".")
 		if len(args) < 5 {
@@ -69,8 +69,8 @@ func loadRoleImage(roleID common.AssetID, imageFilePath string, roleJson *RoleJs
 		}
 		switch roleAction {
 		case proto.RoleAction_RoleAction_Move:
-			roleDirection := GetRoleDirectionByName(direction)
-			if roleDirection == proto.RoleDirection_RoleDirection_Unknow {
+			roleDirection := GetAssetDirectionByName(direction)
+			if roleDirection == proto.AssetDirection_AssetDirection_Unknow {
 				return fmt.Errorf("帧名称包含未知方向: %v %s %v", imageFilePath, direction, xruntime.Location())
 			}
 			idx, err := strconv.Atoi(frameIndex)
@@ -107,7 +107,7 @@ type roleFrameData struct {
 }
 
 // 角色-裁剪-帧
-func roleCutFrames(role *Role, imageFilePath string, directionFrames map[proto.RoleDirection][]*roleFrameData) error {
+func roleCutFrames(role *Role, imageFilePath string, directionFrames map[proto.AssetDirection][]*roleFrameData) error {
 	// 加载图片
 	img, _, err := ebitenv2ebitenutil.NewImageFromFile(imageFilePath)
 	if err != nil {
