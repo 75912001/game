@@ -16,7 +16,7 @@ func Get(assetRoleBaseMap common.AssetMap) (earth, water, fire, wind common.Asse
 }
 
 func GetEarth(assetRoleBaseMap common.AssetMap) common.AssetQuantity {
-	value, ok := assetRoleBaseMap[common.AssetID(proto.AssetIDRoleBase_AssetIDRoleBase_ElementalEarth)]
+	value, ok := assetRoleBaseMap[common.AssetID(proto.AssetIDRecord_AssetIDRecord_ElementalEarth)]
 	if ok {
 		return value
 	}
@@ -24,7 +24,7 @@ func GetEarth(assetRoleBaseMap common.AssetMap) common.AssetQuantity {
 }
 
 func GetWater(assetRoleBaseMap common.AssetMap) common.AssetQuantity {
-	value, ok := assetRoleBaseMap[common.AssetID(proto.AssetIDRoleBase_AssetIDRoleBase_ElementalWater)]
+	value, ok := assetRoleBaseMap[common.AssetID(proto.AssetIDRecord_AssetIDRecord_ElementalWater)]
 	if ok {
 		return value
 	}
@@ -32,7 +32,7 @@ func GetWater(assetRoleBaseMap common.AssetMap) common.AssetQuantity {
 }
 
 func GetFire(assetRoleBaseMap common.AssetMap) common.AssetQuantity {
-	value, ok := assetRoleBaseMap[common.AssetID(proto.AssetIDRoleBase_AssetIDRoleBase_ElementalFire)]
+	value, ok := assetRoleBaseMap[common.AssetID(proto.AssetIDRecord_AssetIDRecord_ElementalFire)]
 	if ok {
 		return value
 	}
@@ -40,7 +40,7 @@ func GetFire(assetRoleBaseMap common.AssetMap) common.AssetQuantity {
 }
 
 func GetWind(assetRoleBaseMap common.AssetMap) common.AssetQuantity {
-	value, ok := assetRoleBaseMap[common.AssetID(proto.AssetIDRoleBase_AssetIDRoleBase_ElementalWind)]
+	value, ok := assetRoleBaseMap[common.AssetID(proto.AssetIDRecord_AssetIDRecord_ElementalWind)]
 	if ok {
 		return value
 	}
