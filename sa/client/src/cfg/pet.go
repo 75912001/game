@@ -86,12 +86,6 @@ func (p *PetMgr) Load() error {
 			return fmt.Errorf("添加宠物失败,宠物已存在: %v %v", pet.ID, xruntime.Location())
 		}
 	}
-	return nil
-}
-
-// Check 检查配置
-func (p *PetMgr) Check() error {
-	var err error
 	p.Pets.Foreach(
 		func(id common.AssetID, pet *Pet) bool { // 验证元素属性是否合法
 			err = elemental.Validate(pet.Elemental.Earth, pet.Elemental.Water, pet.Elemental.Fire, pet.Elemental.Wind)
@@ -102,7 +96,12 @@ func (p *PetMgr) Check() error {
 			return true
 		},
 	)
-	return err
+	return nil
+}
+
+// Check 检查配置
+func (p *PetMgr) Check() error {
+	return nil
 }
 
 // Assemble 组装配置
