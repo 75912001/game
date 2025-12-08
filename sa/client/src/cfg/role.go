@@ -1,25 +1,26 @@
 package cfg
 
 import (
-	"encoding/json"
 	"fmt"
-	xmap "github.com/75912001/xlib/map"
-	xruntime "github.com/75912001/xlib/runtime"
-	"github.com/pkg/errors"
 	"os"
 	"path/filepath"
 	"saClient/src/common"
 	"saClient/src/proto"
 	"saClient/src/res"
+
+	xmap "github.com/75912001/xlib/map"
+	xruntime "github.com/75912001/xlib/runtime"
+	"github.com/pkg/errors"
+	"gopkg.in/yaml.v3"
 )
 
 // Role 角色信息
 type Role struct {
-	ID          common.AssetID `json:"id"`          // 角色ID
-	Name        string         `json:"name"`        // 名称
-	Gender      string         `json:"gender"`      // 性别
-	Color       string         `json:"color"`       // 颜色
-	Description string         `json:"description"` // 描述
+	ID          common.AssetID `yaml:"id"`          // 角色ID
+	Name        string         `yaml:"name"`        // 名称
+	Gender      string         `yaml:"gender"`      // 性别
+	Color       string         `yaml:"color"`       // 颜色
+	Description string         `yaml:"description"` // 描述
 
 	roleBase *RoleBase // 基础属性
 	resRole  *res.Role // 角色资源
@@ -41,18 +42,18 @@ func newRoleMgr() *RoleMgr {
 // Load 加载配置文件
 func (p *RoleMgr) Load() error {
 	// 构建配置文件路径
-	cfgPath := filepath.Join(common.AppCfgDir, "role.json")
+	cfgPath := filepath.Join(common.AppCfgDir, "role.yaml")
 	// 读取配置文件
 	data, err := os.ReadFile(cfgPath)
 	if err != nil {
 		return errors.WithMessagef(err, "读取角色配置文件失败: %v %v", cfgPath, xruntime.Location())
 	}
-	// 定义中间结构用于JSON解析
+	// 定义中间结构用于YAML解析
 	var config struct {
-		Roles []*Role `json:"roles"`
+		Roles []*Role `yaml:"roles"`
 	}
-	// 解析JSON
-	err = json.Unmarshal(data, &config)
+	// 解析YAML
+	err = yaml.Unmarshal(data, &config)
 	if err != nil {
 		return errors.WithMessagef(err, "解析角色配置文件失败: %v %v", cfgPath, err)
 	}

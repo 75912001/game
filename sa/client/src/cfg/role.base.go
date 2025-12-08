@@ -1,7 +1,6 @@
 package cfg
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -11,14 +10,15 @@ import (
 	xmap "github.com/75912001/xlib/map"
 	xruntime "github.com/75912001/xlib/runtime"
 	"github.com/pkg/errors"
+	"gopkg.in/yaml.v3"
 )
 
 // RoleBase 角色基础属性
 type RoleBase struct {
-	ID          common.AssetID `json:"id"`          // 属性ID
-	Name        string         `json:"name"`        // 英文名称
-	NameCN      string         `json:"nameCN"`      // 中文名称
-	Description string         `json:"description"` // 描述
+	ID          common.AssetID `yaml:"id"`          // 属性ID
+	Name        string         `yaml:"name"`        // 英文名称
+	NameCN      string         `yaml:"nameCN"`      // 中文名称
+	Description string         `yaml:"description"` // 描述
 }
 
 var GRoleBaseMgr = newRoleBaseMgr()
@@ -37,18 +37,18 @@ func newRoleBaseMgr() *RoleBaseMgr {
 // Load 加载基础属性配置文件
 func (p *RoleBaseMgr) Load() error {
 	// 构建配置文件路径
-	cfgPath := filepath.Join(common.AppCfgDir, "role.base.json")
+	cfgPath := filepath.Join(common.AppCfgDir, "role.base.yaml")
 	// 读取配置文件
 	data, err := os.ReadFile(cfgPath)
 	if err != nil {
 		return errors.WithMessagef(err, "读取角色基础属性配置文件失败: %v %v", cfgPath, xruntime.Location())
 	}
-	// 定义中间结构用于JSON解析
+	// 定义中间结构用于YAML解析
 	var config struct {
-		RoleBase []*RoleBase `json:"roleBase"`
+		RoleBase []*RoleBase `yaml:"roleBase"`
 	}
-	// 解析JSON
-	err = json.Unmarshal(data, &config)
+	// 解析YAML
+	err = yaml.Unmarshal(data, &config)
 	if err != nil {
 		return errors.WithMessagef(err, "解析角色基础属性配置文件失败: %v %v", cfgPath, xruntime.Location())
 	}
