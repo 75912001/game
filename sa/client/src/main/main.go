@@ -1,6 +1,7 @@
 package main
 
 import (
+	xpacket "github.com/75912001/xlib/packet"
 	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
 	"image"
 	"log"
@@ -11,6 +12,8 @@ import (
 )
 
 func main() {
+	xpacket.SetEndianMode(xpacket.LittleEndian)
+	// todo menglc 初始化程序, 需要 加载 app 配置文件
 	err := LoadCfg()
 	if err != nil {
 		panic(err)
