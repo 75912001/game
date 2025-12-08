@@ -1,0 +1,157 @@
+# 资产ID-宠物 [4000001,4999999]
+# 任何修改此文件的行为都需要通知客户端和服务端开发人员
+
+# rarity 稀有度: 1-普通, 2-稀有, 3-史诗, 4-传说, 5-神话
+# elemental 元素属性: earth-土, water-水, fire-火, wind-风
+# basic 基础属性: attack-攻击, defense-防御, agility-敏捷, hp-生命
+
+pets:
+  - id: 4000001
+    name: 小火焰
+    rarity: 1
+    description: 温暖可爱的火焰精灵,初学者的理想伙伴
+    elemental:
+      earth: 0
+      water: 0
+      fire: 10
+      wind: 0
+    basic:
+      attack: 8
+      defense: 4
+      agility: 6
+      hp: 5
+
+  - id: 4000002
+    name: 水滴
+    rarity: 1
+    description: 清澈透明的水元素精灵,性格温和
+    elemental:
+      earth: 0
+      water: 10
+      fire: 0
+      wind: 0
+    basic:
+      attack: 5
+      defense: 6
+      agility: 5
+      hp: 7
+
+  - id: 4000003
+    name: 盖亚
+    rarity: 1
+    description: 充满生机的大地精灵,热爱和平
+    elemental:
+      earth: 10
+      water: 0
+      fire: 0
+      wind: 0
+    basic:
+      attack: 4
+      defense: 8
+      agility: 4
+      hp: 7
+
+  - id: 4000004
+    name: 微风
+    rarity: 1
+    description: 活泼好动的风元素精灵,速度极快
+    elemental:
+      earth: 0
+      water: 0
+      fire: 0
+      wind: 10
+    basic:
+      attack: 5
+      defense: 4
+      agility: 9
+      hp: 5
+
+  - id: 4000005
+    name: 岩浆
+    rarity: 2
+    description: 炽热的火焰精灵,攻击力强大
+    elemental:
+      earth: 0
+      water: 0
+      fire: 7
+      wind: 3
+    basic:
+      attack: 12
+      defense: 6
+      agility: 5
+      hp: 8
+
+  - id: 4000006
+    name: 冰霜
+    rarity: 2
+    description: 寒冷的水元素精灵,能冻结敌人
+    elemental:
+      earth: 0
+      water: 7
+      fire: 3
+      wind: 0
+    basic:
+      attack: 9
+      defense: 7
+      agility: 6
+      hp: 9
+
+  - id: 4000007
+    name: 凤凰
+    rarity: 3
+    description: 传说中的不死鸟,拥有重生能力
+    elemental:
+      earth: 0
+      water: 0
+      fire: 6
+      wind: 4
+    basic:
+      attack: 14
+      defense: 8
+      agility: 10
+      hp: 12
+
+  - id: 4000008
+    name: 泰坦
+    rarity: 3
+    description: 远古的大地巨灵,防御力惊人
+    elemental:
+      earth: 6
+      water: 4
+      fire: 0
+      wind: 0
+    basic:
+      attack: 10
+      defense: 15
+      agility: 5
+      hp: 14
+
+  - id: 4000009
+    name: 暴风
+    rarity: 4
+    description: 掌控风暴的神秘精灵,力量深不可测
+    elemental:
+      earth: 4
+      water: 0
+      fire: 0
+      wind: 6
+    basic:
+      attack: 16
+      defense: 10
+      agility: 18
+      hp: 14
+
+  - id: 4000010
+    name: 利维坦
+    rarity: 4
+    description: 深海的霸主,拥有毁灭性的力量
+    elemental:
+      earth: 4
+      water: 6
+      fire: 0
+      wind: 0
+    basic:
+      attack: 18
+      defense: 12
+      agility: 8
+      hp: 20

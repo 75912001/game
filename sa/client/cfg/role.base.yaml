@@ -1,0 +1,43 @@
+# 资产ID-角色基础 [1,1000000]
+# 任何修改此文件的行为都需要通知客户端和服务端开发人员
+
+roleBase:
+  - id: 1
+    name: Exp
+    nameCN: 经验值
+    description: 角色获得的经验值,用于升级
+
+  - id: 2
+    name: HP
+    nameCN: 生命值
+    description: 角色当前生命值
+
+  - id: 3
+    name: MP
+    nameCN: 魔法值
+    description: 角色当前魔法值
+
+  - id: 12
+    name: AvailablePoint
+    nameCN: 可用点数
+    description: 升级后获得的可用点数,可分配到基础属性
+
+  - id: 201
+    name: BasicAttack
+    nameCN: 攻击
+    description: 角色基础攻击力
+
+  - id: 202
+    name: BasicDefensePoint
+    nameCN: 防御
+    description: 角色基础防御力
+
+  - id: 203
+    name: BasicAgility
+    nameCN: 敏捷
+    description: 角色基础敏捷属性
+
+  - id: 204
+    name: BasicHP
+    nameCN: 生命
+    description: 角色基础生命属性
