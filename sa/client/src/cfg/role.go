@@ -22,8 +22,7 @@ type Role struct {
 	Color       string         `yaml:"color"`       // 颜色
 	Description string         `yaml:"description"` // 描述
 
-	roleBase *RoleBase // 基础属性
-	resRole  *res.Role // 角色资源
+	resRole *res.Role // 角色资源
 }
 
 var GRoleMgr = newRoleMgr()
@@ -78,12 +77,6 @@ func (p *RoleMgr) Check() error {
 	var err error
 	p.Roles.Foreach( // 检查每个角色的基础属性和资源是否存在
 		func(id common.AssetID, role *Role) bool {
-			// 基础属性
-			roleBase := GRoleBaseMgr.RoleBases.Get(role.ID)
-			if roleBase == nil {
-				err = fmt.Errorf("角色ID %d 的基础属性不存在", role.ID)
-				return false
-			}
 			// 资源
 			resRole := res.GRoleMgr.Roles.Get(role.ID)
 			if resRole == nil {
@@ -100,8 +93,6 @@ func (p *RoleMgr) Check() error {
 func (p *RoleMgr) Assemble() error {
 	p.Roles.Foreach(
 		func(id common.AssetID, role *Role) bool {
-			// 基础属性
-			role.roleBase = GRoleBaseMgr.RoleBases.Get(role.ID)
 			// 资源
 			role.resRole = res.GRoleMgr.Roles.Get(role.ID)
 			return true
