@@ -37,7 +37,9 @@ const (
 
 type AssetID uint32       // 资产ID
 type AssetQuantity uint64 // 资产数量
-type RoleID uint64        // 角色ID
+type UserUUID uint64      // 用户ID
+type RoleUUID uint64      // 角色ID 每个用户的角色唯一ID
+type PetUUID uint64       // 宠物唯一ID 每个角色的宠物唯一ID
 
 type AssetMap map[AssetID]AssetQuantity // 资产映射
 
