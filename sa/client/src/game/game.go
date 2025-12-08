@@ -1,26 +1,29 @@
 package game
 
 import (
-	"saClient/src/scene"
 	"saClient/src/ui"
+	"saClient/src/user"
 )
 
 type Game struct {
-	state State        // 当前游戏状态
-	scene *scene.Scene // 当前场景
+	user *user.User // 当前用户
+}
+
+func NewGame() *Game {
+	return &Game{
+		user: user.NewUser(),
+	}
 }
 
 func (p *Game) Init() {
-	// 初始化为菜单状态
-	p.state = State_StartMenu
-
-	// 添加一个开始按钮
-	ui.GUIButtonMgr.AddButton("startBtn", 300, 250, 200, 50, "开始",
-		func() (ui.ButtonAction, error) {
-			// 点击开始按钮后,切换到游戏状态
-			p.state = State_Scene
-			// 销毁按钮
-			return ui.ButtonActionDestroy, nil
+	// 添加一个登录按钮
+	ui.GUIButtonMgr.AddButton("loginBtn", 300, 250, 200, 50, "登录",
+		func() (ui.ButtonAction, error) { // 点击开始按钮后,切换到场景
+			err := p.user.Login("", "")
+			if err != nil {
+				return ui.ButtonActionShow, nil
+			}
+			return ui.ButtonActionDestroy, nil // 销毁按钮
 		},
 	)
 }
