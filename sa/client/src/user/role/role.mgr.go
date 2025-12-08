@@ -6,11 +6,11 @@ import (
 )
 
 type RoleMgr struct {
-	m *xmap.MapMgr[common.RoleUUID, *Role]
+	Roles *xmap.MapMgr[common.RoleUUID, *Role]
 }
 
 func NewRoleMgr() *RoleMgr {
 	return &RoleMgr{
-		m: xmap.NewMapMgr[common.RoleUUID, *Role](),
+		Roles: xmap.NewMapMgr[common.RoleUUID, *Role](),
 	}
 }
