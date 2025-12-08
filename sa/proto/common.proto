@@ -13,54 +13,19 @@ message KV {
 // 矩形
 message Rect {
   Point Pos = 1; // 位置
-  uint32 Width = 3; // 宽度
-  uint32 Height = 4; // 高度
+  int32 Width = 3; // 宽度
+  int32 Height = 4; // 高度
 }
 
 // 图像
 message Image {
-  uint32 Width = 2; // 宽度
-  uint32 Height = 3; // 高度
+  int32 Width = 2; // 宽度
+  int32 Height = 3; // 高度
 }
 
 // 坐标点
 message Point {
-  uint32 X = 1; // X坐标
-  uint32 Y = 2; // Y坐标
+  int32 X = 1; // X坐标
+  int32 Y = 2; // Y坐标
 }
 
-// 角色朝向
-enum RoleDirection {
-  RoleDirection_Unknow = 0; // 未知方向
-  RoleDirection_Up = 1; // 上
-  RoleDirection_UpRight = 2; // 右上
-  RoleDirection_Right = 3; // 右
-  RoleDirection_DownRight = 4; // 右下
-  RoleDirection_Down = 5; // 下
-  RoleDirection_DownLeft = 6; // 左下
-  RoleDirection_Left = 7; // 左
-  RoleDirection_UpLeft = 8; // 左上
-  RoleDirection_Max = 9; // 方向最大值
-}
-
-enum RoleAction {
-  RoleAction_Unknow = 0; // 未知动作
-  RoleAction_Idle = 1; // 待机
-  RoleAction_Stand = 2; // 站立
-  RoleAction_Move = 3; // 移动
-  RoleAction_Attack = 4; // 攻击
-  RoleAction_Hurt = 5; // 受伤
-  RoleAction_Die = 6; // 死亡
-  RoleAction_Max = 7; // 动作最大值
-}
-
-// 宠物-稀有度
-enum PetRarity {
-  Rarity_Unknow = 0; // 未知
-  Rarity_Common = 1; // 普通-白色
-  Rarity_Rare = 2; // 稀有-绿色
-  Rarity_Epic = 3; // 史诗-紫色
-  Rarity_Legendary = 4; // 传说-橙色
-  Rarity_Mythic = 5; // 神话-红色
-  Rarity_Max = 6; // 稀有度最大值
-}

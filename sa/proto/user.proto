@@ -4,18 +4,11 @@ package pb;
 
 option go_package = "saClient/proto";
 
-import "event.proto";
+import "record.proto";
+import "pet.proto";
+import "role.proto";
 
-message RoleRecord {
-  uint32 AssetIDRole = 1; // 资产ID-角色
-  string Name = 2; // 名称
-  map<uint32, uint64> AssetRoleBaseMap = 10; // 资产表 key: 资产ID-角色基础 AssetIDRoleBase value: 数值
-  map<uint64, EventPrimary> EventRecordMap = 1000; // 事件记录表 key: 事件-主要ID
-}
-
-message PetRecord {
-  uint32 AssetIDPet = 1; // 资产ID-宠物
-  string Name = 2; // 名称
-  map<uint32, uint64> AssetRoleBaseMap = 10; // 资产表 key: 资产ID-角色基础 AssetIDRoleBase value: 数值
-  map<uint64, EventPrimary> EventRecordMap = 1000; // 事件记录表 key: 事件-主要ID
+// 用户记录
+message UserRecord {
+  map<uint64, RoleRecord> RoleRecordMap = 10; // 角色记录表 key: 角色UUID
 }

@@ -86,5 +86,17 @@ enum AssetIDRecord {
   AssetIDRecord_BasicHP = 204; // 基础-生命
 }
 
-
+// 资产朝向
+enum AssetDirection {
+  AssetDirection_Unknow = 0; // 未知方向
+  AssetDirection_Up = 1; // 上
+  AssetDirection_UpRight = 2; // 右上
+  AssetDirection_Right = 3; // 右
+  AssetDirection_DownRight = 4; // 右下
+  AssetDirection_Down = 5; // 下
+  AssetDirection_DownLeft = 6; // 左下
+  AssetDirection_Left = 7; // 左
+  AssetDirection_UpLeft = 8; // 左上
+  AssetDirection_Max = 9; // 方向最大值
+}
 
