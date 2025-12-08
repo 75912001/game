@@ -1,4 +1,4 @@
-package scene
+package scene_del
 
 type Item struct {
 }
