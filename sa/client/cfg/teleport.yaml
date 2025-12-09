@@ -47,6 +47,6 @@ teleportPoints:
     name: "山谷入口"
   - id: 200000402
     mapID: 2000004
-    x: 960
-    y: 1200
+    x: 600
+    y: 600
     name: "山谷深处"
