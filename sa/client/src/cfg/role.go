@@ -94,7 +94,7 @@ func (p *RoleMgr) Assemble() error {
 	p.Roles.Foreach(
 		func(id common.AssetID, role *Role) bool {
 			// 资源
-			role.resRole = res.GRoleMgr.Roles.Get(role.ID)
+			role.ResRole = res.GRoleMgr.Roles.Get(role.ID)
 			return true
 		},
 	)
