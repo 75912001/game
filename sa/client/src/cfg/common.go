@@ -12,10 +12,13 @@ import (
 
 // Common 通用配置
 type Common struct {
-	RoleCountMax         uint32  `yaml:"roleCountMax"`         // 允许创建的最大角色数
-	RoleRebirthMax       uint32  `yaml:"roleRebirthCountMax"`  // 允许转生的最大次数
-	RoleDefaultMoveSpeed float32 `yaml:"roleDefaultMoveSpeed"` // 角色默认移动速度
-	RoleDefaultScale     float32 `yaml:"roleDefaultScale"`     // 角色默认缩放比例
+	RoleCountMax              uint32  `yaml:"roleCountMax"`              // 允许创建的最大角色数
+	RoleRebirthMax            uint32  `yaml:"roleRebirthCountMax"`       // 允许转生的最大次数
+	RoleDefaultMoveSpeed      float32 `yaml:"roleDefaultMoveSpeed"`      // 角色默认移动速度
+	RoleDefaultScale          float32 `yaml:"roleDefaultScale"`          // 角色默认缩放比例
+	RoleLevelUpAvailablePoint uint32  `yaml:"roleLevelUpAvailablePoint"` // 角色每升一级,获得可用点数
+	RoleMPMax                 uint32  `yaml:"roleMPMax"`                 // 角色属性-魔法值最大值
+	RoleInitialAvailablePoint uint32  `yaml:"roleInitialAvailablePoint"` // 角色初始可分配点数
 }
 
 var GCommon = &Common{}
