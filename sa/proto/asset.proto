@@ -70,8 +70,8 @@ enum AssetIDRecord {
   AssetIDRecord_X = 8; // 当前位置x
   AssetIDRecord_Y = 9; // 当前位置y
   AssetIDRecord_Direction = 10; // 当前朝向
-  AssetIDRecord_Pose = 11; // 姿势 0:站立 1:坐下
-  AssetIDRecord_AvailablePoint = 12; // 可用点数-升级后获得的可用点数
+  AssetIDRecord_Pose = 11; // 姿势 RoleAction
+  AssetIDRecord_AvailablePoint = 12; // 可用点数 - 出生/升级/转生 后获得的可用点数
   AssetIDRecord_RebirthCount = 13; // 转生次数 [0, 配置表最大值]
   AssetIDRecord_AssetID = 14; // 资产ID
 
