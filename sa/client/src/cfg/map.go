@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"saClient/src/common"
 	"saClient/src/proto"
+	"saClient/src/res"
 
 	xmap "github.com/75912001/xlib/map"
 	xruntime "github.com/75912001/xlib/runtime"
@@ -36,6 +37,8 @@ type Map struct {
 	Width   int            `yaml:"width"`   // 地图宽度
 	Height  int            `yaml:"height"`  // 地图高度
 	Exits   []*MapExit     `yaml:"exits"`   // 出口数组
+
+	ResMap *res.Map // 资源-地图
 }
 
 var GMapMgr = newMapMgr()
@@ -107,6 +110,12 @@ func (p *MapMgr) Check() error {
 				return false
 			}
 		}
+		// 检查资源
+		resMap := res.GMapMgr.Maps.Get(m.AssetID)
+		if resMap == nil {
+			err = fmt.Errorf("地图 %d 的资源不存在", m.AssetID)
+			return false
+		}
 		return true
 	})
 	return err
@@ -122,5 +131,14 @@ func (p *MapMgr) Assemble() error {
 		}
 		return true
 	})
+	// 地图资源
+	p.Maps.Foreach(
+		func(id common.AssetID, m *Map) bool {
+			// 资源
+			m.ResMap = res.GMapMgr.Maps.Get(m.AssetID)
+			return true
+		},
+	)
+
 	return err
 }
