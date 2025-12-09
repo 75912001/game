@@ -7,6 +7,10 @@ type Decoration struct {
 type DecorationMgr struct {
 }
 
+func NewDecorationMgr() *DecorationMgr {
+	return &DecorationMgr{}
+}
+
 func (p *DecorationMgr) Update() {
 
 }

@@ -7,6 +7,10 @@ type Building struct {
 type BuildingMgr struct {
 }
 
+func NewBuildingMgr() *BuildingMgr {
+	return &BuildingMgr{}
+}
+
 func (p *BuildingMgr) Update() {
 
 }

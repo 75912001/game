@@ -7,6 +7,10 @@ type Plant struct {
 type PlantMgr struct {
 }
 
+func NewPlantMgr() *PlantMgr {
+	return &PlantMgr{}
+}
+
 func (p *PlantMgr) Update() {
 
 }
