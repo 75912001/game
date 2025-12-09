@@ -17,7 +17,8 @@ type Role struct {
 
 func NewRole(roleRecord *proto.RoleRecord) *Role {
 	role := &Role{
-		roleRecord: roleRecord,
+		roleRecord:           roleRecord,
+		debugDrawImageBounds: true,
 	}
 	roleAssetID := role.GetAssetID()
 	role.cfgRole = cfg.GRoleMgr.Roles.Get(roleAssetID)
