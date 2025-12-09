@@ -6,6 +6,8 @@ import (
 )
 
 func (p *User) Draw(screen *ebitenv2.Image) {
-	p.role.Draw(screen)
+	if p.role != nil {
+		p.role.Draw(screen)
+	}
 	ui.GUIMgr.Draw(screen)
 }

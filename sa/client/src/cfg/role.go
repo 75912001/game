@@ -22,7 +22,7 @@ type Role struct {
 	Color       string         `yaml:"color"`       // 颜色
 	Description string         `yaml:"description"` // 描述
 
-	resRole *res.Role // 角色资源
+	ResRole *res.Role // 资源-角色
 }
 
 var GRoleMgr = newRoleMgr()
