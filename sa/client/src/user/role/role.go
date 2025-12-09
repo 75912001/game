@@ -4,6 +4,7 @@ import (
 	"saClient/src/cfg"
 	"saClient/src/common"
 	"saClient/src/proto"
+	"saClient/src/user/scene"
 )
 
 type Role struct {
@@ -13,6 +14,8 @@ type Role struct {
 	frameIdx uint32 // 当前帧索引
 
 	debugDrawImageBounds bool // 是否画出图像边界(调试用)
+
+	scene *scene.Scene // 角色所在场景
 }
 
 func NewRole(roleRecord *proto.RoleRecord) *Role {
@@ -24,6 +27,11 @@ func NewRole(roleRecord *proto.RoleRecord) *Role {
 	role.cfgRole = cfg.GRoleMgr.Roles.Get(roleAssetID)
 	if role.cfgRole == nil {
 		// todo menglc  日志记录错误: 角色配置不存在 roleAssetID
+		return nil
+	}
+	role.scene = scene.NewScene(common.AssetID(role.GetValueU32(proto.AssetIDRecord_AssetIDRecord_MapID)))
+	if role.scene == nil {
+		// todo menglc 日志记录错误: 场景创建失败 mapID
 		return nil
 	}
 	return role
