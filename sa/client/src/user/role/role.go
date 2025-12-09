@@ -4,6 +4,7 @@ import (
 	"saClient/src/cfg"
 	"saClient/src/common"
 	"saClient/src/proto"
+	"saClient/src/user/camera"
 	"saClient/src/user/scene"
 )
 
@@ -11,11 +12,13 @@ type Role struct {
 	roleRecord *proto.RoleRecord // 角色-记录
 	cfgRole    *cfg.Role         // 角色-配置
 
-	frameIdx uint32 // 当前帧索引
+	frameIdx   uint32     // 当前帧索引
+	roleSprite RoleSprite // 角色-精灵
 
 	debugDrawImageBounds bool // 是否画出图像边界(调试用)
 
-	scene *scene.Scene // 角色所在场景
+	scene  *scene.Scene   // 角色所在场景
+	camera *camera.Camera // 角色摄像机
 }
 
 func NewRole(roleRecord *proto.RoleRecord) *Role {
@@ -34,6 +37,7 @@ func NewRole(roleRecord *proto.RoleRecord) *Role {
 		// todo menglc 日志记录错误: 场景创建失败 mapID
 		return nil
 	}
+	role.camera = camera.NewCamera(role.GetValueInt(proto.AssetIDRecord_AssetIDRecord_X), role.GetValueInt(proto.AssetIDRecord_AssetIDRecord_Y))
 	return role
 }
 
