@@ -28,7 +28,7 @@ func NewUser() *User {
 
 func (p *User) Login(account string, password string) error {
 	// 初始化用户数据 - 模拟数据
-	{
+	if true {
 		var roleUUID common.RoleUUID = 1
 		now := uint64(time.Now().Unix())
 		p.userRecord.RoleRecordMap[uint64(roleUUID)] = &proto.RoleRecord{
@@ -78,7 +78,7 @@ func (p *User) Login(account string, password string) error {
 		}
 		p.role = role
 	}
-	{
+	if false {
 		var roleUUID common.RoleUUID = 2
 		now := uint64(time.Now().Unix())
 		p.userRecord.RoleRecordMap[uint64(roleUUID)] = &proto.RoleRecord{
