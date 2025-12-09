@@ -1,0 +1,66 @@
+# 地图配置文件
+# 任何修改此文件的行为都需要通知客户端和服务端开发人员
+
+# targetTeleportID: 指向目标传送点的唯一ID, 对应 teleport.yaml 中的传送点ID
+# rect: 出口矩形区域, 包含 x,y 坐标及宽度(w)和高度(h)
+
+maps:
+  - assetID: 2000001       # 地图资产ID
+    name: "新手村"          # 地图名称
+    width: 1920            # 地图宽度
+    height: 1080           # 地图高度
+    exits:                 # 出口数组
+      - targetTeleportID: 200000202  # 到达目标传送点ID (平原西侧)
+        rect:                        # 出口矩形
+          x: 1800
+          y: 500
+          w: 100
+          h: 200
+      - targetTeleportID: 200000301  # 到达目标传送点ID (森林深处)
+        rect:
+          x: 0
+          y: 500
+          w: 100
+          h: 200
+
+  - assetID: 2000002
+    name: "平原"
+    width: 2400
+    height: 1200
+    exits:
+      - targetTeleportID: 200000102  # 到达目标传送点ID (新手村入口)
+        rect:
+          x: 0
+          y: 600
+          w: 100
+          h: 200
+      - targetTeleportID: 200000401  # 到达目标传送点ID (山谷入口)
+        rect:
+          x: 2300
+          y: 600
+          w: 100
+          h: 200
+
+  - assetID: 2000003
+    name: "森林"
+    width: 1920
+    height: 1080
+    exits:
+      - targetTeleportID: 200000102  # 到达目标传送点ID (新手村入口)
+        rect:
+          x: 1800
+          y: 500
+          w: 100
+          h: 200
+
+  - assetID: 2000004
+    name: "山谷"
+    width: 1920
+    height: 1440
+    exits:
+      - targetTeleportID: 200000203  # 到达目标传送点ID (平原东侧)
+        rect:
+          x: 0
+          y: 700
+          w: 100
+          h: 200
