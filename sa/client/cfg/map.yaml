@@ -43,24 +43,24 @@ maps:
 
   - assetID: 2000003
     name: "森林"
-    width: 1920
-    height: 1080
+    width: 1376
+    height: 768
     exits:
       - targetTeleportID: 200000102  # 到达目标传送点ID (新手村入口)
         rect:
-          x: 1800
-          y: 500
+          x: 0
+          y: 0
           w: 100
           h: 200
 
   - assetID: 2000004
-    name: "山谷"
-    width: 1920
-    height: 1440
+    name: "医院"
+    width: 1408
+    height: 768
     exits:
       - targetTeleportID: 200000203  # 到达目标传送点ID (平原东侧)
         rect:
           x: 0
-          y: 700
+          y: 0
           w: 100
           h: 200
