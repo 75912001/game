@@ -9,7 +9,7 @@ import (
 type RoleSprite struct {
 	x               int
 	y               int
-	direction       int
-	image           *ebitenv2.Image
-	roleImageSprite *res.RoleImageSprite
+	direction       int                  // 方向
+	image           *ebitenv2.Image      // 角色图片
+	roleImageSprite *res.RoleImageSprite // 角色图片配置
 }
