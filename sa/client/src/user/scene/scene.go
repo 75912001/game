@@ -33,7 +33,7 @@ func (p *Scene) Update() {
 	p.itemMgr.Update()
 }
 
-func (p *Scene) Draw(screen *ebitenv2.Image) {
+func (p *Scene) Draw(screen *ebitenv2.Image, cameraX, cameraY int) {
 	// 填充草地一样的绿色背景
 	screen.Fill(color.RGBA{
 		R: 34,
@@ -42,7 +42,7 @@ func (p *Scene) Draw(screen *ebitenv2.Image) {
 		A: 255,
 	})
 
-	p.sceneMap.Draw(screen)
+	p.sceneMap.Draw(screen, cameraX, cameraY)
 	p.buildingMgr.Draw(screen)
 	p.plantMgr.Draw(screen)
 	p.decorationMgr.Draw(screen)
