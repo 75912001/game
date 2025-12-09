@@ -10,57 +10,57 @@ maps:
     width: 5504            # 地图宽度
     height: 3072           # 地图高度
     exits:                 # 出口数组
-      - targetTeleportID: 200000202  # 到达目标传送点ID (平原西侧)
-        rect:                        # 出口矩形
-          x: 1800
-          y: 500
+      - targetTeleportID: 200000202
+        rect: # 出口矩形-位于正下方,中间,宽100高100
+          x: 2702
+          y: 2972
           w: 100
-          h: 200
-      - targetTeleportID: 200000301  # 到达目标传送点ID (森林深处)
-        rect:
-          x: 0
-          y: 500
+          h: 100
+      - targetTeleportID: 200000301
+        rect: # 出口矩形-位于正上方,中间,宽100高100
+          x: 2702
+          y: 0
           w: 100
-          h: 200
+          h: 100
 
   - assetID: 2000002
     name: "平原"
     width: 5504
     height: 3072
     exits:
-      - targetTeleportID: 200000102  # 到达目标传送点ID (新手村入口)
-        rect:
-          x: 0
-          y: 600
+      - targetTeleportID: 200000102
+        rect: # 出口矩形-位于正下方,中间,宽100高100
+          x: 2702
+          y: 2972
           w: 100
-          h: 200
-      - targetTeleportID: 200000401  # 到达目标传送点ID (山谷入口)
-        rect:
-          x: 2300
-          y: 600
+          h: 100
+      - targetTeleportID: 200000401
+        rect: # 出口矩形-位于正上方,中间,宽100高100
+          x: 2702
+          y: 0
           w: 100
-          h: 200
+          h: 100
 
   - assetID: 2000003
     name: "森林"
     width: 1376
     height: 768
     exits:
-      - targetTeleportID: 200000102  # 到达目标传送点ID (新手村入口)
-        rect:
-          x: 0
-          y: 0
+      - targetTeleportID: 200000102
+        rect: # 出口矩形-位于正下方,中间,宽100高100
+          x: 638
+          y: 668
           w: 100
-          h: 200
+          h: 100
 
   - assetID: 2000004
     name: "医院"
     width: 1408
     height: 768
     exits:
-      - targetTeleportID: 200000203  # 到达目标传送点ID (平原东侧)
-        rect:
-          x: 0
-          y: 0
+      - targetTeleportID: 200000203
+        rect: # 出口矩形-位于正下方,中间,宽100高100
+          x: 654
+          y: 668
           w: 100
-          h: 200
+          h: 100
