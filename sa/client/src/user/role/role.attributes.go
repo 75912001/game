@@ -89,3 +89,8 @@ func (p *Role) GetValueU64(assetID proto.AssetIDRecord) uint64 {
 	}
 	return v
 }
+
+// SetValueU64 设置属性值
+func (p *Role) SetValueU64(assetID proto.AssetIDRecord, value uint64) {
+	p.roleRecord.AssetIDRecordMap[uint32(assetID)] = value
+}

@@ -8,7 +8,7 @@ roleCountMax: 5
 roleRebirthCountMax: 5
 
 # 角色默认移动速度
-roleDefaultMoveSpeed: 2.0
+roleDefaultMoveSpeed: 4.0
 
 # 角色默认缩放比例
 roleDefaultScale: 1.0

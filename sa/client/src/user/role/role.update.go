@@ -6,6 +6,9 @@ import (
 )
 
 func (p *Role) Update() {
+	// 处理键盘输入
+	p.HandleInput()
+
 	// 更新角色底部中心点坐标
 	p.roleSprite.bottomCenterX = p.GetValueInt(proto.AssetIDRecord_AssetIDRecord_BottomCenterX)
 	p.roleSprite.bottomCenterY = p.GetValueInt(proto.AssetIDRecord_AssetIDRecord_BottomCenterY)
