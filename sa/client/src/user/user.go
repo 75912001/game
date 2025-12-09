@@ -27,6 +27,8 @@ func NewUser() *User {
 }
 
 func (p *User) Login(account string, password string) error {
+	_ = account
+	_ = password
 	// 初始化用户数据 - 模拟数据
 	if true {
 		var roleUUID common.RoleUUID = 1
@@ -132,5 +134,6 @@ func (p *User) Login(account string, password string) error {
 }
 
 func (p *User) SelectRole(roleUUID common.RoleUUID) error {
+	_ = roleUUID
 	return nil
 }
