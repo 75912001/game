@@ -6,6 +6,10 @@ func (p *Role) Update() {
 	p.roleSprite.x = p.GetValueInt(proto.AssetIDRecord_AssetIDRecord_X)
 	p.roleSprite.y = p.GetValueInt(proto.AssetIDRecord_AssetIDRecord_Y)
 	p.roleSprite.direction = p.GetValueInt(proto.AssetIDRecord_AssetIDRecord_Direction)
+
+	images := p.cfgRole.ResRole.Move.Frames[uint32(p.roleSprite.direction)]
+	p.roleSprite.image = images[p.frameIdx%uint32(len(images))]
+
 	frames := p.cfgRole.ResRole.Move.FrameInfo[p.roleSprite.direction]
 	p.roleSprite.roleImageSprite = frames[p.frameIdx%uint32(len(frames))]
 
