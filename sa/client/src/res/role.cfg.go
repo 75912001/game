@@ -132,8 +132,38 @@ func roleCutFrames(role *Role, imageFilePath string, directionFrames map[proto.A
 				return fmt.Errorf("未实现的角色动作裁剪: %v", fd.roleAction)
 			}
 		}
+		// 生成镜像帧
+		roleGenerateMirrorFrames(role, direction)
 	}
 	return nil
+}
+
+// 生成镜像 (左->右)
+func roleGenerateMirrorFrames(role *Role, direction proto.AssetDirection) {
+	var mirrorDirection proto.AssetDirection // 镜像方向
+	switch direction {
+	case proto.AssetDirection_AssetDirection_Left: // 左 -> 右
+		mirrorDirection = proto.AssetDirection_AssetDirection_Right
+	case proto.AssetDirection_AssetDirection_DownLeft: // 左下 -> 右下
+		mirrorDirection = proto.AssetDirection_AssetDirection_DownRight
+	case proto.AssetDirection_AssetDirection_UpLeft: // 左上 -> 右上
+		mirrorDirection = proto.AssetDirection_AssetDirection_UpRight
+	default:
+		return // 不需要镜像
+	}
+	for i, srcImg := range role.Move.Frames[direction] {
+		bounds := srcImg.Bounds()
+		w, h := bounds.Dx(), bounds.Dy()
+		// 创建镜像图片
+		mirrorImg := ebitenv2.NewImage(w, h)
+		op := &ebitenv2.DrawImageOptions{}
+		op.GeoM.Scale(-1, 1)             // 水平翻转
+		op.GeoM.Translate(float64(w), 0) // 平移回原位置
+		mirrorImg.DrawImage(srcImg, op)
+		role.Move.Frames[mirrorDirection] = append(role.Move.Frames[mirrorDirection], mirrorImg)
+		// 复制帧信息(镜像帧信息与原帧相同)
+		role.Move.FrameInfo[mirrorDirection] = append(role.Move.FrameInfo[mirrorDirection], role.Move.FrameInfo[direction][i])
+	}
 }
 
 // sortFrames 按帧索引排序
