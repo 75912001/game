@@ -26,6 +26,14 @@ func LoadCfg() error {
 	if err != nil {
 		return errors.WithMessagef(err, "load petMgr error %v", xruntime.Location())
 	}
+	err = cfg.GMapMgr.Load()
+	if err != nil {
+		return errors.WithMessagef(err, "load mapMgr error %v", xruntime.Location())
+	}
+	err = cfg.GTeleportMgr.Load()
+	if err != nil {
+		return errors.WithMessagef(err, "load teleportMgr error %v", xruntime.Location())
+	}
 	return nil
 }
 
@@ -47,6 +55,14 @@ func CheckCfg() error {
 	if err != nil {
 		return errors.WithMessagef(err, "check petMgr error %v", xruntime.Location())
 	}
+	err = cfg.GMapMgr.Check()
+	if err != nil {
+		return errors.WithMessagef(err, "check mapMgr error %v", xruntime.Location())
+	}
+	err = cfg.GTeleportMgr.Check()
+	if err != nil {
+		return errors.WithMessagef(err, "check teleportMgr error %v", xruntime.Location())
+	}
 	return nil
 }
 
@@ -67,6 +83,14 @@ func AssembleCfg() error {
 	err = cfg.GPetMgr.Assemble()
 	if err != nil {
 		return errors.WithMessagef(err, "Assemble petMgr error %v", xruntime.Location())
+	}
+	err = cfg.GMapMgr.Assemble()
+	if err != nil {
+		return errors.WithMessagef(err, "Assemble mapMgr error %v", xruntime.Location())
+	}
+	err = cfg.GTeleportMgr.Assemble()
+	if err != nil {
+		return errors.WithMessagef(err, "Assemble teleportMgr error %v", xruntime.Location())
 	}
 	return nil
 }
