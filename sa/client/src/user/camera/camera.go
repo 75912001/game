@@ -8,9 +8,6 @@ type Camera struct {
 	ScreenY int // 屏幕左上角Y
 }
 
-func NewCamera(x, y int) *Camera {
-	return &Camera{
-		X: x,
-		Y: y,
-	}
+func NewCamera() *Camera {
+	return &Camera{}
 }
