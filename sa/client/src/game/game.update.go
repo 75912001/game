@@ -6,9 +6,6 @@ import (
 
 func (p *Game) Update() error {
 	ui.GUIMgr.Update()
-	err := p.user.Update()
-	if err != nil {
-		return err
-	}
+	p.user.Update()
 	return nil
 }
