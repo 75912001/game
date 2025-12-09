@@ -1,5 +1,7 @@
 package scene
 
+import ebitenv2 "github.com/hajimehoshi/ebiten/v2"
+
 // Plant 植物
 type Plant struct {
 }
@@ -15,6 +17,6 @@ func (p *PlantMgr) Update() {
 
 }
 
-func (p *PlantMgr) Draw() {
+func (p *PlantMgr) Draw(screen *ebitenv2.Image) {
 
 }
