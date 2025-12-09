@@ -50,7 +50,7 @@ func (p *Role) HandleInput() { // 获取当前位置
 	} else if left {
 		direction = proto.AssetDirection_AssetDirection_Left
 		dx = -moveSpeed
-	} else if right {
+	} else { // right
 		direction = proto.AssetDirection_AssetDirection_Right
 		dx = moveSpeed
 	}

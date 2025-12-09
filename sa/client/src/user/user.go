@@ -67,16 +67,16 @@ func (p *User) Login(account string, password string) error {
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Agility)] = 10   // 速度
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Stamina)] = 10   // 体力
 
-		role := role.NewRole(roleRecord)
-		if role == nil {
+		roleObject := role.NewRole(roleRecord)
+		if roleObject == nil {
 			return fmt.Errorf("new role failed, roleUUID %d", roleUUID)
 		}
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_HP)] = uint64(role.GetHpMax()) // 将生命值设为最大值
-		ok := p.roleMgr.Roles.AddIfNotExist(roleUUID, role)
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_HP)] = uint64(roleObject.GetHpMax()) // 将生命值设为最大值
+		ok := p.roleMgr.Roles.AddIfNotExist(roleUUID, roleObject)
 		if !ok {
 			return fmt.Errorf("add role failed, roleUUID %d already exists", roleUUID)
 		}
-		p.role = role
+		p.role = roleObject
 	}
 	if false {
 		var roleUUID common.RoleUUID = 2
