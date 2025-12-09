@@ -6,6 +6,8 @@ import (
 )
 
 func (p *Role) Draw(screen *ebitenv2.Image) {
+	p.scene.Draw(screen)
+
 	direction := p.GetValueU32(proto.AssetIDRecord_AssetIDRecord_Direction)
 	frames := p.cfgRole.ResRole.Move.Frames[direction]
 	frameImage := frames[p.frameIdx%uint32(len(frames))]
