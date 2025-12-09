@@ -1,6 +1,9 @@
 package role
 
-import "saClient/src/proto"
+import (
+	"saClient/src/common"
+	"saClient/src/proto"
+)
 
 func (p *Role) Update() {
 	p.roleSprite.x = p.GetValueInt(proto.AssetIDRecord_AssetIDRecord_X)
@@ -16,6 +19,8 @@ func (p *Role) Update() {
 	// 更新摄像机位置
 	p.camera.X = p.roleSprite.x + p.roleSprite.roleImageSprite.Frame.Width/2
 	p.camera.Y = p.roleSprite.y + p.roleSprite.roleImageSprite.Frame.Height/2
+	p.camera.ScreenX = p.camera.X - common.ScreenWidth/2
+	p.camera.ScreenY = p.camera.Y - common.ScreenHeight/2
 
 	p.scene.Update()
 }

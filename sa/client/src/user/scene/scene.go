@@ -1,9 +1,11 @@
 package scene
 
 import (
-	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
 	"image/color"
 	"saClient/src/common"
+	"saClient/src/user/camera"
+
+	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
 )
 
 type Scene struct {
@@ -33,7 +35,7 @@ func (p *Scene) Update() {
 	p.itemMgr.Update()
 }
 
-func (p *Scene) Draw(screen *ebitenv2.Image, cameraX, cameraY int) {
+func (p *Scene) Draw(screen *ebitenv2.Image, camera *camera.Camera) {
 	// 填充草地一样的绿色背景
 	screen.Fill(color.RGBA{
 		R: 34,
@@ -42,19 +44,19 @@ func (p *Scene) Draw(screen *ebitenv2.Image, cameraX, cameraY int) {
 		A: 255,
 	})
 
-	p.sceneMap.Draw(screen, cameraX, cameraY)
+	p.sceneMap.Draw(screen, camera)
 	p.buildingMgr.Draw(screen)
 	p.plantMgr.Draw(screen)
 	p.decorationMgr.Draw(screen)
 	p.itemMgr.Draw(screen)
 
 	// 根据游戏状态绘制不同的内容
-	//switch p.state {
-	//case scene.State_StartMenu: // 开始菜单状态下绘制 UI
+	// switch p.state {
+	// case scene.State_StartMenu: // 开始菜单状态下绘制 UI
 	//	ui.GUIMgr.Draw(screen)
-	//case scene.State_Scene: // 场景状态,绘制场景背景等
-	//case scene.State_Battling: // 战斗状态,绘制战斗相关内容
-	//case scene.State_GameOver: // 游戏结束,显示游戏结束信息
+	// case scene.State_Scene: // 场景状态,绘制场景背景等
+	// case scene.State_Battling: // 战斗状态,绘制战斗相关内容
+	// case scene.State_GameOver: // 游戏结束,显示游戏结束信息
 	//	ui.Printf(screen, 280, 280, "*** 游戏结束 ***")
-	//}
+	// }
 }

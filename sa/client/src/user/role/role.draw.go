@@ -1,13 +1,14 @@
 package role
 
 import (
-	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
 	"saClient/src/common"
+
+	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
 )
 
 func (p *Role) Draw(screen *ebitenv2.Image) {
 	// 绘制场景
-	p.scene.Draw(screen, p.camera.X, p.camera.Y)
+	p.scene.Draw(screen, p.camera)
 
 	// 绘制角色
 	op := &ebitenv2.DrawImageOptions{}
