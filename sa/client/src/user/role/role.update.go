@@ -13,6 +13,7 @@ func (p *Role) Update() {
 	frames := p.cfgRole.ResRole.Move.FrameInfo[p.roleSprite.direction]
 	p.roleSprite.roleImageSprite = frames[p.frameIdx%uint32(len(frames))]
 
+	// 更新摄像机位置
 	p.camera.X = p.roleSprite.x + p.roleSprite.roleImageSprite.Frame.Width/2
 	p.camera.Y = p.roleSprite.y + p.roleSprite.roleImageSprite.Frame.Height/2
 
