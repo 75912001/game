@@ -15,3 +15,6 @@ roleDefaultScale: 1.0
 
 # 角色每升一级,获得可用点数
 roleLevelUpAvailablePoint: 3
+
+# 角色属性-MP最大值
+roleMPMax: 100
