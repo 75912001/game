@@ -63,6 +63,15 @@ func (p *Role) GetSpeed() uint32 {
 	return uint32(agility)
 }
 
+// GetValueInt 获取属性值-int
+func (p *Role) GetValueInt(assetID proto.AssetIDRecord) int {
+	v, ok := p.roleRecord.AssetIDRecordMap[uint32(assetID)]
+	if !ok {
+		return 0
+	}
+	return int(v)
+}
+
 // GetValueU32 获取属性值-uint32
 func (p *Role) GetValueU32(assetID proto.AssetIDRecord) uint32 {
 	v, ok := p.roleRecord.AssetIDRecordMap[uint32(assetID)]
