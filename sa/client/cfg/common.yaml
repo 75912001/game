@@ -12,3 +12,6 @@ roleDefaultMoveSpeed: 2.0
 
 # 角色默认缩放比例
 roleDefaultScale: 1.0
+
+# 角色每升一级,获得可用点数
+roleLevelUpAvailablePoint: 3
