@@ -1,5 +1,7 @@
 package scene
 
+import ebitenv2 "github.com/hajimehoshi/ebiten/v2"
+
 // Building 建筑物
 type Building struct {
 }
@@ -15,6 +17,6 @@ func (p *BuildingMgr) Update() {
 
 }
 
-func (p *BuildingMgr) Draw() {
+func (p *BuildingMgr) Draw(screen *ebitenv2.Image) {
 
 }

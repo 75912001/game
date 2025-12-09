@@ -42,11 +42,11 @@ func (p *Scene) Draw(screen *ebitenv2.Image) {
 		A: 255,
 	})
 
-	p.sceneMap.Draw()
-	p.buildingMgr.Draw()
-	p.plantMgr.Draw()
-	p.decorationMgr.Draw()
-	p.itemMgr.Draw()
+	p.sceneMap.Draw(screen)
+	p.buildingMgr.Draw(screen)
+	p.plantMgr.Draw(screen)
+	p.decorationMgr.Draw(screen)
+	p.itemMgr.Draw(screen)
 
 	// 根据游戏状态绘制不同的内容
 	//switch p.state {

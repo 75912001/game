@@ -1,5 +1,7 @@
 package scene
 
+import ebitenv2 "github.com/hajimehoshi/ebiten/v2"
+
 type Item struct {
 }
 
@@ -14,6 +16,6 @@ func (p *ItemMgr) Update() {
 
 }
 
-func (p *ItemMgr) Draw() {
+func (p *ItemMgr) Draw(screen *ebitenv2.Image) {
 
 }
