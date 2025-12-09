@@ -7,8 +7,8 @@
 maps:
   - assetID: 2000001       # 地图资产ID
     name: "新手村"          # 地图名称
-    width: 1920            # 地图宽度
-    height: 1080           # 地图高度
+    width: 5504            # 地图宽度
+    height: 3072           # 地图高度
     exits:                 # 出口数组
       - targetTeleportID: 200000202  # 到达目标传送点ID (平原西侧)
         rect:                        # 出口矩形
