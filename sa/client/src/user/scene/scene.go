@@ -13,8 +13,12 @@ type Scene struct {
 	itemMgr       *ItemMgr       // 物品-管理器
 }
 
-func (p *Scene) Update() error {
-	return nil
+func (p *Scene) Update() {
+	p.sceneMap.Update()
+	p.buildingMgr.Update()
+	p.plantMgr.Update()
+	p.decorationMgr.Update()
+	p.itemMgr.Update()
 }
 
 func (p *Scene) Draw(screen *ebitenv2.Image) {
@@ -25,6 +29,12 @@ func (p *Scene) Draw(screen *ebitenv2.Image) {
 		B: 34,
 		A: 255,
 	})
+
+	p.sceneMap.Draw()
+	p.buildingMgr.Draw()
+	p.plantMgr.Draw()
+	p.decorationMgr.Draw()
+	p.itemMgr.Draw()
 
 	// 根据游戏状态绘制不同的内容
 	//switch p.state {
