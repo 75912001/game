@@ -3,6 +3,7 @@ package scene
 import (
 	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
 	"image/color"
+	"saClient/src/common"
 )
 
 type Scene struct {
@@ -11,6 +12,17 @@ type Scene struct {
 	sceneMap      *Map           // 地图
 	plantMgr      *PlantMgr      // 植物-管理器
 	itemMgr       *ItemMgr       // 物品-管理器
+}
+
+func NewScene(mapID common.AssetID) *Scene {
+	scene := &Scene{
+		buildingMgr:   NewBuildingMgr(),
+		decorationMgr: NewDecorationMgr(),
+		sceneMap:      NewMap(mapID),
+		plantMgr:      NewPlantMgr(),
+		itemMgr:       NewItemMgr(),
+	}
+	return scene
 }
 
 func (p *Scene) Update() {
