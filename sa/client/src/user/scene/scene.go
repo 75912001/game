@@ -3,6 +3,8 @@ package scene
 import (
 	"image/color"
 	"saClient/src/common"
+	"saClient/src/proto"
+	"saClient/src/res"
 	"saClient/src/user/camera"
 
 	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
@@ -11,7 +13,8 @@ import (
 type Scene struct {
 	buildingMgr   *BuildingMgr   // 建筑-管理器
 	decorationMgr *DecorationMgr // 装饰物-管理器
-	sceneMap      *Map           // 地图
+	sceneMap      *Map           // 普通地图
+	tiledMap      *TiledMap      // Tiled 地图
 	plantMgr      *PlantMgr      // 植物-管理器
 	itemMgr       *ItemMgr       // 物品-管理器
 }
@@ -20,24 +23,52 @@ func NewScene(mapID common.AssetID) *Scene {
 	scene := &Scene{
 		buildingMgr:   NewBuildingMgr(),
 		decorationMgr: NewDecorationMgr(),
-		sceneMap:      NewMap(mapID),
 		plantMgr:      NewPlantMgr(),
 		itemMgr:       NewItemMgr(),
+	}
+
+	// 优先检查是否有 Tiled 地图
+	if res.GTiledMapMgr.Maps.Get(mapID) != nil {
+		scene.tiledMap = NewTiledMap(mapID)
+	} else {
+		scene.sceneMap = NewMap(mapID)
 	}
 	return scene
 }
 
 func (p *Scene) Update() {
-	p.sceneMap.Update()
+	switch p.GetResMapType() {
+	case proto.ResMapType_ResMapType_Normal:
+		p.sceneMap.Update()
+	case proto.ResMapType_ResMapType_Tiled:
+		p.tiledMap.Update()
+	}
 	p.buildingMgr.Update()
 	p.plantMgr.Update()
 	p.decorationMgr.Update()
 	p.itemMgr.Update()
 }
 
+// GetResMapType 获取-资源-地图-类型
+func (p *Scene) GetResMapType() proto.ResMapType {
+	if p.sceneMap != nil {
+		return proto.ResMapType_ResMapType_Normal
+	}
+	if p.tiledMap != nil {
+		return proto.ResMapType_ResMapType_Tiled
+	}
+	return proto.ResMapType_ResMapType_Unknow
+}
+
 // GetMapSize 获取地图尺寸
 func (p *Scene) GetMapSize() (width, height int) {
-	return p.sceneMap.cfg.Width, p.sceneMap.cfg.Height
+	switch p.GetResMapType() {
+	case proto.ResMapType_ResMapType_Normal:
+		return p.sceneMap.cfg.Width, p.sceneMap.cfg.Height
+	case proto.ResMapType_ResMapType_Tiled:
+		return p.tiledMap.GetMapSize()
+	}
+	return 0, 0
 }
 
 func (p *Scene) Draw(screen *ebitenv2.Image, camera *camera.Camera) {
@@ -49,19 +80,16 @@ func (p *Scene) Draw(screen *ebitenv2.Image, camera *camera.Camera) {
 		A: 255,
 	})
 
-	p.sceneMap.Draw(screen, camera)
+	// 根据地图类型绘制
+	switch p.GetResMapType() {
+	case proto.ResMapType_ResMapType_Normal:
+		p.sceneMap.Draw(screen, camera)
+	case proto.ResMapType_ResMapType_Tiled:
+		p.tiledMap.Draw(screen, camera)
+	}
+
 	p.buildingMgr.Draw(screen)
 	p.plantMgr.Draw(screen)
 	p.decorationMgr.Draw(screen)
 	p.itemMgr.Draw(screen)
-
-	// 根据游戏状态绘制不同的内容
-	// switch p.state {
-	// case scene.State_StartMenu: // 开始菜单状态下绘制 UI
-	//	ui.GUIMgr.Draw(screen)
-	// case scene.State_Scene: // 场景状态,绘制场景背景等
-	// case scene.State_Battling: // 战斗状态,绘制战斗相关内容
-	// case scene.State_GameOver: // 游戏结束,显示游戏结束信息
-	//	ui.Printf(screen, 280, 280, "*** 游戏结束 ***")
-	// }
 }
