@@ -7,13 +7,13 @@ import (
 
 type Bullet struct {
 	*common.Object
-	direction float64 // 方向(弧度), 0为向右, π/2为向下, π为向左, 3π/2为向上
-	owner     *Plane  // 发射这颗子弹的飞机
-	damage    uint32  // 伤害值
+	Orientation float64 // 方向(弧度), 0为向右, π/2为向下, π为向左, 3π/2为向上
+	owner       *Plane  // 发射这颗子弹的飞机
+	damage      uint32  // 伤害值
 }
 
 // NewBullet 创建一个新子弹
-func NewBullet(id, level uint32, x, y, speed, direction float64, owner *Plane) *Bullet {
+func NewBullet(id, level uint32, x, y, speed, Orientation float64, owner *Plane) *Bullet {
 	frames, imageWidth, imageHeight, err := resources.LoadBulletFrames(id, level, 1)
 	if err != nil {
 		panic(err)
@@ -31,9 +31,9 @@ func NewBullet(id, level uint32, x, y, speed, direction float64, owner *Plane) *
 			1.0, // 子弹使用原始大小
 			frames,
 		),
-		direction: direction,
-		owner:     owner,
-		damage:    1,
+		Orientation: Orientation,
+		owner:       owner,
+		damage:      1,
 	}
 }
 

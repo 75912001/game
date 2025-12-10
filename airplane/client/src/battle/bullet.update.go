@@ -8,8 +8,8 @@ import (
 // Update 更新子弹位置
 func (b *Bullet) Update() {
 	// 根据方向更新位置
-	b.SetX(b.GetX() + math.Cos(b.direction)*b.GetSpeed())
-	b.SetY(b.GetY() + math.Sin(b.direction)*b.GetSpeed())
+	b.SetX(b.GetX() + math.Cos(b.Orientation)*b.GetSpeed())
+	b.SetY(b.GetY() + math.Sin(b.Orientation)*b.GetSpeed())
 }
 
 // Draw 绘制子弹
