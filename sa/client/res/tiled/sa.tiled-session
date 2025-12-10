@@ -5,9 +5,9 @@
     },
     "activeFile": "map/map.2000001.tmx",
     "expandedProjectPaths": [
-        ".",
         "map",
-        "tsx"
+        "tsx",
+        "."
     ],
     "fileStates": {
         "map/block.tsx": {
@@ -27,11 +27,11 @@
             }
         },
         "map/map.2000001.tmx": {
-            "scale": 0.25,
-            "selectedLayer": 3,
+            "scale": 2,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 80,
-                "y": 1512
+                "x": 6976.75,
+                "y": 2411.5
             }
         },
         "tsx/map.isometric_grass_and_water.tsx": {
@@ -48,6 +48,7 @@
         "map/map.2000001.tmx"
     ],
     "project": "sa.tiled-project",
+    "property.type": "string",
     "recentFiles": [
         "map/map.2000001.tmx",
         "tsx/map.isometric_grass_and_water.tsx",
