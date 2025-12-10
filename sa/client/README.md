@@ -20,3 +20,31 @@
 营造出轻松,愉快的童话冒险氛围
 背景透明
 `
+
+# todo
+
+开发地图跳转功能
+
+
+
+
+
+# 相关工具
+## 地图编辑器 Tiled
+    https://www.mapeditor.org/
+    正常 orthogonal
+    45度 isometric
+    等角(交错) staggered
+    
+
+## 解析 Tiled 地图(TMX)的库 go-tiled
+    github.com/lafriks/go-tiled
+    Go library to parse Tiled map editor file format (TMX) and render map to image
+## 精灵图集打包工具 TexturePacker
+    https://www.codeandweb.com/texturepacker
+## PhotoScape X (图像编辑软件)
+    http://x.photoscape.org/
+## 移除图像背景 Remove Image Backgrounds
+    https://pixian.ai/
+## 精灵播放器 Sprite Reel
+    https://spritereel.com/

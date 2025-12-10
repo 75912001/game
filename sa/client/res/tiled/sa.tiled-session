@@ -5,8 +5,8 @@
     },
     "activeFile": "map/map.2000001.tmx",
     "expandedProjectPaths": [
-        "map",
         "tsx",
+        "map",
         "."
     ],
     "fileStates": {
@@ -27,11 +27,11 @@
             }
         },
         "map/map.2000001.tmx": {
-            "scale": 2,
+            "scale": 0.5,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 6976.75,
-                "y": 2411.5
+                "x": 6331,
+                "y": 2972
             }
         },
         "tsx/map.isometric_grass_and_water.tsx": {
