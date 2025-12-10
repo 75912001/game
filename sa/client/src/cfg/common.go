@@ -19,6 +19,10 @@ type Common struct {
 	RoleLevelUpAvailablePoint uint32  `yaml:"roleLevelUpAvailablePoint"` // 角色每升一级,获得可用点数
 	RoleMPMax                 uint32  `yaml:"roleMPMax"`                 // 角色属性-魔法值最大值
 	RoleInitialAvailablePoint uint32  `yaml:"roleInitialAvailablePoint"` // 角色初始可分配点数
+	WindowDefaultWidth        int     `yaml:"windowDefaultWidth"`        // 窗口默认宽度
+	WindowDefaultHeight       int     `yaml:"windowDefaultHeight"`       // 窗口默认高度
+	ScreenMaxWidth            int     `yaml:"screenMaxWidth"`            // 屏幕最大宽度
+	ScreenMaxHeight           int     `yaml:"screenMaxHeight"`           // 屏幕最大高度
 }
 
 var GCommon = &Common{}

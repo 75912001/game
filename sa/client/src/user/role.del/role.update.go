@@ -3,6 +3,7 @@ package role_del
 import (
 	"fmt"
 	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
+	"saClient/src/cfg"
 	"saClient/src/common"
 	"saClient/src/proto"
 	"saClient/src/ui"
@@ -81,8 +82,8 @@ func (p *role.Role) move(direction proto.RoleDirection) {
 	if y < 0 {
 		y = 0
 	}
-	maxX := float64(common.ScreenWidth) - p.GetImageWidth()
-	maxY := float64(common.ScreenHeight) - p.GetImageHeight()
+	maxX := float64(cfg.GCommon.ScreenMaxWidth) - p.GetImageWidth()
+	maxY := float64(cfg.GCommon.ScreenMaxHeight) - p.GetImageHeight()
 	if x > maxX {
 		x = maxX
 	}

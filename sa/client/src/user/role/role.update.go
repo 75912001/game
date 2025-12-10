@@ -1,7 +1,7 @@
 package role
 
 import (
-	"saClient/src/common"
+	"saClient/src/cfg"
 	"saClient/src/proto"
 )
 
@@ -30,31 +30,31 @@ func (p *Role) Update() {
 	p.camera.Y = p.roleSprite.centerY
 
 	// 计算摄像机屏幕坐标(左上角)
-	screenX := p.camera.X - common.ScreenWidth/2
-	screenY := p.camera.Y - common.ScreenHeight/2
+	screenX := p.camera.X - cfg.GCommon.ScreenMaxWidth/2
+	screenY := p.camera.Y - cfg.GCommon.ScreenMaxHeight/2
 	// 获取地图尺寸
 	mapWidth, mapHeight := p.scene.GetMapSize()
 
 	// 限制摄像机不显示地图边界之外
-	if mapWidth <= common.ScreenWidth { // 地图宽度小于屏幕，地图居中
-		screenX = -(common.ScreenWidth - mapWidth) / 2
+	if mapWidth <= cfg.GCommon.ScreenMaxWidth { // 地图宽度小于屏幕，地图居中
+		screenX = -(cfg.GCommon.ScreenMaxWidth - mapWidth) / 2
 	} else { // 地图宽度大于屏幕，限制边界
 		if screenX < 0 {
 			screenX = 0
 		}
-		if screenX > mapWidth-common.ScreenWidth {
-			screenX = mapWidth - common.ScreenWidth
+		if screenX > mapWidth-cfg.GCommon.ScreenMaxWidth {
+			screenX = mapWidth - cfg.GCommon.ScreenMaxWidth
 		}
 	}
-	if mapHeight <= common.ScreenHeight { // 地图高度小于屏幕，地图居中
-		screenY = -(common.ScreenHeight - mapHeight) / 2
+	if mapHeight <= cfg.GCommon.ScreenMaxHeight { // 地图高度小于屏幕，地图居中
+		screenY = -(cfg.GCommon.ScreenMaxHeight - mapHeight) / 2
 	} else {
 		// 地图高度大于屏幕，限制边界
 		if screenY < 0 {
 			screenY = 0
 		}
-		if screenY > mapHeight-common.ScreenHeight {
-			screenY = mapHeight - common.ScreenHeight
+		if screenY > mapHeight-cfg.GCommon.ScreenMaxHeight {
+			screenY = mapHeight - cfg.GCommon.ScreenMaxHeight
 		}
 	}
 	p.camera.ScreenX = screenX

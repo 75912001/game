@@ -27,14 +27,6 @@ var (
 	AppResRoleDir   string // 资源目录-角色
 )
 
-const (
-	WindowWidth  = 1920
-	WindowHeight = 1080
-
-	ScreenWidth  = WindowWidth
-	ScreenHeight = WindowHeight
-)
-
 type AssetID uint32       // 资产ID
 type AssetQuantity uint64 // 资产数量
 type UserUUID uint64      // 用户ID
