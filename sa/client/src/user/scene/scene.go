@@ -35,6 +35,11 @@ func (p *Scene) Update() {
 	p.itemMgr.Update()
 }
 
+// GetMapSize 获取地图尺寸
+func (p *Scene) GetMapSize() (width, height int) {
+	return p.sceneMap.cfg.Width, p.sceneMap.cfg.Height
+}
+
 func (p *Scene) Draw(screen *ebitenv2.Image, camera *camera.Camera) {
 	// 填充草地一样的绿色背景
 	screen.Fill(color.RGBA{

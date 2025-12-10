@@ -55,9 +55,28 @@ func (p *Role) HandleInput() { // 获取当前位置
 		dx = moveSpeed
 	}
 
+	// 计算新位置
+	newX := x + dx
+	newY := y + dy
+
+	// 限制在地图范围内
+	mapWidth, mapHeight := p.scene.GetMapSize()
+	if newX < 0 {
+		newX = 0
+	}
+	if newX > mapWidth {
+		newX = mapWidth
+	}
+	if newY < 0 {
+		newY = 0
+	}
+	if newY > mapHeight {
+		newY = mapHeight
+	}
+
 	// 更新位置和方向
-	p.SetValueU64(proto.AssetIDRecord_AssetIDRecord_BottomCenterX, uint64(x+dx))
-	p.SetValueU64(proto.AssetIDRecord_AssetIDRecord_BottomCenterY, uint64(y+dy))
+	p.SetValueU64(proto.AssetIDRecord_AssetIDRecord_BottomCenterX, uint64(newX))
+	p.SetValueU64(proto.AssetIDRecord_AssetIDRecord_BottomCenterY, uint64(newY))
 	p.SetValueU64(proto.AssetIDRecord_AssetIDRecord_Direction, uint64(direction))
 
 	// 更新动画帧（每 6 tick 切换一帧，60 TPS 下约 10 FPS 动画）
