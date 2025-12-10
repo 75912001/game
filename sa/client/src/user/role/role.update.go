@@ -13,12 +13,12 @@ func (p *Role) Update() {
 	p.roleSprite.bottomCenterX = p.GetValueInt(proto.AssetIDRecord_AssetIDRecord_BottomCenterX)
 	p.roleSprite.bottomCenterY = p.GetValueInt(proto.AssetIDRecord_AssetIDRecord_BottomCenterY)
 	// 更新角色方向
-	p.roleSprite.direction = p.GetValueInt(proto.AssetIDRecord_AssetIDRecord_Direction)
+	p.roleSprite.orientation = p.GetValueInt(proto.AssetIDRecord_AssetIDRecord_Orientation)
 
-	images := p.cfgRole.ResRole.Move.Frames[uint32(p.roleSprite.direction)]
+	images := p.cfgRole.ResRole.Move.Frames[uint32(p.roleSprite.orientation)]
 	p.roleSprite.image = images[p.frameIdx%uint32(len(images))]
 
-	frames := p.cfgRole.ResRole.Move.FrameInfo[p.roleSprite.direction]
+	frames := p.cfgRole.ResRole.Move.FrameInfo[p.roleSprite.orientation]
 	p.roleSprite.roleImageSprite = frames[p.frameIdx%uint32(len(frames))]
 
 	// 更新角色中心坐标

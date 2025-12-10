@@ -69,7 +69,7 @@ enum AssetIDRecord {
   AssetIDRecord_MapID = 7; // 所在地图ID
   AssetIDRecord_BottomCenterX = 8; // 当前位置x - 图像底-中心点坐标 x
   AssetIDRecord_BottomCenterY = 9; // 当前位置y - 图像底-中心点坐标 y
-  AssetIDRecord_Direction = 10; // 当前朝向
+  AssetIDRecord_Orientation = 10; // 当前朝向
   AssetIDRecord_Pose = 11; // 姿势 RoleAction
   AssetIDRecord_AvailablePoint = 12; // 可用点数 - 出生/升级/转生 后获得的可用点数
   AssetIDRecord_RebirthCount = 13; // 转生次数 [0, 配置表最大值]
@@ -87,16 +87,16 @@ enum AssetIDRecord {
 }
 
 // 资产朝向
-enum AssetDirection {
-  AssetDirection_Unknow = 0; // 未知方向
-  AssetDirection_Up = 1; // 上
-  AssetDirection_UpRight = 2; // 右上
-  AssetDirection_Right = 3; // 右
-  AssetDirection_DownRight = 4; // 右下
-  AssetDirection_Down = 5; // 下
-  AssetDirection_DownLeft = 6; // 左下
-  AssetDirection_Left = 7; // 左
-  AssetDirection_UpLeft = 8; // 左上
-  AssetDirection_Max = 9; // 方向最大值
+enum AssetOrientation {
+  AssetOrientation_Unknow = 0; // 未知方向
+  AssetOrientation_Up = 1; // 上
+  AssetOrientation_UpRight = 2; // 右上
+  AssetOrientation_Right = 3; // 右
+  AssetOrientation_DownRight = 4; // 右下
+  AssetOrientation_Down = 5; // 下
+  AssetOrientation_DownLeft = 6; // 左下
+  AssetOrientation_Left = 7; // 左
+  AssetOrientation_UpLeft = 8; // 左上
+  AssetOrientation_Max = 9; // 方向最大值
 }
 

@@ -26,32 +26,32 @@ func (p *Role) HandleInput() { // 获取当前位置
 	y := p.GetValueInt(proto.AssetIDRecord_AssetIDRecord_BottomCenterY)
 
 	// 计算方向和位移
-	var direction proto.AssetDirection
+	var orientation proto.AssetOrientation
 	dx, dy := 0, 0
 
 	if up && right {
-		direction = proto.AssetDirection_AssetDirection_UpRight
+		orientation = proto.AssetOrientation_AssetOrientation_UpRight
 		dx, dy = moveSpeed, -moveSpeed
 	} else if up && left {
-		direction = proto.AssetDirection_AssetDirection_UpLeft
+		orientation = proto.AssetOrientation_AssetOrientation_UpLeft
 		dx, dy = -moveSpeed, -moveSpeed
 	} else if down && right {
-		direction = proto.AssetDirection_AssetDirection_DownRight
+		orientation = proto.AssetOrientation_AssetOrientation_DownRight
 		dx, dy = moveSpeed, moveSpeed
 	} else if down && left {
-		direction = proto.AssetDirection_AssetDirection_DownLeft
+		orientation = proto.AssetOrientation_AssetOrientation_DownLeft
 		dx, dy = -moveSpeed, moveSpeed
 	} else if up {
-		direction = proto.AssetDirection_AssetDirection_Up
+		orientation = proto.AssetOrientation_AssetOrientation_Up
 		dy = -moveSpeed
 	} else if down {
-		direction = proto.AssetDirection_AssetDirection_Down
+		orientation = proto.AssetOrientation_AssetOrientation_Down
 		dy = moveSpeed
 	} else if left {
-		direction = proto.AssetDirection_AssetDirection_Left
+		orientation = proto.AssetOrientation_AssetOrientation_Left
 		dx = -moveSpeed
 	} else { // right
-		direction = proto.AssetDirection_AssetDirection_Right
+		orientation = proto.AssetOrientation_AssetOrientation_Right
 		dx = moveSpeed
 	}
 
@@ -90,7 +90,7 @@ func (p *Role) HandleInput() { // 获取当前位置
 	// 更新位置和方向
 	p.SetValueU64(proto.AssetIDRecord_AssetIDRecord_BottomCenterX, uint64(newX))
 	p.SetValueU64(proto.AssetIDRecord_AssetIDRecord_BottomCenterY, uint64(newY))
-	p.SetValueU64(proto.AssetIDRecord_AssetIDRecord_Direction, uint64(direction))
+	p.SetValueU64(proto.AssetIDRecord_AssetIDRecord_Orientation, uint64(orientation))
 
 	// 更新动画帧（每 6 tick 切换一帧，60 TPS 下约 10 FPS 动画）
 	p.frameTick++

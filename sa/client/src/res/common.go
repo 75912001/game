@@ -13,10 +13,10 @@ type Rect struct {
 	Height int `json:"h"` // 高度
 }
 
-// GetNameByAssetDirection 根据资产方向获取名称
-// 例如: 枚举 AssetDirection_AssetDirection_Up 的字符串为 "AssetDirection_Up" 返回 "up"
-func GetNameByAssetDirection(assetDirection proto.AssetDirection) string {
-	str, ok := proto.AssetDirection_name[int32(assetDirection)]
+// GetNameByAssetOrientation 根据资产方向获取名称
+// 例如: 枚举 AssetOrientation_AssetOrientation_Up 的字符串为 "AssetOrientation_Up" 返回 "up"
+func GetNameByAssetOrientation(assetOrientation proto.AssetOrientation) string {
+	str, ok := proto.AssetOrientation_name[int32(assetOrientation)]
 	if ok {
 		if i := strings.Index(str, "_"); i >= 0 && i+1 < len(str) {
 			return strings.ToLower(str[i+1:])
@@ -30,9 +30,9 @@ func GetNameByAssetDirection(assetDirection proto.AssetDirection) string {
 	return "unknown"
 }
 
-// GetAssetDirectionByName 根据名称获取资产方向枚举值
-func GetAssetDirectionByName(name string) proto.AssetDirection {
-	for k, v := range proto.AssetDirection_name {
+// GetAssetOrientationByName 根据名称获取资产方向枚举值
+func GetAssetOrientationByName(name string) proto.AssetOrientation {
+	for k, v := range proto.AssetOrientation_name {
 		str := v
 		if i := strings.Index(str, "_"); i >= 0 && i+1 < len(str) {
 			str = strings.ToLower(str[i+1:])
@@ -40,10 +40,10 @@ func GetAssetDirectionByName(name string) proto.AssetDirection {
 			str = strings.ToLower(str)
 		}
 		if str == name {
-			return proto.AssetDirection(k)
+			return proto.AssetOrientation(k)
 		}
 	}
-	return proto.AssetDirection_AssetDirection_Unknow
+	return proto.AssetOrientation_AssetOrientation_Unknow
 }
 
 // GetNameByRoleAction 根据角色动作获取名称

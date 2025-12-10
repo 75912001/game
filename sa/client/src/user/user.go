@@ -42,20 +42,20 @@ func (p *User) Login(account string, password string) error {
 		}
 		roleRecord := p.userRecord.RoleRecordMap[uint64(roleUUID)]
 
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Exp)] = 0                                                        // 经验值
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_HP)] = 9999                                                      // 生命值
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_MP)] = uint64(cfg.GCommon.RoleMPMax)                             // 魔法值
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_CreateTimestamp)] = now                                          // 创建时间戳
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_LastLoginTimestamp)] = now                                       // 上次登录时间戳
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_LastLogoutTimestamp)] = 0                                        // 上次登出时间戳
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_MapID)] = 2000001                                                // 所在地图ID (地图ID范围起始)
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_BottomCenterX)] = 2700                                           // 当前位置x
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_BottomCenterY)] = 1620                                           // 当前位置y
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Direction)] = uint64(proto.AssetDirection_AssetDirection_Down)   // 当前朝向-下
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Pose)] = uint64(proto.RoleAction_RoleAction_Stand)               // 姿势 0:站立
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_AvailablePoint)] = uint64(cfg.GCommon.RoleInitialAvailablePoint) // 可用点数
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_RebirthCount)] = 0                                               // 转生次数
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_AssetID)] = 1000101                                              // 资产ID (角色ID范围起始)
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Exp)] = 0                                                            // 经验值
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_HP)] = 9999                                                          // 生命值
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_MP)] = uint64(cfg.GCommon.RoleMPMax)                                 // 魔法值
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_CreateTimestamp)] = now                                              // 创建时间戳
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_LastLoginTimestamp)] = now                                           // 上次登录时间戳
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_LastLogoutTimestamp)] = 0                                            // 上次登出时间戳
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_MapID)] = 2000001                                                    // 所在地图ID (地图ID范围起始)
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_BottomCenterX)] = 2700                                               // 当前位置x
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_BottomCenterY)] = 1620                                               // 当前位置y
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Orientation)] = uint64(proto.AssetOrientation_AssetOrientation_Down) // 当前朝向-下
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Pose)] = uint64(proto.RoleAction_RoleAction_Stand)                   // 姿势 0:站立
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_AvailablePoint)] = uint64(cfg.GCommon.RoleInitialAvailablePoint)     // 可用点数
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_RebirthCount)] = 0                                                   // 转生次数
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_AssetID)] = 1000101                                                  // 资产ID (角色ID范围起始)
 
 		// 元素属性 (101-104)
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_ElementalEarth)] = 0 // 元素属性-土
@@ -92,20 +92,20 @@ func (p *User) Login(account string, password string) error {
 		}
 		roleRecord := p.userRecord.RoleRecordMap[uint64(roleUUID)]
 
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Exp)] = 0                                                        // 经验值
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_HP)] = 9999                                                      // 生命值
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_MP)] = uint64(cfg.GCommon.RoleMPMax)                             // 魔法值
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_CreateTimestamp)] = now                                          // 创建时间戳
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_LastLoginTimestamp)] = now                                       // 上次登录时间戳
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_LastLogoutTimestamp)] = 0                                        // 上次登出时间戳
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_MapID)] = 2000001                                                // 所在地图ID (地图ID范围起始)
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_BottomCenterX)] = 200                                            // 当前位置x
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_BottomCenterY)] = 200                                            // 当前位置y
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Direction)] = uint64(proto.AssetDirection_AssetDirection_Down)   // 当前朝向-下
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Pose)] = uint64(proto.RoleAction_RoleAction_Stand)               // 姿势 0:站立
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_AvailablePoint)] = uint64(cfg.GCommon.RoleInitialAvailablePoint) // 可用点数
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_RebirthCount)] = 0                                               // 转生次数
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_AssetID)] = 1000101                                              // 资产ID (角色ID范围起始)
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Exp)] = 0                                                            // 经验值
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_HP)] = 9999                                                          // 生命值
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_MP)] = uint64(cfg.GCommon.RoleMPMax)                                 // 魔法值
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_CreateTimestamp)] = now                                              // 创建时间戳
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_LastLoginTimestamp)] = now                                           // 上次登录时间戳
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_LastLogoutTimestamp)] = 0                                            // 上次登出时间戳
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_MapID)] = 2000001                                                    // 所在地图ID (地图ID范围起始)
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_BottomCenterX)] = 200                                                // 当前位置x
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_BottomCenterY)] = 200                                                // 当前位置y
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Orientation)] = uint64(proto.AssetOrientation_AssetOrientation_Down) // 当前朝向-下
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Pose)] = uint64(proto.RoleAction_RoleAction_Stand)                   // 姿势 0:站立
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_AvailablePoint)] = uint64(cfg.GCommon.RoleInitialAvailablePoint)     // 可用点数
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_RebirthCount)] = 0                                                   // 转生次数
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_AssetID)] = 1000101                                                  // 资产ID (角色ID范围起始)
 
 		// 元素属性 (101-104)
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_ElementalEarth)] = 0 // 元素属性-土

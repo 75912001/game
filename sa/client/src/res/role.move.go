@@ -6,8 +6,8 @@ import (
 )
 
 type RoleMove struct {
-	Frames    [proto.AssetDirection_AssetDirection_Max][]*ebitenv2.Image  // 动画帧
-	FrameInfo [proto.AssetDirection_AssetDirection_Max][]*RoleImageSprite // 向上-动画帧信息 配置表中 (镜像帧信息与原帧相同)
+	Frames    [proto.AssetOrientation_AssetOrientation_Max][]*ebitenv2.Image  // 动画帧
+	FrameInfo [proto.AssetOrientation_AssetOrientation_Max][]*RoleImageSprite // 向上-动画帧信息 配置表中 (镜像帧信息与原帧相同)
 }
 
 func NewRoleMove() *RoleMove {

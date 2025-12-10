@@ -13,7 +13,7 @@ import (
 // Update 更新角色状态
 func (p *role.Role) Update() {
 	// 检测移动方向
-	var direction proto.RoleDirection = proto.RoleDirection_RoleDirection_Unknow
+	var orientation proto.RoleOrientation = proto.RoleOrientation_RoleOrientation_Unknow
 
 	// 检测按键输入
 	up := ebitenv2.IsKeyPressed(ebitenv2.KeyUp) || ebitenv2.IsKeyPressed(ebitenv2.KeyW)
@@ -23,54 +23,54 @@ func (p *role.Role) Update() {
 
 	// 根据按键组合确定方向
 	if up && left {
-		direction = proto.RoleDirection_RoleDirection_UpLeft
+		orientation = proto.RoleOrientation_RoleOrientation_UpLeft
 	} else if up && right {
-		direction = proto.RoleDirection_RoleDirection_UpRight
+		orientation = proto.RoleOrientation_RoleOrientation_UpRight
 	} else if down && left {
-		direction = proto.RoleDirection_RoleDirection_DownLeft
+		orientation = proto.RoleOrientation_RoleOrientation_DownLeft
 	} else if down && right {
-		direction = proto.RoleDirection_RoleDirection_DownRight
+		orientation = proto.RoleOrientation_RoleOrientation_DownRight
 	} else if up {
-		direction = proto.RoleDirection_RoleDirection_Up
+		orientation = proto.RoleOrientation_RoleOrientation_Up
 	} else if down {
-		direction = proto.RoleDirection_RoleDirection_Down
+		orientation = proto.RoleOrientation_RoleOrientation_Down
 	} else if left {
-		direction = proto.RoleDirection_RoleDirection_Left
+		orientation = proto.RoleOrientation_RoleOrientation_Left
 	} else if right {
-		direction = proto.RoleDirection_RoleDirection_Right
+		orientation = proto.RoleOrientation_RoleOrientation_Right
 	}
 
 	// 移动角色
-	if direction != proto.RoleDirection_RoleDirection_Unknow {
-		p.move(direction)
+	if orientation != proto.RoleOrientation_RoleOrientation_Unknow {
+		p.move(orientation)
 	}
 }
 
 // move 根据方向移动角色
-func (p *role.Role) move(direction proto.RoleDirection) {
+func (p *role.Role) move(orientation proto.RoleOrientation) {
 	speed := SpeedDefault
 	x := p.GetX()
 	y := p.GetY()
 
-	switch direction {
-	case proto.RoleDirection_RoleDirection_Up:
+	switch orientation {
+	case proto.RoleOrientation_RoleOrientation_Up:
 		y -= speed
-	case proto.RoleDirection_RoleDirection_Down:
+	case proto.RoleOrientation_RoleOrientation_Down:
 		y += speed
-	case proto.RoleDirection_RoleDirection_Left:
+	case proto.RoleOrientation_RoleOrientation_Left:
 		x -= speed
-	case proto.RoleDirection_RoleDirection_Right:
+	case proto.RoleOrientation_RoleOrientation_Right:
 		x += speed
-	case proto.RoleDirection_RoleDirection_UpLeft:
+	case proto.RoleOrientation_RoleOrientation_UpLeft:
 		x -= speed * 0.707 // 斜向移动时速度分量
 		y -= speed * 0.707
-	case proto.RoleDirection_RoleDirection_UpRight:
+	case proto.RoleOrientation_RoleOrientation_UpRight:
 		x += speed * 0.707
 		y -= speed * 0.707
-	case proto.RoleDirection_RoleDirection_DownLeft:
+	case proto.RoleOrientation_RoleOrientation_DownLeft:
 		x -= speed * 0.707
 		y += speed * 0.707
-	case proto.RoleDirection_RoleDirection_DownRight:
+	case proto.RoleOrientation_RoleOrientation_DownRight:
 		x += speed * 0.707
 		y += speed * 0.707
 	}

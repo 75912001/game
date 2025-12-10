@@ -14,7 +14,7 @@ type RoleSprite struct {
 	bottomCenterX int // 底部中心点坐标-x
 	bottomCenterY int // 底部中心点坐标-y
 
-	direction       int                  // 方向
+	orientation     int                  // 方向
 	image           *ebitenv2.Image      // 角色图片
 	roleImageSprite *res.RoleImageSprite // 角色图片配置
 }
