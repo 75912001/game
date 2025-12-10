@@ -14,17 +14,20 @@ const (
 )
 
 var (
-	AppExeDir       string // 可执行文件目录
-	AppDataDir      string // 数据目录
-	AppLogDir       string // 日志目录
-	AppCfgDir       string // 配置目录
-	AppTempDir      string // 临时目录
-	AppBinDir       string // 可执行文件目录
-	AppResDir       string // 资源目录
-	AppResSystemDir string // 资源目录-系统
-	AppResFontDir   string // 资源目录-字体
-	AppResMapDir    string // 资源目录-地图
-	AppResRoleDir   string // 资源目录-角色
+	AppExeDir         string // 可执行文件目录
+	AppDataDir        string // 数据目录
+	AppLogDir         string // 日志目录
+	AppCfgDir         string // 配置目录
+	AppTempDir        string // 临时目录
+	AppBinDir         string // 可执行文件目录
+	AppResDir         string // 资源目录
+	AppResSystemDir   string // 资源目录-系统
+	AppResFontDir     string // 资源目录-字体
+	AppResMapDir      string // 资源目录-地图
+	AppResRoleDir     string // 资源目录-角色
+	AppResTiledDir    string // 资源目录-Tiled
+	AppResTiledMapDir string // 资源目录-Tiled地图
+	AppResTiledTsxDir string // 资源目录-Tiled tsx 文件夹
 )
 
 type AssetID uint32       // 资产ID
@@ -52,4 +55,8 @@ func init() {
 	AppResFontDir = filepath.Join(AppResDir, "font")
 	AppResMapDir = filepath.Join(AppResDir, "map")
 	AppResRoleDir = filepath.Join(AppResDir, "role")
+	// Tiled 资源
+	AppResTiledDir = filepath.Join(AppResDir, "tiled")
+	AppResTiledMapDir = filepath.Join(AppResTiledDir, "map")
+	AppResTiledTsxDir = filepath.Join(AppResTiledDir, "tsx")
 }

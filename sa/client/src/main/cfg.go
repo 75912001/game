@@ -38,6 +38,11 @@ func LoadCfg() error {
 	if err != nil {
 		return errors.WithMessagef(err, "load teleportMgr error %v", xruntime.Location())
 	}
+	// 加载 Tiled 地图资源
+	err = res.GTiledMapMgr.Load()
+	if err != nil {
+		return errors.WithMessagef(err, "load res tiledMapMgr error %v", xruntime.Location())
+	}
 	return nil
 }
 
@@ -71,6 +76,11 @@ func CheckCfg() error {
 	if err != nil {
 		return errors.WithMessagef(err, "check teleportMgr error %v", xruntime.Location())
 	}
+	// 检查 Tiled 地图资源
+	err = res.GTiledMapMgr.Check()
+	if err != nil {
+		return errors.WithMessagef(err, "check res tiledMapMgr error %v", xruntime.Location())
+	}
 	return nil
 }
 
@@ -103,6 +113,11 @@ func AssembleCfg() error {
 	err = cfg.GTeleportMgr.Assemble()
 	if err != nil {
 		return errors.WithMessagef(err, "Assemble teleportMgr error %v", xruntime.Location())
+	}
+	// 装配 Tiled 地图资源
+	err = res.GTiledMapMgr.Assemble()
+	if err != nil {
+		return errors.WithMessagef(err, "Assemble res tiledMapMgr error %v", xruntime.Location())
 	}
 	return nil
 }
