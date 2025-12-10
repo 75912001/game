@@ -60,6 +60,10 @@ func (p *Role) HandleInput() { // 获取当前位置
 	p.SetValueU64(proto.AssetIDRecord_AssetIDRecord_BottomCenterY, uint64(y+dy))
 	p.SetValueU64(proto.AssetIDRecord_AssetIDRecord_Direction, uint64(direction))
 
-	// 更新动画帧
-	p.frameIdx++
+	// 更新动画帧（每 6 tick 切换一帧，60 TPS 下约 10 FPS 动画）
+	p.frameTick++
+	if p.frameTick >= 6 {
+		p.frameTick = 0
+		p.frameIdx++
+	}
 }

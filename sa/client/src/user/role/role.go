@@ -13,6 +13,7 @@ type Role struct {
 	cfgRole    *cfg.Role         // 角色-配置
 
 	frameIdx   uint32     // 当前帧索引
+	frameTick  uint32     // 帧计数器（用于控制动画速度）
 	roleSprite RoleSprite // 角色-精灵
 
 	debugDrawImageBounds bool // 是否画出图像边界(调试用)
