@@ -48,3 +48,8 @@
     https://pixian.ai/
 ## 精灵播放器 Sprite Reel
     https://spritereel.com/
+
+
+C:\game\sa\client\src\res\map.tiled.go
+C:\game\sa\client\src\res\map.tiled.mgr.go
+C:\game\sa\client\src\user\scene\scene.map.tiled.go
