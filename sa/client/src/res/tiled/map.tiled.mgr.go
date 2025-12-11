@@ -1,4 +1,4 @@
-package res
+package tiled
 
 import (
 	"encoding/xml"
@@ -6,7 +6,6 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	restiled "saClient/src/res/tiled"
 	"strconv"
 	"strings"
 
@@ -212,7 +211,7 @@ func (p *TiledMapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*Tiled
 	if mapXML.Properties != nil { // 解析地图属性
 		for _, prop := range mapXML.Properties.Properties {
 			switch prop.Name {
-			case restiled.MapBgmFilePathTag: // 背景音乐文件路径
+			case MapBgmFilePathTag: // 背景音乐文件路径
 				tiledMap.BackgroundMusicFilePath = prop.Value
 			default: // 未知属性 忽略
 			}
@@ -233,7 +232,7 @@ func (p *TiledMapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*Tiled
 	for _, layerXML := range mapXML.Layers {
 		layer := &TiledLayer{
 			ID:      layerXML.ID,
-			Type:    restiled.LayerType_TileLayer,
+			Type:    LayerType_TileLayer,
 			Visible: layerXML.Visible == nil || *layerXML.Visible != 0,
 			Opacity: layerXML.Opacity,
 			Width:   layerXML.Width,
@@ -254,7 +253,7 @@ func (p *TiledMapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*Tiled
 	for _, ogXML := range mapXML.ObjectGroups {
 		layer := &TiledLayer{
 			ID:      ogXML.ID,
-			Type:    restiled.LayerType_ObjectLayer,
+			Type:    LayerType_ObjectLayer,
 			Visible: ogXML.Visible == nil || *ogXML.Visible != 0,
 			Opacity: 1.0,
 		}
@@ -280,7 +279,7 @@ func (p *TiledMapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*Tiled
 			if objXML.Properties != nil {
 				for _, prop := range objXML.Properties.Properties {
 					switch prop.Name {
-					case restiled.ObjectCollisionTag:
+					case ObjectCollisionTag:
 						obj.Collision = prop.Value == "true"
 					}
 				}
