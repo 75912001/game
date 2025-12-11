@@ -3,8 +3,10 @@ package res
 import (
 	"encoding/xml"
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
+	restiled "saClient/src/res/tiled"
 	"strconv"
 	"strings"
 
@@ -31,20 +33,29 @@ func newTiledMapMgr() *TiledMapMgr {
 
 // TMX XML 结构定义
 type tmxMap struct {
-	XMLName      xml.Name         `xml:"map"`
-	Version      string           `xml:"version,attr"`
 	Orientation  string           `xml:"orientation,attr"`
 	RenderOrder  string           `xml:"renderorder,attr"`
 	Width        int              `xml:"width,attr"`
 	Height       int              `xml:"height,attr"`
 	TileWidth    int              `xml:"tilewidth,attr"`
 	TileHeight   int              `xml:"tileheight,attr"`
-	Infinite     int              `xml:"infinite,attr"`
-	StaggerAxis  string           `xml:"staggeraxis,attr"`
-	StaggerIndex string           `xml:"staggerindex,attr"`
+	Infinite     *int             `xml:"infinite,attr"`
+	Properties   *tmxProperties   `xml:"properties"`
 	Tilesets     []tmxTilesetRef  `xml:"tileset"`
 	Layers       []tmxLayer       `xml:"layer"`
 	ObjectGroups []tmxObjectGroup `xml:"objectgroup"`
+}
+
+// tmxProperties 地图属性集合
+type tmxProperties struct {
+	Properties []tmxProperty `xml:"property"`
+}
+
+// tmxProperty 单个属性
+type tmxProperty struct {
+	Name  string `xml:"name,attr"`
+	Type  string `xml:"type,attr"`
+	Value string `xml:"value,attr"`
 }
 
 type tmxTilesetRef struct {
@@ -54,7 +65,6 @@ type tmxTilesetRef struct {
 
 type tmxLayer struct {
 	ID      int     `xml:"id,attr"`
-	Name    string  `xml:"name,attr"`
 	Width   int     `xml:"width,attr"`
 	Height  int     `xml:"height,attr"`
 	Visible *int    `xml:"visible,attr"`
@@ -78,22 +88,21 @@ type tmxChunk struct {
 
 type tmxObjectGroup struct {
 	ID      int         `xml:"id,attr"`
-	Name    string      `xml:"name,attr"`
 	Visible *int        `xml:"visible,attr"`
 	Objects []tmxObject `xml:"object"`
 }
 
 type tmxObject struct {
-	ID       int         `xml:"id,attr"`
-	Name     string      `xml:"name,attr"`
-	Type     string      `xml:"type,attr"`
-	X        float64     `xml:"x,attr"`
-	Y        float64     `xml:"y,attr"`
-	Width    float64     `xml:"width,attr"`
-	Height   float64     `xml:"height,attr"`
-	Rotation float64     `xml:"rotation,attr"`
-	Visible  *int        `xml:"visible,attr"`
-	Polygon  *tmxPolygon `xml:"polygon"`
+	ID         int            `xml:"id,attr"`
+	Type       string         `xml:"type,attr"`
+	X          float64        `xml:"x,attr"`
+	Y          float64        `xml:"y,attr"`
+	Width      float64        `xml:"width,attr"`
+	Height     float64        `xml:"height,attr"`
+	Rotation   float64        `xml:"rotation,attr"`
+	Visible    *int           `xml:"visible,attr"`
+	Polygon    *tmxPolygon    `xml:"polygon"`
+	Properties *tmxProperties `xml:"properties"`
 }
 
 type tmxPolygon struct {
@@ -178,16 +187,36 @@ func (p *TiledMapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*Tiled
 	if err := xml.Unmarshal(data, &mapXML); err != nil {
 		return nil, errors.WithMessagef(err, "解析 TMX XML 失败: %v %v", tmxPath, xruntime.Location())
 	}
+	if mapXML.Orientation != "isometric" {
+		return nil, fmt.Errorf("仅支持等距(isometric)地图,当前地图 %v 类型: %s %v", mapID, mapXML.Orientation, xruntime.Location())
+	}
+	if mapXML.RenderOrder != "right-down" {
+		return nil, fmt.Errorf("仅支持右下(right-down)渲染顺序,当前地图 %v 渲染顺序: %s %v", mapID, mapXML.RenderOrder, xruntime.Location())
+	}
+	if mapXML.Infinite != nil && *mapXML.Infinite != 0 {
+		return nil, fmt.Errorf("不支持无限(infinite)地图,当前地图 %v infinite 属性: %v %v", mapID, mapXML.Infinite, xruntime.Location())
+	}
+	if mapXML.TileWidth/2 != mapXML.TileHeight {
+		return nil, fmt.Errorf("仅支持等宽高比 2:1 的等距(isometric)地图,当前地图 %v 瓦片宽高: %d x %d %v", mapID, mapXML.TileWidth, mapXML.TileHeight, xruntime.Location())
+	}
 
 	tiledMap := &TiledMap{
-		ID:           mapID,
-		Width:        mapXML.Width,
-		Height:       mapXML.Height,
-		TileWidth:    mapXML.TileWidth,
-		TileHeight:   mapXML.TileHeight,
-		Orientation:  mapXML.Orientation,
-		StaggerAxis:  mapXML.StaggerAxis,
-		StaggerIndex: mapXML.StaggerIndex,
+		ID:          mapID,
+		Width:       mapXML.Width,
+		Height:      mapXML.Height,
+		TileWidth:   mapXML.TileWidth,
+		TileHeight:  mapXML.TileHeight,
+		Orientation: mapXML.Orientation,
+	}
+
+	if mapXML.Properties != nil { // 解析地图属性
+		for _, prop := range mapXML.Properties.Properties {
+			switch prop.Name {
+			case restiled.MapBgmFilePathTag: // 背景音乐文件路径
+				tiledMap.BackgroundMusicFilePath = prop.Value
+			default: // 未知属性 忽略
+			}
+		}
 	}
 
 	// 加载 tilesets
@@ -197,15 +226,14 @@ func (p *TiledMapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*Tiled
 		if err != nil {
 			return nil, err
 		}
-		tiledMap.Tilesets = append(tiledMap.Tilesets, tileset)
+		tiledMap.Tilesets = append(tiledMap.Tilesets, tileset) // todo menglc 这里不同的 mapID, 相同的 tileset 会重复加载,可以考虑缓存优化
 	}
 
 	// 加载 tile layers
 	for _, layerXML := range mapXML.Layers {
 		layer := &TiledLayer{
 			ID:      layerXML.ID,
-			Name:    layerXML.Name,
-			Type:    "tilelayer",
+			Type:    restiled.LayerType_TileLayer,
 			Visible: layerXML.Visible == nil || *layerXML.Visible != 0,
 			Opacity: layerXML.Opacity,
 			Width:   layerXML.Width,
@@ -214,20 +242,7 @@ func (p *TiledMapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*Tiled
 		if layer.Opacity == 0 {
 			layer.Opacity = 1.0
 		}
-
-		// 解析 chunks (infinite map)
-		if len(layerXML.Data.Chunks) > 0 {
-			for _, chunkXML := range layerXML.Data.Chunks {
-				chunk := &TiledChunk{
-					X:      chunkXML.X,
-					Y:      chunkXML.Y,
-					Width:  chunkXML.Width,
-					Height: chunkXML.Height,
-					Data:   parseCSVData(chunkXML.Content),
-				}
-				layer.Chunks = append(layer.Chunks, chunk)
-			}
-		} else if layerXML.Data.Encoding == "csv" || layerXML.Data.Encoding == "" {
+		if layerXML.Data.Encoding == "csv" || layerXML.Data.Encoding == "" {
 			// 解析非 infinite map 的 data
 			layer.Data = parseCSVData(layerXML.Data.Content)
 		}
@@ -239,8 +254,7 @@ func (p *TiledMapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*Tiled
 	for _, ogXML := range mapXML.ObjectGroups {
 		layer := &TiledLayer{
 			ID:      ogXML.ID,
-			Name:    ogXML.Name,
-			Type:    "objectgroup",
+			Type:    restiled.LayerType_ObjectLayer,
 			Visible: ogXML.Visible == nil || *ogXML.Visible != 0,
 			Opacity: 1.0,
 		}
@@ -248,7 +262,6 @@ func (p *TiledMapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*Tiled
 		for _, objXML := range ogXML.Objects {
 			obj := &TiledObject{
 				ID:       objXML.ID,
-				Name:     objXML.Name,
 				Type:     objXML.Type,
 				X:        objXML.X,
 				Y:        objXML.Y,
@@ -261,6 +274,16 @@ func (p *TiledMapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*Tiled
 			// 解析多边形
 			if objXML.Polygon != nil {
 				obj.Polygon = parsePolygonPoints(objXML.Polygon.Points)
+			}
+
+			// 解析对象属性
+			if objXML.Properties != nil {
+				for _, prop := range objXML.Properties.Properties {
+					switch prop.Name {
+					case restiled.ObjectCollisionTag:
+						obj.Collision = prop.Value == "true"
+					}
+				}
 			}
 
 			layer.Objects = append(layer.Objects, obj)
@@ -328,6 +351,7 @@ func parseCSVData(content string) []int {
 		}
 		val, err := strconv.Atoi(part)
 		if err != nil {
+			log.Printf("解析 CSV tile 数据失败: %v %v", err, xruntime.Location())
 			continue
 		}
 		result = append(result, val)
