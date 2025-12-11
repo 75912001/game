@@ -4,7 +4,7 @@ import (
 	"image/color"
 	"saClient/src/common"
 	"saClient/src/proto"
-	"saClient/src/res"
+	"saClient/src/res/tiled"
 	"saClient/src/user/camera"
 
 	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
@@ -28,7 +28,7 @@ func NewScene(mapID common.AssetID) *Scene {
 	}
 
 	// 优先检查是否有 Tiled 地图
-	if res.GTiledMapMgr.Maps.Get(mapID) != nil {
+	if tiled.GMapMgr.Maps.Get(mapID) != nil {
 		scene.tiledMap = NewTiledMap(mapID)
 	} else {
 		scene.sceneMap = NewMap(mapID)
