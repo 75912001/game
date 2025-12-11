@@ -27,7 +27,6 @@ var (
 	AppResRoleDir     string // 资源目录-角色
 	AppResTiledDir    string // 资源目录-Tiled
 	AppResTiledMapDir string // 资源目录-Tiled地图
-	AppResTiledTsxDir string // 资源目录-Tiled tsx 文件夹
 )
 
 type AssetID uint32       // 资产ID
@@ -58,5 +57,4 @@ func init() {
 	// Tiled 资源
 	AppResTiledDir = filepath.Join(AppResDir, "tiled")
 	AppResTiledMapDir = filepath.Join(AppResTiledDir, "map")
-	AppResTiledTsxDir = filepath.Join(AppResTiledDir, "tsx")
 }
