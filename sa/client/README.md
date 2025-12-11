@@ -23,6 +23,16 @@
 
 # todo
 
+tiled 编辑地图
+    制作2张地图
+        1. 新手村
+            2个传送点
+                1. 野外.位置1
+                2. 野外.位置2
+        2. 野外
+            2个传送点
+                1. 新手村.位置1
+                2. 新手村.位置2
 开发地图跳转功能
 
 
@@ -33,7 +43,7 @@
 ## 地图编辑器 Tiled
     https://www.mapeditor.org/
     正常 orthogonal
-    45度 isometric
+    ✅45度 isometric
     等角(交错) staggered
     
 
@@ -50,6 +60,4 @@
     https://spritereel.com/
 
 
-C:\game\sa\client\src\res\map.tiled.go
-C:\game\sa\client\src\res\map.tiled.mgr.go
 C:\game\sa\client\src\user\scene\scene.map.tiled.go
