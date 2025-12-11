@@ -3,6 +3,7 @@ package main
 import (
 	"saClient/src/cfg"
 	"saClient/src/res"
+	"saClient/src/res/tiled"
 
 	xruntime "github.com/75912001/xlib/runtime"
 	"github.com/pkg/errors"
@@ -39,7 +40,7 @@ func LoadCfg() error {
 		return errors.WithMessagef(err, "load teleportMgr error %v", xruntime.Location())
 	}
 	// 加载 Tiled 地图资源
-	err = res.GTiledMapMgr.Load()
+	err = tiled.GTiledMapMgr.Load()
 	if err != nil {
 		return errors.WithMessagef(err, "load res tiledMapMgr error %v", xruntime.Location())
 	}
@@ -77,7 +78,7 @@ func CheckCfg() error {
 		return errors.WithMessagef(err, "check teleportMgr error %v", xruntime.Location())
 	}
 	// 检查 Tiled 地图资源
-	err = res.GTiledMapMgr.Check()
+	err = tiled.GTiledMapMgr.Check()
 	if err != nil {
 		return errors.WithMessagef(err, "check res tiledMapMgr error %v", xruntime.Location())
 	}
@@ -115,7 +116,7 @@ func AssembleCfg() error {
 		return errors.WithMessagef(err, "Assemble teleportMgr error %v", xruntime.Location())
 	}
 	// 装配 Tiled 地图资源
-	err = res.GTiledMapMgr.Assemble()
+	err = tiled.GTiledMapMgr.Assemble()
 	if err != nil {
 		return errors.WithMessagef(err, "Assemble res tiledMapMgr error %v", xruntime.Location())
 	}
