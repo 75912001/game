@@ -48,7 +48,7 @@
         "map/map.2000001.tmx"
     ],
     "project": "sa.tiled-project",
-    "property.type": "string",
+    "property.type": "bool",
     "recentFiles": [
         "map/map.2000001.tmx",
         "tsx/map.isometric_grass_and_water.tsx",
