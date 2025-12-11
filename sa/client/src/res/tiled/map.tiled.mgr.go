@@ -3,7 +3,6 @@ package tiled
 import (
 	"encoding/xml"
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -17,15 +16,15 @@ import (
 	"saClient/src/proto"
 )
 
-var GTiledMapMgr = newTiledMapMgr()
+var GMapMgr = newMapMgr()
 
-// TiledMapMgr Tiled 地图资源管理器
-type TiledMapMgr struct {
+// MapMgr Tiled 地图资源管理器
+type MapMgr struct {
 	Maps *xmap.MapMgr[common.AssetID, *TiledMap]
 }
 
-func newTiledMapMgr() *TiledMapMgr {
-	return &TiledMapMgr{
+func newMapMgr() *MapMgr {
+	return &MapMgr{
 		Maps: xmap.NewMapMgr[common.AssetID, *TiledMap](),
 	}
 }
@@ -126,7 +125,7 @@ type tsxImage struct {
 }
 
 // Load 加载 Tiled 地图资源
-func (p *TiledMapMgr) Load() error {
+func (p *MapMgr) Load() error {
 	tiledMapDir := common.AppResTiledMapDir
 	// 检查目录是否存在
 	if _, err := os.Stat(tiledMapDir); os.IsNotExist(err) {
@@ -176,7 +175,7 @@ func (p *TiledMapMgr) Load() error {
 }
 
 // loadTiledMap 加载单个 Tiled 地图 (TMX 格式)
-func (p *TiledMapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*TiledMap, error) {
+func (p *MapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*TiledMap, error) {
 	data, err := os.ReadFile(tmxPath)
 	if err != nil {
 		return nil, errors.WithMessagef(err, "读取 TMX 文件失败: %v %v", tmxPath, xruntime.Location())
@@ -243,7 +242,10 @@ func (p *TiledMapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*Tiled
 		}
 		if layerXML.Data.Encoding == "csv" || layerXML.Data.Encoding == "" {
 			// 解析非 infinite map 的 data
-			layer.Data = parseCSVData(layerXML.Data.Content)
+			layer.Data, err = parseCSVData(layerXML.Data.Content)
+			if err != nil {
+				return nil, errors.WithMessagef(err, "解析 %v 图层 %d 的 CSV 数据失败: %v %v", mapID, layer.ID, tmxPath, xruntime.Location())
+			}
 		}
 
 		tiledMap.Layers = append(tiledMap.Layers, layer)
@@ -295,7 +297,7 @@ func (p *TiledMapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*Tiled
 }
 
 // loadTileset 加载 tileset (TSX 格式)
-func (p *TiledMapMgr) loadTileset(tmxDir string, tsRef tmxTilesetRef) (*TiledTileset, error) {
+func (p *MapMgr) loadTileset(tmxDir string, tsRef tmxTilesetRef) (*TiledTileset, error) {
 	tsxPath := filepath.Join(tmxDir, tsRef.Source)
 	tsxPath = filepath.Clean(tsxPath)
 
@@ -335,10 +337,10 @@ func (p *TiledMapMgr) loadTileset(tmxDir string, tsRef tmxTilesetRef) (*TiledTil
 }
 
 // parseCSVData 解析 CSV 格式的 tile 数据
-func parseCSVData(content string) []int {
+func parseCSVData(content string) ([]int, error) {
 	content = strings.TrimSpace(content)
 	if content == "" {
-		return nil
+		return nil, nil
 	}
 
 	var result []int
@@ -350,12 +352,11 @@ func parseCSVData(content string) []int {
 		}
 		val, err := strconv.Atoi(part)
 		if err != nil {
-			log.Printf("解析 CSV tile 数据失败: %v %v", err, xruntime.Location())
-			continue
+			return nil, errors.WithMessagef(err, "解析 CSV tile 数据失败: %v %v", err, xruntime.Location())
 		}
 		result = append(result, val)
 	}
-	return result
+	return result, nil
 }
 
 // parsePolygonPoints 解析多边形点 "x1,y1 x2,y2 x3,y3"
@@ -387,11 +388,11 @@ func parsePolygonPoints(points string) []*TiledPoint {
 }
 
 // Check 检查 Tiled 地图资源
-func (p *TiledMapMgr) Check() error {
+func (p *MapMgr) Check() error {
 	return nil
 }
 
 // Assemble 装配 Tiled 地图资源
-func (p *TiledMapMgr) Assemble() error {
+func (p *MapMgr) Assemble() error {
 	return nil
 }
