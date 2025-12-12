@@ -24,7 +24,7 @@ maps:
           h: 100
 
   - assetID: 2000002
-    name: "平原"
+    name: "玛丽娜丝"
     width: 5504
     height: 3072
     exits:

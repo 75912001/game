@@ -59,29 +59,34 @@ func (p *TiledMap) drawBorder(screen *ebitenv2.Image, cam *camera.Camera) {
 	h := p.tiledMap.Height
 	tw := p.tiledMap.TileWidth
 	th := p.tiledMap.TileHeight
+	halfTW := tw / 2
+	halfTH := th / 2
 
-	// 等距地图的四个角点(世界坐标)
-	// 顶点: tile(0,0) 的顶部
-	// 右点: tile(W-1,0) 的右侧
-	// 底点: tile(W-1,H-1) 的底部
-	// 左点: tile(0,H-1) 的左侧
-	offsetX := h * (tw / 2)
+	// 边界与 GetMapSize 一致，从 X=0 开始到 X=GetPixelWidth 结束
+	// GetPixelWidth = (w+h) * halfTW
+	// GetPixelHeight = (w+h) * halfTH
+	//
+	// 菱形边界的四个角点:
+	// 顶点: X = h*halfTW, Y = 0
+	// 右点: X = (w+h)*halfTW, Y = w*halfTH
+	// 底点: X = w*halfTW, Y = (w+h)*halfTH
+	// 左点: X = 0, Y = h*halfTH
 
-	// 顶点 - tile(0,0) 的顶部中心
-	topX := float32(offsetX + tw/2)
+	// 顶点
+	topX := float32(h * halfTW)
 	topY := float32(0)
 
-	// 右点 - tile(W-1,0) 的右侧
-	rightX := float32((w-1-0)*(tw/2) + offsetX + tw)
-	rightY := float32((w-1+0)*(th/2) + th/2)
+	// 右点
+	rightX := float32((w + h) * halfTW)
+	rightY := float32(w * halfTH)
 
-	// 底点 - tile(W-1,H-1) 的底部
-	bottomX := float32((w-1-(h-1))*(tw/2) + offsetX + tw/2)
-	bottomY := float32((w-1+(h-1))*(th/2) + th)
+	// 底点
+	bottomX := float32(w * halfTW)
+	bottomY := float32((w + h) * halfTH)
 
-	// 左点 - tile(0,H-1) 的左侧
-	leftX := float32((0-(h-1))*(tw/2) + offsetX)
-	leftY := float32((0+(h-1))*(th/2) + th/2)
+	// 左点
+	leftX := float32(0)
+	leftY := float32(h * halfTH)
 
 	// 转换为屏幕坐标
 	camX := float32(cam.ScreenX)
@@ -159,9 +164,8 @@ func (p *TiledMap) getTileScreenPos(tileX, tileY int) (screenX, screenY int) {
 	switch p.tiledMap.Orientation {
 	case "isometric":
 		// 等距地图（菱形）
-		// 原始公式会让左半边地图出现负坐标，需要加上偏移
-		// 偏移量 = Height * TileWidth / 2，让最左边的 tile(0, Height-1) 的 X 坐标从 0 开始
-		offsetX := p.tiledMap.Height * (p.tiledMap.TileWidth / 2)
+		// 偏移量 = (Height-1) * TileWidth / 2，让最左边的 tile(0, Height-1) 的 X 坐标从 0 开始
+		offsetX := (p.tiledMap.Height - 1) * (p.tiledMap.TileWidth / 2)
 		screenX = (tileX-tileY)*(p.tiledMap.TileWidth/2) + offsetX
 		screenY = (tileX + tileY) * (p.tiledMap.TileHeight / 2)
 	default:
@@ -204,4 +208,86 @@ func (p *TiledMap) getTileImage(gid int) *ebitenv2.Image {
 // GetMapSize 获取地图尺寸(像素)
 func (p *TiledMap) GetMapSize() (width, height int) {
 	return p.tiledMap.GetPixelWidth(), p.tiledMap.GetPixelHeight()
+}
+
+// WorldToTile 世界坐标转换为 tile 坐标
+// worldX, worldY: 世界坐标(像素),基于 tile 菱形中心
+// 返回: tileX, tileY (浮点数,可用于精确位置判断)
+func (p *TiledMap) WorldToTile(worldX, worldY float64) (tileX, tileY float64) {
+	tw := float64(p.tiledMap.TileWidth)
+	th := float64(p.tiledMap.TileHeight)
+	halfTW := tw / 2
+	halfTH := th / 2
+	offsetX := float64(p.tiledMap.Height-1) * halfTW
+
+	// getTileScreenPos 返回 tile 图像左上角位置
+	// tile 菱形中心相对于左上角的偏移是 (halfTW, halfTH)
+	// 所以需要先将世界坐标转换为 tile 图像左上角坐标
+	screenX := worldX - halfTW
+	screenY := worldY - halfTH
+
+	// 逆变换公式:
+	// screenX = (tileX - tileY) * halfTW + offsetX
+	// screenY = (tileX + tileY) * halfTH
+	// 解方程组得:
+	sx := screenX - offsetX
+	tileX = (sx/halfTW + screenY/halfTH) / 2
+	tileY = (screenY/halfTH - sx/halfTW) / 2
+	return
+}
+
+// TileToWorld tile 坐标转换为世界坐标
+// tileX, tileY: tile 坐标
+// 返回: worldX, worldY (世界坐标,像素,基于 tile 菱形中心)
+func (p *TiledMap) TileToWorld(tileX, tileY float64) (worldX, worldY float64) {
+	tw := float64(p.tiledMap.TileWidth)
+	th := float64(p.tiledMap.TileHeight)
+	halfTW := tw / 2
+	halfTH := th / 2
+	offsetX := float64(p.tiledMap.Height-1) * halfTW
+
+	// 先计算 tile 图像左上角位置
+	screenX := (tileX-tileY)*halfTW + offsetX
+	screenY := (tileX + tileY) * halfTH
+
+	// 加上菱形中心偏移得到世界坐标
+	worldX = screenX + halfTW
+	worldY = screenY + halfTH
+	return
+}
+
+// IsInMapBounds 检查世界坐标是否在地图边界内
+func (p *TiledMap) IsInMapBounds(worldX, worldY float64) bool {
+	tileX, tileY := p.WorldToTile(worldX, worldY)
+	w := float64(p.tiledMap.Width)
+	h := float64(p.tiledMap.Height)
+	return tileX >= 0 && tileX < w && tileY >= 0 && tileY < h
+}
+
+// ClampToMapBounds 将世界坐标限制在地图边界内
+// 如果坐标超出边界,将其限制到最近的边界位置
+func (p *TiledMap) ClampToMapBounds(worldX, worldY float64) (clampedX, clampedY float64) {
+	tileX, tileY := p.WorldToTile(worldX, worldY)
+	w := float64(p.tiledMap.Width)
+	h := float64(p.tiledMap.Height)
+
+	// 限制 tile 坐标到有效范围
+	// 使用小于 Width/Height 的最大值,避免刚好在边界外
+	maxTileX := w - 0.01
+	maxTileY := h - 0.01
+
+	if tileX < 0 {
+		tileX = 0
+	} else if tileX > maxTileX {
+		tileX = maxTileX
+	}
+
+	if tileY < 0 {
+		tileY = 0
+	} else if tileY > maxTileY {
+		tileY = maxTileY
+	}
+
+	// 转换回世界坐标
+	return p.TileToWorld(tileX, tileY)
 }
