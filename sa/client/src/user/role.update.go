@@ -1,4 +1,4 @@
-package role
+package user
 
 import (
 	"saClient/src/cfg"
@@ -9,29 +9,22 @@ func (p *Role) Update() {
 	// 处理键盘输入
 	p.HandleInput()
 
-	// 初始化 World 坐标 (首次或重生时从 Tile 坐标转换)
-	if p.roleSprite.bottomCenterWorldX == 0 && p.roleSprite.bottomCenterWorldY == 0 {
-		tx := p.GetValueInt(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TX)
-		ty := p.GetValueInt(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TY)
-		p.roleSprite.bottomCenterWorldX, p.roleSprite.bottomCenterWorldY = p.scene.TileToWorld(float32(tx), float32(ty))
-	}
-
 	// 更新角色方向
-	p.roleSprite.orientation = p.GetValueInt(proto.AssetIDRecord_AssetIDRecord_Orientation)
+	p.sprite.orientation = p.GetValueInt(proto.AssetIDRecord_AssetIDRecord_Orientation)
 
-	images := p.cfgRole.ResRole.Move.Frames[uint32(p.roleSprite.orientation)]
-	p.roleSprite.image = images[p.frameIdx%uint32(len(images))]
+	images := p.cfgRole.ResRole.Move.Frames[uint32(p.sprite.orientation)]
+	p.sprite.image = images[p.frameIdx%uint32(len(images))]
 
-	frames := p.cfgRole.ResRole.Move.FrameInfo[p.roleSprite.orientation]
-	p.roleSprite.roleImageSprite = frames[p.frameIdx%uint32(len(frames))]
+	frames := p.cfgRole.ResRole.Move.FrameInfo[p.sprite.orientation]
+	p.sprite.roleImageSprite = frames[p.frameIdx%uint32(len(frames))]
 
 	// 更新角色中心 World 坐标 (脚底中心向上偏移半个角色高度)
-	p.roleSprite.centerWorldX = p.roleSprite.bottomCenterWorldX
-	p.roleSprite.centerWorldY = p.roleSprite.bottomCenterWorldY - float32(p.roleSprite.roleImageSprite.Frame.Height/2)
+	p.sprite.centerWorldX = p.sprite.bottomCenterWorldX
+	p.sprite.centerWorldY = p.sprite.bottomCenterWorldY - float32(p.sprite.roleImageSprite.Frame.Height/2)
 
 	// 更新摄像机跟随点 (World 坐标)
-	p.camera.FollowX = int(p.roleSprite.centerWorldX)
-	p.camera.FollowY = int(p.roleSprite.centerWorldY)
+	p.camera.FollowX = int(p.sprite.centerWorldX)
+	p.camera.FollowY = int(p.sprite.centerWorldY)
 
 	// 计算摄像机视口左上角 (World 坐标)
 	viewportX := p.camera.FollowX - cfg.GCommon.ScreenMaxWidth/2

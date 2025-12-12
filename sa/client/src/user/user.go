@@ -7,13 +7,12 @@ import (
 	"saClient/src/cfg"
 	"saClient/src/common"
 	"saClient/src/proto"
-	"saClient/src/user/role"
 )
 
 type User struct {
 	userRecord *proto.UserRecord
-	roleMgr    *role.RoleMgr
-	role       *role.Role // 当前选择的角色
+	roleMgr    *RoleMgr
+	role       *Role // 当前选择的角色
 }
 
 func NewUser() *User {
@@ -21,7 +20,7 @@ func NewUser() *User {
 		userRecord: &proto.UserRecord{
 			RoleRecordMap: make(map[uint64]*proto.RoleRecord),
 		},
-		roleMgr: role.NewRoleMgr(),
+		roleMgr: NewRoleMgr(),
 	}
 	return user
 }
@@ -49,8 +48,8 @@ func (p *User) Login(account string, password string) error {
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_LastLoginTimestamp)] = now                                           // 上次登录时间戳
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_LastLogoutTimestamp)] = 0                                            // 上次登出时间戳
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_MapID)] = 2000001                                                    // 所在地图ID (地图ID范围起始)
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TX)] = 24                                               // 当前位置tx
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TY)] = 24                                               // 当前位置ty
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TX)] = 24 * 1000                                        // 当前位置tx
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TY)] = 24 * 1000                                        // 当前位置ty
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Orientation)] = uint64(proto.AssetOrientation_AssetOrientation_Down) // 当前朝向-下
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Pose)] = uint64(proto.RoleAction_RoleAction_Stand)                   // 姿势 0:站立
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_AvailablePoint)] = uint64(cfg.GCommon.RoleInitialAvailablePoint)     // 可用点数
@@ -69,7 +68,7 @@ func (p *User) Login(account string, password string) error {
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Agility)] = 10   // 速度
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Stamina)] = 10   // 体力
 
-		roleObject := role.NewRole(roleRecord)
+		roleObject := NewRole(roleRecord)
 		if roleObject == nil {
 			return fmt.Errorf("new role failed, roleUUID %d", roleUUID)
 		}
@@ -79,6 +78,11 @@ func (p *User) Login(account string, password string) error {
 			return fmt.Errorf("add role failed, roleUUID %d already exists", roleUUID)
 		}
 		p.role = roleObject
+		{
+			tx := p.role.GetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TX)
+			ty := p.role.GetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TY)
+			p.role.sprite.bottomCenterWorldX, p.role.sprite.bottomCenterWorldY = p.role.scene.TileToWorld(float32(tx), float32(ty))
+		}
 	}
 	if false {
 		var roleUUID common.RoleUUID = 2
@@ -99,8 +103,8 @@ func (p *User) Login(account string, password string) error {
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_LastLoginTimestamp)] = now                                           // 上次登录时间戳
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_LastLogoutTimestamp)] = 0                                            // 上次登出时间戳
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_MapID)] = 2000001                                                    // 所在地图ID (地图ID范围起始)
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TX)] = 200                                              // 当前位置tx
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TY)] = 200                                              // 当前位置ty
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TX)] = 200 * 1000                                       // 当前位置tx
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TY)] = 200 * 1000                                       // 当前位置ty
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Orientation)] = uint64(proto.AssetOrientation_AssetOrientation_Down) // 当前朝向-下
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Pose)] = uint64(proto.RoleAction_RoleAction_Stand)                   // 姿势 0:站立
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_AvailablePoint)] = uint64(cfg.GCommon.RoleInitialAvailablePoint)     // 可用点数
@@ -119,7 +123,7 @@ func (p *User) Login(account string, password string) error {
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Agility)] = 10   // 速度
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Stamina)] = 10   // 体力
 
-		roleObject := role.NewRole(roleRecord)
+		roleObject := NewRole(roleRecord)
 		if roleObject == nil {
 			return fmt.Errorf("new role failed, roleUUID %d", roleUUID)
 		}
@@ -129,6 +133,11 @@ func (p *User) Login(account string, password string) error {
 			return fmt.Errorf("add role failed, roleUUID %d already exists", roleUUID)
 		}
 		p.role = roleObject
+		{
+			tx := p.role.GetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TX)
+			ty := p.role.GetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TY)
+			p.role.sprite.bottomCenterWorldX, p.role.sprite.bottomCenterWorldY = p.role.scene.TileToWorld(float32(tx), float32(ty))
+		}
 	}
 	return nil
 }

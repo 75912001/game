@@ -1,4 +1,4 @@
-package scene
+package user
 
 import ebitenv2 "github.com/hajimehoshi/ebiten/v2"
 

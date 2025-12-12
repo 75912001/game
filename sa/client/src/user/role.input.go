@@ -1,9 +1,10 @@
-package role
+package user
 
 import (
 	"saClient/src/cfg"
 	"saClient/src/proto"
 
+	xutil "github.com/75912001/xlib/util"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
@@ -62,11 +63,11 @@ func (p *Role) HandleInput() {
 	p.SetValueU64(proto.AssetIDRecord_AssetIDRecord_Orientation, uint64(orientation))
 
 	// 移动速度 (像素/帧)
-	moveSpeed := float32(cfg.GCommon.RoleDefaultMoveSpeed)
+	moveSpeed := cfg.GCommon.RoleDefaultMoveSpeed
 
 	// 计算新的 World 坐标
-	newWorldX := p.roleSprite.bottomCenterWorldX + dx*moveSpeed
-	newWorldY := p.roleSprite.bottomCenterWorldY + dy*moveSpeed
+	newWorldX := p.sprite.bottomCenterWorldX + dx*moveSpeed
+	newWorldY := p.sprite.bottomCenterWorldY + dy*moveSpeed
 
 	// 转换为 Tile 坐标进行边界检测
 	tileX, tileY := p.scene.WorldToTile(newWorldX, newWorldY)
@@ -75,17 +76,17 @@ func (p *Role) HandleInput() {
 	clampedTX, clampedTY := p.scene.ClampTileBounds(tileX, tileY)
 
 	// 如果被限制了，需要重新计算 World 坐标
-	if clampedTX != tileX || clampedTY != tileY {
+	if xutil.Float32Equal(clampedTX, tileX) || xutil.Float32Equal(clampedTY, tileY) {
 		newWorldX, newWorldY = p.scene.TileToWorld(clampedTX, clampedTY)
 	}
 
 	// 更新 World 坐标
-	p.roleSprite.bottomCenterWorldX = newWorldX
-	p.roleSprite.bottomCenterWorldY = newWorldY
+	p.sprite.bottomCenterWorldX = newWorldX
+	p.sprite.bottomCenterWorldY = newWorldY
 
 	// 同步 Tile 坐标到 proto (用于记录/网络同步)
-	p.SetValueU64(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TX, uint64(int(clampedTX)))
-	p.SetValueU64(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TY, uint64(int(clampedTY)))
+	p.SetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TX, clampedTX)
+	p.SetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TY, clampedTY)
 
 	// 更新动画帧
 	p.frameTick++

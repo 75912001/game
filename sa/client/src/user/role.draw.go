@@ -1,4 +1,4 @@
-package role
+package user
 
 import (
 	"saClient/src/ui"
@@ -12,12 +12,12 @@ func (p *Role) Draw(screen *ebitenv2.Image) {
 
 	// 绘制角色
 	// 角色屏幕位置 = 角色 World 坐标 - 摄像机视口 World 坐标 - 角色图片偏移
-	screenX := p.roleSprite.centerWorldX - float32(p.camera.ViewportX) - float32(p.roleSprite.roleImageSprite.Frame.Width/2)
-	screenY := p.roleSprite.centerWorldY - float32(p.camera.ViewportY) - float32(p.roleSprite.roleImageSprite.Frame.Height/2)
+	screenX := p.sprite.centerWorldX - float32(p.camera.ViewportX) - float32(p.sprite.roleImageSprite.Frame.Width/2)
+	screenY := p.sprite.centerWorldY - float32(p.camera.ViewportY) - float32(p.sprite.roleImageSprite.Frame.Height/2)
 
 	op := &ebitenv2.DrawImageOptions{}
 	op.GeoM.Translate(float64(screenX), float64(screenY))
-	screen.DrawImage(p.roleSprite.image, op)
+	screen.DrawImage(p.sprite.image, op)
 
 	// 绘制调试信息
 	p.drawDebugInfo(screen)
@@ -31,15 +31,15 @@ func (p *Role) drawDebugInfo(screen *ebitenv2.Image) {
 	pixelW, pixelH := p.scene.GetMapPixeSize()
 
 	// 获取角色 Tile 坐标
-	tileX, tileY := p.scene.WorldToTile(p.roleSprite.bottomCenterWorldX, p.roleSprite.bottomCenterWorldY)
+	tileX, tileY := p.scene.WorldToTile(p.sprite.bottomCenterWorldX, p.sprite.bottomCenterWorldY)
 
 	// 获取角色 World 坐标
-	worldX := p.roleSprite.bottomCenterWorldX
-	worldY := p.roleSprite.bottomCenterWorldY
+	worldX := p.sprite.bottomCenterWorldX
+	worldY := p.sprite.bottomCenterWorldY
 
 	// 获取角色 Screen 坐标
-	roleScreenX := p.roleSprite.centerWorldX - float32(p.camera.ViewportX)
-	roleScreenY := p.roleSprite.centerWorldY - float32(p.camera.ViewportY)
+	roleScreenX := p.sprite.centerWorldX - float32(p.camera.ViewportX)
+	roleScreenY := p.sprite.centerWorldY - float32(p.camera.ViewportY)
 
 	// 显示地图信息
 	y := float32(10.0)

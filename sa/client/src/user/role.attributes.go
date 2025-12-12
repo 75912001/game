@@ -1,4 +1,4 @@
-package role
+package user
 
 import (
 	"saClient/src/proto"
@@ -93,4 +93,18 @@ func (p *Role) GetValueU64(assetID proto.AssetIDRecord) uint64 {
 // SetValueU64 设置属性值
 func (p *Role) SetValueU64(assetID proto.AssetIDRecord, value uint64) {
 	p.roleRecord.AssetIDRecordMap[uint32(assetID)] = value
+}
+
+// GetValueF32 获取属性值-float32 (/1000倍)
+func (p *Role) GetValueF32(assetID proto.AssetIDRecord) float32 {
+	v, ok := p.roleRecord.AssetIDRecordMap[uint32(assetID)]
+	if !ok {
+		return 0
+	}
+	return float32(v / 1000.0)
+}
+
+// SetValueF32 设置属性值-float32 (*1000倍)
+func (p *Role) SetValueF32(assetID proto.AssetIDRecord, value float32) {
+	p.roleRecord.AssetIDRecordMap[uint32(assetID)] = uint64(value * 1000)
 }

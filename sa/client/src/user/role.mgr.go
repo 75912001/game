@@ -1,8 +1,9 @@
-package role
+package user
 
 import (
-	xmap "github.com/75912001/xlib/map"
 	"saClient/src/common"
+
+	xmap "github.com/75912001/xlib/map"
 )
 
 type RoleMgr struct {
