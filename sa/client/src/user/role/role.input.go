@@ -22,8 +22,8 @@ func (p *Role) HandleInput() { // 获取当前位置
 
 	moveSpeed := int(cfg.GCommon.RoleDefaultMoveSpeed)
 	// 获取当前位置
-	x := p.GetValueInt(proto.AssetIDRecord_AssetIDRecord_BottomCenterX)
-	y := p.GetValueInt(proto.AssetIDRecord_AssetIDRecord_BottomCenterY)
+	tx := p.GetValueInt(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TX)
+	ty := p.GetValueInt(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TY)
 
 	// 计算方向和位移
 	var orientation proto.AssetOrientation
@@ -56,8 +56,8 @@ func (p *Role) HandleInput() { // 获取当前位置
 	}
 
 	// 计算新位置
-	newX := x + dx
-	newY := y + dy
+	newX := tx + dx
+	newY := ty + dy
 
 	// 使用场景的边界限制（支持菱形边界）
 	clampedX, clampedY := p.scene.ClampToMapBounds(float64(newX), float64(newY))
@@ -65,8 +65,8 @@ func (p *Role) HandleInput() { // 获取当前位置
 	newY = int(clampedY)
 
 	// 更新位置和方向
-	p.SetValueU64(proto.AssetIDRecord_AssetIDRecord_BottomCenterX, uint64(newX))
-	p.SetValueU64(proto.AssetIDRecord_AssetIDRecord_BottomCenterY, uint64(newY))
+	p.SetValueU64(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TX, uint64(newX))
+	p.SetValueU64(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TY, uint64(newY))
 	p.SetValueU64(proto.AssetIDRecord_AssetIDRecord_Orientation, uint64(orientation))
 
 	// 更新动画帧（每 6 tick 切换一帧，60 TPS 下约 10 FPS 动画）

@@ -8,11 +8,11 @@ import (
 
 // RoleSprite 角色-精灵
 type RoleSprite struct {
-	centerX int // 角色中心坐标-x
-	centerY int // 角色中心Y坐标-y
+	centerTX int // 角色中心坐标-tx
+	centerTY int // 角色中心Y坐标-ty
 
-	bottomCenterX int // 底部中心点坐标-x
-	bottomCenterY int // 底部中心点坐标-y
+	bottomCenterTX int // 底部中心点坐标-tx
+	bottomCenterTY int // 底部中心点坐标-ty
 
 	orientation     int                  // 方向
 	image           *ebitenv2.Image      // 角色图片

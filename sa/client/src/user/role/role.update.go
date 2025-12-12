@@ -10,8 +10,8 @@ func (p *Role) Update() {
 	p.HandleInput()
 
 	// 更新角色底部中心点坐标
-	p.roleSprite.bottomCenterX = p.GetValueInt(proto.AssetIDRecord_AssetIDRecord_BottomCenterX)
-	p.roleSprite.bottomCenterY = p.GetValueInt(proto.AssetIDRecord_AssetIDRecord_BottomCenterY)
+	p.roleSprite.bottomCenterTX = p.GetValueInt(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TX)
+	p.roleSprite.bottomCenterTY = p.GetValueInt(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TY)
 	// 更新角色方向
 	p.roleSprite.orientation = p.GetValueInt(proto.AssetIDRecord_AssetIDRecord_Orientation)
 
@@ -22,12 +22,12 @@ func (p *Role) Update() {
 	p.roleSprite.roleImageSprite = frames[p.frameIdx%uint32(len(frames))]
 
 	// 更新角色中心坐标
-	p.roleSprite.centerX = p.roleSprite.bottomCenterX
-	p.roleSprite.centerY = p.roleSprite.bottomCenterY - p.roleSprite.roleImageSprite.Frame.Height/2
+	p.roleSprite.centerTX = p.roleSprite.bottomCenterTX
+	p.roleSprite.centerTY = p.roleSprite.bottomCenterTY - p.roleSprite.roleImageSprite.Frame.Height/2
 
 	// 更新摄像机坐标
-	p.camera.X = p.roleSprite.centerX
-	p.camera.Y = p.roleSprite.centerY
+	p.camera.X = p.roleSprite.centerTX
+	p.camera.Y = p.roleSprite.centerTY
 
 	// 计算摄像机屏幕坐标(左上角)
 	screenX := p.camera.X - cfg.GCommon.ScreenMaxWidth/2

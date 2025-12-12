@@ -67,8 +67,8 @@ enum AssetIDRecord {
   AssetIDRecord_LastLoginTimestamp = 5; // 上次登录时间戳
   AssetIDRecord_LastLogoutTimestamp = 6; // 上次登出时间戳
   AssetIDRecord_MapID = 7; // 所在地图ID
-  AssetIDRecord_BottomCenterX = 8; // 当前位置x - 图像底-中心点坐标 x
-  AssetIDRecord_BottomCenterY = 9; // 当前位置y - 图像底-中心点坐标 y
+  AssetIDRecord_BottomCenter_TX = 8; // 当前位置x - 图像底-中心点坐标 tile-x
+  AssetIDRecord_BottomCenter_TY = 9; // 当前位置y - 图像底-中心点坐标 tile-y
   AssetIDRecord_Orientation = 10; // 当前朝向
   AssetIDRecord_Pose = 11; // 姿势 RoleAction
   AssetIDRecord_AvailablePoint = 12; // 可用点数 - 出生/升级/转生 后获得的可用点数
