@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"saClient/src/common"
 	"saClient/src/proto"
-	"saClient/src/res"
+	restiled "saClient/src/res/tiled"
 
 	xmap "github.com/75912001/xlib/map"
 	xruntime "github.com/75912001/xlib/runtime"
@@ -14,31 +14,12 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-// MapExitRect 出口矩形
-type MapExitRect struct {
-	X int `yaml:"x"` // 出口矩形x
-	Y int `yaml:"y"` // 出口矩形y
-	W int `yaml:"w"` // 出口矩形宽度
-	H int `yaml:"h"` // 出口矩形高度
-}
-
-// MapExit 地图出口
-type MapExit struct {
-	TargetTeleportID TeleportPointID `yaml:"targetTeleportID"` // 目标传送点ID
-	Rect             MapExitRect     `yaml:"rect"`             // 出口矩形
-
-	TargetTeleportPoint *TeleportPoint // 目标传送点 (Assemble时填充)
-}
-
 // Map 地图信息
 type Map struct {
 	AssetID common.AssetID `yaml:"assetID"` // 地图资产ID
 	Name    string         `yaml:"name"`    // 地图名称
-	Width   int            `yaml:"width"`   // 地图宽度
-	Height  int            `yaml:"height"`  // 地图高度
-	Exits   []*MapExit     `yaml:"exits"`   // 出口数组
 
-	ResMap *res.Map // 资源-地图
+	ResMap *restiled.TiledMap // 资源-地图
 }
 
 var GMapMgr = newMapMgr()
@@ -84,36 +65,10 @@ func (p *MapMgr) Load() error {
 func (p *MapMgr) Check() error {
 	var err error
 	p.Maps.Foreach(func(id common.AssetID, m *Map) bool {
-		// 检查宽高
-		if m.Width <= 0 || m.Height <= 0 {
-			err = fmt.Errorf("地图 %d 宽高无效: width=%d, height=%d", m.AssetID, m.Width, m.Height)
-			return false
-		}
-		// 检查出口
-		for _, exit := range m.Exits {
-			// 检查目标传送点是否存在
-			targetPoint, exists := GTeleportMgr.Points.Find(exit.TargetTeleportID)
-			if !exists {
-				err = fmt.Errorf("地图 %d 的出口目标传送点 %d 不存在", m.AssetID, exit.TargetTeleportID)
-				return false
-			}
-			// 检查目标传送点所在地图是否存在
-			if _, exists := p.Maps.Find(targetPoint.MapID); !exists {
-				err = fmt.Errorf("地图 %d 的出口目标传送点 %d 所在地图 %d 不存在", m.AssetID, exit.TargetTeleportID, targetPoint.MapID)
-				return false
-			}
-			// 检查出口矩形是否在地图范围内
-			if exit.Rect.X < 0 || exit.Rect.Y < 0 ||
-				exit.Rect.X+exit.Rect.W > m.Width ||
-				exit.Rect.Y+exit.Rect.H > m.Height {
-				err = fmt.Errorf("地图 %d 的出口矩形超出地图范围", m.AssetID)
-				return false
-			}
-		}
 		// 检查资源
-		resMap := res.GMapMgr.Maps.Get(m.AssetID)
-		if resMap == nil {
-			err = fmt.Errorf("地图 %d 的资源不存在", m.AssetID)
+		exist := restiled.GMapMgr.Maps.IsExist(id)
+		if !exist {
+			err = fmt.Errorf("地图资源不存在: %d %v", id, xruntime.Location())
 			return false
 		}
 		return true
@@ -124,21 +79,9 @@ func (p *MapMgr) Check() error {
 // Assemble 组装地图配置
 func (p *MapMgr) Assemble() error {
 	var err error
-	p.Maps.Foreach(func(id common.AssetID, m *Map) bool {
-		for _, exit := range m.Exits {
-			// 关联目标传送点
-			exit.TargetTeleportPoint = GTeleportMgr.Points.Get(exit.TargetTeleportID)
-		}
+	p.Maps.Foreach(func(id common.AssetID, m *Map) bool { // 关联-地图资源
+		m.ResMap = restiled.GMapMgr.Maps.Get(m.AssetID)
 		return true
 	})
-	// 地图资源
-	p.Maps.Foreach(
-		func(id common.AssetID, m *Map) bool {
-			// 资源
-			m.ResMap = res.GMapMgr.Maps.Get(m.AssetID)
-			return true
-		},
-	)
-
 	return err
 }
