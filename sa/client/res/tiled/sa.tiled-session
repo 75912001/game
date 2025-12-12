@@ -40,6 +40,7 @@
         }
     },
     "last.exportedFilePath": "C:/game/sa/client/res/tiled/map",
+    "last.imagePath": "C:/game/sa/client/res/tiled/map",
     "map.fixedSize": false,
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
     "map.lastUsedFormat": "tmx",
@@ -50,15 +51,15 @@
     "project": "sa.tiled-project",
     "property.type": "bool",
     "recentFiles": [
+        "map/isometric_grass_and_water.tsx",
         "map/map.2000001.tmx",
         "tsx/map.isometric_grass_and_water.tsx",
         "map/map.2000001.json",
-        "map/isometric_grass_and_water.tsx",
         "map/block.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {
-        "height": 32,
+        "height": 64,
         "width": 64
     }
 }
