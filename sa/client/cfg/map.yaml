@@ -1,66 +1,10 @@
 # 地图配置文件
 # 任何修改此文件的行为都需要通知客户端和服务端开发人员
 
-# targetTeleportID: 指向目标传送点的唯一ID, 对应 teleport.yaml 中的传送点ID
-# rect: 出口矩形区域, 包含 x,y 坐标及宽度(w)和高度(h)
-
 maps:
-  - assetID: 2000001       # 地图资产ID
-    name: "新手村"          # 地图名称
-    width: 5504            # 地图宽度
-    height: 3072           # 地图高度
-    exits:                 # 出口数组
-      - targetTeleportID: 200000202
-        rect: # 出口矩形-位于正下方,中间,宽100高100
-          x: 2702
-          y: 2972
-          w: 100
-          h: 100
-      - targetTeleportID: 200000301
-        rect: # 出口矩形-位于正上方,中间,宽100高100
-          x: 2702
-          y: 0
-          w: 100
-          h: 100
+  - assetID: 2000001 # 地图资产ID
+    name: "玛丽娜丝-村长家" # 地图名称
 
   - assetID: 2000002
     name: "玛丽娜丝"
-    width: 5504
-    height: 3072
-    exits:
-      - targetTeleportID: 200000102
-        rect: # 出口矩形-位于正下方,中间,宽100高100
-          x: 2702
-          y: 2972
-          w: 100
-          h: 100
-      - targetTeleportID: 200000401
-        rect: # 出口矩形-位于正上方,中间,宽100高100
-          x: 2702
-          y: 0
-          w: 100
-          h: 100
 
-  - assetID: 2000003
-    name: "森林"
-    width: 1376
-    height: 768
-    exits:
-      - targetTeleportID: 200000102
-        rect: # 出口矩形-位于正下方,中间,宽100高100
-          x: 638
-          y: 668
-          w: 100
-          h: 100
-
-  - assetID: 2000004
-    name: "医院"
-    width: 1408
-    height: 768
-    exits:
-      - targetTeleportID: 200000203
-        rect: # 出口矩形-位于正下方,中间,宽100高100
-          x: 654
-          y: 668
-          w: 100
-          h: 100
