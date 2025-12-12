@@ -171,13 +171,14 @@ func (p *CT) ClampTile(tileX, tileY float32) (clampedTX, clampedTY float32) {
 
 // GetDiamondCorners 获取菱形边界的四个角点 (World 坐标)
 // 返回: top(顶), right(右), bottom(底), left(左)
+// 四个角点对应的 Tile 坐标: top(0,0), right(w,0), bottom(w,h), left(0,h)
 func (p *CT) GetDiamondCorners() (topX, topY, rightX, rightY, bottomX, bottomY, leftX, leftY float32) {
 	halfTW := float32(p.TileWidth) / 2
 	halfTH := float32(p.TileHeight) / 2
 	w := float32(p.Width)
 	h := float32(p.Height)
 
-	// 与 TileToWorld 保持一致，Y 方向加上菱形中心偏移
+	// 使用 TileToWorld 公式: worldY = (tileX + tileY) * halfTH + halfTH
 	topX = h * halfTW
 	topY = halfTH
 	rightX = (w + h) * halfTW

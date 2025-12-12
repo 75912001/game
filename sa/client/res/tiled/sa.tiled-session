@@ -30,18 +30,18 @@
             "expandedObjectLayers": [
                 7
             ],
-            "scale": 0.25,
+            "scale": 0.75,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 1654,
-                "y": 426
+                "x": 1944.6666666666665,
+                "y": 904.6666666666665
             }
         },
         "map/map.2000002.tmx": {
             "scale": 0.206328125,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 3196.3650132525563,
+                "x": 3690.72321090496,
                 "y": 1596.9708443771306
             }
         },
@@ -65,8 +65,8 @@
     "project": "sa.tiled-project",
     "property.type": "string",
     "recentFiles": [
-        "map/map.2000001.tmx",
         "map/isometric_grass_and_water.tsx",
+        "map/map.2000001.tmx",
         "tsx/map.isometric_grass_and_water.tsx",
         "map/map.2000001.json",
         "map/block.tsx"
