@@ -177,13 +177,14 @@ func (p *CT) GetDiamondCorners() (topX, topY, rightX, rightY, bottomX, bottomY, 
 	w := float32(p.Width)
 	h := float32(p.Height)
 
+	// 与 TileToWorld 保持一致，Y 方向加上菱形中心偏移
 	topX = h * halfTW
-	topY = 0
+	topY = halfTH
 	rightX = (w + h) * halfTW
-	rightY = w * halfTH
+	rightY = w*halfTH + halfTH
 	bottomX = w * halfTW
-	bottomY = (w + h) * halfTH
+	bottomY = (w+h)*halfTH + halfTH
 	leftX = 0
-	leftY = h * halfTH
+	leftY = h*halfTH + halfTH
 	return
 }
