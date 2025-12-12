@@ -12,28 +12,25 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-// PortalID 传送ID类型
-type PortalID uint32
-
 // PortalPoint 传送点
 type PortalPoint struct {
-	ID    PortalID       `yaml:"id"`    // 传送点ID (地图ID * 100 + 序号)
-	Name  string         `yaml:"name"`  // 传送点名称
-	MapID common.AssetID `yaml:"mapID"` // 所在地图ID
-	X     int            `yaml:"x"`     // x坐标
-	Y     int            `yaml:"y"`     // y坐标
+	ID    common.PortalID `yaml:"id"`    // 传送点ID (地图ID * 100 + 序号)
+	Name  string          `yaml:"name"`  // 传送点名称
+	MapID common.AssetID  `yaml:"mapID"` // 所在地图ID
+	WX    int             `yaml:"x"`     // wx坐标
+	WY    int             `yaml:"y"`     // wy坐标
 }
 
 var GPortalMgr = newPortalMgr()
 
 // PortalMgr 传送点管理器
 type PortalMgr struct {
-	Points *xmap.MapMgr[PortalID, *PortalPoint] // key: 传送点ID
+	Points *xmap.MapMgr[common.PortalID, *PortalPoint] // key: 传送点ID
 }
 
 func newPortalMgr() *PortalMgr {
 	return &PortalMgr{
-		Points: xmap.NewMapMgr[PortalID, *PortalPoint](),
+		Points: xmap.NewMapMgr[common.PortalID, *PortalPoint](),
 	}
 }
 
@@ -63,7 +60,7 @@ func (p *PortalMgr) Load() error {
 // Check 检查传送点配置
 func (p *PortalMgr) Check() error {
 	var err error
-	p.Points.Foreach(func(id PortalID, point *PortalPoint) bool {
+	p.Points.Foreach(func(id common.PortalID, point *PortalPoint) bool {
 		// 检查所在地图是否存在
 		targetMap, exists := GMapMgr.Maps.Find(point.MapID)
 		if !exists {

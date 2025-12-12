@@ -30,11 +30,11 @@
             "expandedObjectLayers": [
                 7
             ],
-            "scale": 0.5,
-            "selectedLayer": 5,
+            "scale": 0.25,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 2362,
-                "y": 1178
+                "x": 2184,
+                "y": 428
             }
         },
         "map/map.2000002.tmx": {
@@ -53,12 +53,12 @@
     "last.exportedFilePath": "C:/game/sa/client/res/tiled/map",
     "last.imagePath": "C:/game/sa/client/res/tiled/map",
     "map.fixedSize": true,
-    "map.height": 100,
+    "map.height": 10,
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
     "map.lastUsedFormat": "tmx",
     "map.orientation": "2",
     "map.tileWidth": 64,
-    "map.width": 100,
+    "map.width": 10,
     "openFiles": [
         "map/map.2000001.tmx"
     ],

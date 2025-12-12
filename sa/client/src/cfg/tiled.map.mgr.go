@@ -1,4 +1,4 @@
-package tiled
+package cfg
 
 import (
 	"encoding/xml"
@@ -16,15 +16,15 @@ import (
 	"saClient/src/proto"
 )
 
-var GMapMgr = newMapMgr()
+var GTiledMapMgr = newTiledMapMgr()
 
-// MapMgr Tiled 地图资源管理器
-type MapMgr struct {
+// TiledMapMgr Tiled 地图资源管理器
+type TiledMapMgr struct {
 	Maps *xmap.MapMgr[common.AssetID, *TiledMap]
 }
 
-func newMapMgr() *MapMgr {
-	return &MapMgr{
+func newTiledMapMgr() *TiledMapMgr {
+	return &TiledMapMgr{
 		Maps: xmap.NewMapMgr[common.AssetID, *TiledMap](),
 	}
 }
@@ -125,11 +125,11 @@ type tsxImage struct {
 }
 
 // Load 加载 Tiled 地图资源
-func (p *MapMgr) Load() error {
+func (p *TiledMapMgr) Load() error {
 	tiledMapDir := common.AppResTiledMapDir
 	// 检查目录是否存在
 	if _, err := os.Stat(tiledMapDir); os.IsNotExist(err) {
-		return nil // 目录不存在则跳过加载-符合:无 Tiled 地图资源,则使用普通地图
+		return errors.WithMessagef(err, "tiledMapDir %s does not exist", tiledMapDir)
 	}
 
 	mapFiles, err := os.ReadDir(tiledMapDir)
@@ -175,7 +175,7 @@ func (p *MapMgr) Load() error {
 }
 
 // loadTiledMap 加载单个 Tiled 地图 (TMX 格式)
-func (p *MapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*TiledMap, error) {
+func (p *TiledMapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*TiledMap, error) {
 	data, err := os.ReadFile(tmxPath)
 	if err != nil {
 		return nil, errors.WithMessagef(err, "读取 TMX 文件失败: %v %v", tmxPath, xruntime.Location())
@@ -199,18 +199,17 @@ func (p *MapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*TiledMap, 
 	}
 
 	tiledMap := &TiledMap{
-		ID:          mapID,
-		Width:       mapXML.Width,
-		Height:      mapXML.Height,
-		TileWidth:   mapXML.TileWidth,
-		TileHeight:  mapXML.TileHeight,
-		Orientation: mapXML.Orientation,
+		ID:         mapID,
+		Width:      mapXML.Width,
+		Height:     mapXML.Height,
+		TileWidth:  mapXML.TileWidth,
+		TileHeight: mapXML.TileHeight,
 	}
 
 	if mapXML.Properties != nil { // 解析地图属性
 		for _, prop := range mapXML.Properties.Properties {
 			switch prop.Name {
-			case MapBgmFilePathTag: // 背景音乐文件路径
+			case TiledMapBgmFilePathTag: // 背景音乐文件路径
 				tiledMap.BackgroundMusicFilePath = prop.Value
 			default: // 未知属性 忽略
 			}
@@ -231,7 +230,7 @@ func (p *MapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*TiledMap, 
 	for _, layerXML := range mapXML.Layers {
 		layer := &TiledLayer{
 			ID:      layerXML.ID,
-			Type:    LayerType_TileLayer,
+			Type:    TiledLayerType_TileLayer,
 			Visible: layerXML.Visible == nil || *layerXML.Visible != 0,
 			Opacity: layerXML.Opacity,
 			Width:   layerXML.Width,
@@ -255,7 +254,7 @@ func (p *MapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*TiledMap, 
 	for _, ogXML := range mapXML.ObjectGroups {
 		layer := &TiledLayer{
 			ID:      ogXML.ID,
-			Type:    LayerType_ObjectLayer,
+			Type:    TiledLayerType_ObjectLayer,
 			Visible: ogXML.Visible == nil || *ogXML.Visible != 0,
 			Opacity: 1.0,
 		}
@@ -281,8 +280,15 @@ func (p *MapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*TiledMap, 
 			if objXML.Properties != nil {
 				for _, prop := range objXML.Properties.Properties {
 					switch prop.Name {
-					case ObjectCollisionTag:
+					case TiledObjectCollisionTag:
 						obj.Collision = prop.Value == "true"
+					case TiledObjectTargetPortal:
+						v, err := strconv.ParseUint(prop.Value, 10, 32)
+						if err != nil {
+							return nil, errors.WithMessagef(err, "解析对象 %d 的目标传送点失败: %v %v", obj.ID, tmxPath, xruntime.Location())
+						}
+						obj.TargetPortal = common.PortalID(v)
+
 					}
 				}
 			}
@@ -297,7 +303,7 @@ func (p *MapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*TiledMap, 
 }
 
 // loadTileset 加载 tileset (TSX 格式)
-func (p *MapMgr) loadTileset(tmxDir string, tsRef tmxTilesetRef) (*TiledTileset, error) {
+func (p *TiledMapMgr) loadTileset(tmxDir string, tsRef tmxTilesetRef) (*TiledTileset, error) {
 	tsxPath := filepath.Join(tmxDir, tsRef.Source)
 	tsxPath = filepath.Clean(tsxPath)
 
@@ -388,12 +394,22 @@ func parsePolygonPoints(points string) []*TiledPoint {
 }
 
 // Check 检查 Tiled 地图资源
-func (p *MapMgr) Check() error {
-	// todo menglc 检查该资源是否-被地图配置引用
-	return nil
+func (p *TiledMapMgr) Check() error {
+	var err error
+	p.Maps.Foreach(
+		func(mapID common.AssetID, tiledMap *TiledMap) (isContinue bool) { // 检查地图是否合法
+			exist := GMapMgr.Maps.IsExist(mapID)
+			if !exist {
+				err = fmt.Errorf("Tiled 地图资源 %v 未定义 %v", mapID, xruntime.Location())
+				return false
+			}
+			return true
+		},
+	)
+	return err
 }
 
 // Assemble 装配 Tiled 地图资源
-func (p *MapMgr) Assemble() error {
+func (p *TiledMapMgr) Assemble() error {
 	return nil
 }

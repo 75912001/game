@@ -11,7 +11,7 @@
   <object id="9" name="玛丽娜丝" type="portal" x="1521" y="752.333" width="77.8333" height="90.6667">
    <properties>
     <property name="collision" type="bool" value="true"/>
-    <property name="target" type="int" value="200000201"/>
+    <property name="targetPortal" type="int" value="200000201"/>
    </properties>
   </object>
  </objectgroup>

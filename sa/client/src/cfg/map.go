@@ -6,7 +6,6 @@ import (
 	"path/filepath"
 	"saClient/src/common"
 	"saClient/src/proto"
-	restiled "saClient/src/res/tiled"
 
 	xmap "github.com/75912001/xlib/map"
 	xruntime "github.com/75912001/xlib/runtime"
@@ -19,7 +18,7 @@ type Map struct {
 	AssetID common.AssetID `yaml:"assetID"` // 地图资产ID
 	Name    string         `yaml:"name"`    // 地图名称
 
-	ResMap *restiled.TiledMap // 资源-地图
+	ResMap *TiledMap // 资源-地图
 }
 
 var GMapMgr = newMapMgr()
@@ -66,11 +65,12 @@ func (p *MapMgr) Check() error {
 	var err error
 	p.Maps.Foreach(func(id common.AssetID, m *Map) bool {
 		// 检查资源
-		exist := restiled.GMapMgr.Maps.IsExist(id)
+		exist := GTiledMapMgr.Maps.IsExist(id)
 		if !exist {
 			err = fmt.Errorf("地图资源不存在: %d %v", id, xruntime.Location())
 			return false
 		}
+		// todo menglc 检查地图是否有出口, 有入口
 		return true
 	})
 	return err
@@ -80,7 +80,7 @@ func (p *MapMgr) Check() error {
 func (p *MapMgr) Assemble() error {
 	var err error
 	p.Maps.Foreach(func(id common.AssetID, m *Map) bool { // 关联-地图资源
-		m.ResMap = restiled.GMapMgr.Maps.Get(m.AssetID)
+		m.ResMap = GTiledMapMgr.Maps.Get(m.AssetID)
 		return true
 	})
 	return err

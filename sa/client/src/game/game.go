@@ -1,6 +1,7 @@
 package game
 
 import (
+	"saClient/src/cfg"
 	"saClient/src/ui"
 	"saClient/src/user"
 )
@@ -16,8 +17,16 @@ func NewGame() *Game {
 }
 
 func (p *Game) Init() {
-	// 添加一个登录按钮
-	ui.GUIButtonMgr.AddButton("loginBtn", 300, 250, 200, 50, "登录",
+	// 按钮尺寸
+	btnWidth := 200
+	btnHeight := 50
+
+	// 计算居中位置
+	btnX := (cfg.GCommon.ScreenMaxWidth - btnWidth) / 2
+	btnY := (cfg.GCommon.ScreenMaxHeight - btnHeight) / 2
+
+	// 添加一个登录按钮（居中显示）
+	ui.GUIButtonMgr.AddButton("loginBtn", btnX, btnY, btnWidth, btnHeight, "登录",
 		func() (ui.ButtonAction, error) { // 点击开始按钮后,切换到场景
 			err := p.user.Login("", "")
 			if err != nil {
