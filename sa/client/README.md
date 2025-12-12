@@ -94,5 +94,7 @@ tiled 编辑地图
 ## 精灵播放器 Sprite Reel
     https://spritereel.com/
 
+float32 / float64 精度问题
 
-C:\game\sa\client\src\user\role
+C:\game\sa\client\src\user\role\role.update.go
+C:\game\sa\client\src\user\role\role.draw.go
