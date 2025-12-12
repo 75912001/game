@@ -42,10 +42,10 @@ func NewCT(width, height, tileWidth, tileHeight int) *CT {
 // ============================================================================
 
 // TileToWorld Tile坐标 -> World坐标 (tile 菱形中心)
-func (p *CT) TileToWorld(tileX, tileY float64) (worldX, worldY float64) {
-	halfTW := float64(p.TileWidth) / 2
-	halfTH := float64(p.TileHeight) / 2
-	offsetX := float64(p.Height-1) * halfTW
+func (p *CT) TileToWorld(tileX, tileY float32) (worldX, worldY float32) {
+	halfTW := float32(p.TileWidth) / 2
+	halfTH := float32(p.TileHeight) / 2
+	offsetX := float32(p.Height-1) * halfTW
 
 	// 先计算 tile 图像左上角位置
 	imageX := (tileX-tileY)*halfTW + offsetX
@@ -58,10 +58,10 @@ func (p *CT) TileToWorld(tileX, tileY float64) (worldX, worldY float64) {
 }
 
 // WorldToTile World坐标 -> Tile坐标
-func (p *CT) WorldToTile(worldX, worldY float64) (tileX, tileY float64) {
-	halfTW := float64(p.TileWidth) / 2
-	halfTH := float64(p.TileHeight) / 2
-	offsetX := float64(p.Height-1) * halfTW
+func (p *CT) WorldToTile(worldX, worldY float32) (tileX, tileY float32) {
+	halfTW := float32(p.TileWidth) / 2
+	halfTH := float32(p.TileHeight) / 2
+	offsetX := float32(p.Height-1) * halfTW
 
 	// 将 World 坐标转换为 tile 图像左上角坐标
 	imageX := worldX - halfTW
@@ -79,14 +79,14 @@ func (p *CT) WorldToTile(worldX, worldY float64) (tileX, tileY float64) {
 // ============================================================================
 
 // WorldToScreen World坐标 -> Screen坐标
-func (p *CT) WorldToScreen(worldX, worldY, cameraX, cameraY float64) (screenX, screenY float64) {
+func (p *CT) WorldToScreen(worldX, worldY, cameraX, cameraY float32) (screenX, screenY float32) {
 	screenX = worldX - cameraX
 	screenY = worldY - cameraY
 	return
 }
 
 // ScreenToWorld Screen坐标 -> World坐标
-func (p *CT) ScreenToWorld(screenX, screenY, cameraX, cameraY float64) (worldX, worldY float64) {
+func (p *CT) ScreenToWorld(screenX, screenY, cameraX, cameraY float32) (worldX, worldY float32) {
 	worldX = screenX + cameraX
 	worldY = screenY + cameraY
 	return
@@ -121,14 +121,14 @@ func (p *CT) TileToImageScreenPos(tileX, tileY, cameraX, cameraY int) (screenX, 
 // ============================================================================
 
 // IsInBounds 检查 Tile 坐标是否在地图边界内
-func (p *CT) IsInBounds(tileX, tileY float64) bool {
-	return tileX >= 0 && tileX < float64(p.Width) && tileY >= 0 && tileY < float64(p.Height)
+func (p *CT) IsInBounds(tileX, tileY float32) bool {
+	return tileX >= 0 && tileX < float32(p.Width) && tileY >= 0 && tileY < float32(p.Height)
 }
 
 // ClampTile 将 Tile 坐标限制在地图边界内
-func (p *CT) ClampTile(tileX, tileY float64) (clampedTX, clampedTY float64) {
-	maxTX := float64(p.Width) - 0.01
-	maxTY := float64(p.Height) - 0.01
+func (p *CT) ClampTile(tileX, tileY float32) (clampedTX, clampedTY float32) {
+	maxTX := float32(p.Width) - 0.01
+	maxTY := float32(p.Height) - 0.01
 
 	clampedTX, clampedTY = tileX, tileY
 
@@ -152,11 +152,11 @@ func (p *CT) ClampTile(tileX, tileY float64) (clampedTX, clampedTY float64) {
 
 // GetDiamondCorners 获取菱形边界的四个角点 (World 坐标)
 // 返回: top(顶), right(右), bottom(底), left(左)
-func (p *CT) GetDiamondCorners() (topX, topY, rightX, rightY, bottomX, bottomY, leftX, leftY float64) {
-	halfTW := float64(p.TileWidth) / 2
-	halfTH := float64(p.TileHeight) / 2
-	w := float64(p.Width)
-	h := float64(p.Height)
+func (p *CT) GetDiamondCorners() (topX, topY, rightX, rightY, bottomX, bottomY, leftX, leftY float32) {
+	halfTW := float32(p.TileWidth) / 2
+	halfTH := float32(p.TileHeight) / 2
+	w := float32(p.Width)
+	h := float32(p.Height)
 
 	topX = h * halfTW
 	topY = 0

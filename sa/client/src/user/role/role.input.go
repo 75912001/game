@@ -22,7 +22,7 @@ func (p *Role) HandleInput() {
 	}
 
 	// 计算屏幕方向的移动向量 (World 坐标系)
-	var dx, dy float64 = 0, 0
+	var dx, dy float32 = 0, 0
 	var orientation proto.AssetOrientation
 
 	// 屏幕方向: W=上, S=下, A=左, D=右
@@ -62,7 +62,7 @@ func (p *Role) HandleInput() {
 	p.SetValueU64(proto.AssetIDRecord_AssetIDRecord_Orientation, uint64(orientation))
 
 	// 移动速度 (像素/帧)
-	moveSpeed := float64(cfg.GCommon.RoleDefaultMoveSpeed)
+	moveSpeed := float32(cfg.GCommon.RoleDefaultMoveSpeed)
 
 	// 计算新的 World 坐标
 	newWorldX := p.roleSprite.bottomCenterWorldX + dx*moveSpeed

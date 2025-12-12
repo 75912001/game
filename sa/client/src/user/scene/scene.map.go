@@ -1,13 +1,14 @@
 package scene
 
 import (
-	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/vector"
 	"image"
 	"image/color"
 	"saClient/src/cfg"
 	"saClient/src/common"
 	"saClient/src/user/camera"
+
+	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/vector"
 )
 
 // Map Tiled 地图场景
@@ -53,8 +54,8 @@ func (p *Map) drawBorder(screen *ebitenv2.Image, cam *camera.Camera) {
 	topX, topY, rightX, rightY, bottomX, bottomY, leftX, leftY := p.cfg.CT.GetDiamondCorners()
 
 	// World -> Screen
-	camX := float64(cam.ViewportX)
-	camY := float64(cam.ViewportY)
+	camX := float32(cam.ViewportX)
+	camY := float32(cam.ViewportY)
 
 	sTopX, sTopY := p.cfg.CT.WorldToScreen(topX, topY, camX, camY)
 	sRightX, sRightY := p.cfg.CT.WorldToScreen(rightX, rightY, camX, camY)
@@ -139,6 +140,6 @@ func (p *Map) getTileImage(gid int) *ebitenv2.Image {
 }
 
 // ClampTileBounds 将 tile 坐标限制在地图边界内
-func (p *Map) ClampTileBounds(tileX, tileY float64) (clampedTX, clampedTY float64) {
+func (p *Map) ClampTileBounds(tileX, tileY float32) (clampedTX, clampedTY float32) {
 	return p.cfg.CT.ClampTile(tileX, tileY)
 }

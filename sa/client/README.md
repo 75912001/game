@@ -70,10 +70,6 @@ tiled 编辑地图
                 2. 新手村.位置2
 开发地图跳转功能
 
-
-
-
-
 # 相关工具
 ## 地图编辑器 Tiled
     https://www.mapeditor.org/
@@ -93,8 +89,6 @@ tiled 编辑地图
     https://pixian.ai/
 ## 精灵播放器 Sprite Reel
     https://spritereel.com/
-
-float32 / float64 精度问题
 
 C:\game\sa\client\src\user\role\role.update.go
 C:\game\sa\client\src\user\role\role.draw.go

@@ -12,11 +12,11 @@ func (p *Role) Draw(screen *ebitenv2.Image) {
 
 	// 绘制角色
 	// 角色屏幕位置 = 角色 World 坐标 - 摄像机视口 World 坐标 - 角色图片偏移
-	screenX := p.roleSprite.centerWorldX - float64(p.camera.ViewportX) - float64(p.roleSprite.roleImageSprite.Frame.Width/2)
-	screenY := p.roleSprite.centerWorldY - float64(p.camera.ViewportY) - float64(p.roleSprite.roleImageSprite.Frame.Height/2)
+	screenX := p.roleSprite.centerWorldX - float32(p.camera.ViewportX) - float32(p.roleSprite.roleImageSprite.Frame.Width/2)
+	screenY := p.roleSprite.centerWorldY - float32(p.camera.ViewportY) - float32(p.roleSprite.roleImageSprite.Frame.Height/2)
 
 	op := &ebitenv2.DrawImageOptions{}
-	op.GeoM.Translate(screenX, screenY)
+	op.GeoM.Translate(float64(screenX), float64(screenY))
 	screen.DrawImage(p.roleSprite.image, op)
 
 	// 绘制调试信息
@@ -38,11 +38,11 @@ func (p *Role) drawDebugInfo(screen *ebitenv2.Image) {
 	worldY := p.roleSprite.bottomCenterWorldY
 
 	// 获取角色 Screen 坐标
-	roleScreenX := p.roleSprite.centerWorldX - float64(p.camera.ViewportX)
-	roleScreenY := p.roleSprite.centerWorldY - float64(p.camera.ViewportY)
+	roleScreenX := p.roleSprite.centerWorldX - float32(p.camera.ViewportX)
+	roleScreenY := p.roleSprite.centerWorldY - float32(p.camera.ViewportY)
 
 	// 显示地图信息
-	y := 10.0
+	y := float32(10.0)
 	ui.Printf(screen, 10, y, "=== Map Info ===")
 	y += 20
 	ui.Printf(screen, 10, y, "Map ID: %d", mapID)

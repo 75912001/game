@@ -13,7 +13,7 @@ func (p *Role) Update() {
 	if p.roleSprite.bottomCenterWorldX == 0 && p.roleSprite.bottomCenterWorldY == 0 {
 		tx := p.GetValueInt(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TX)
 		ty := p.GetValueInt(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TY)
-		p.roleSprite.bottomCenterWorldX, p.roleSprite.bottomCenterWorldY = p.scene.TileToWorld(float64(tx), float64(ty))
+		p.roleSprite.bottomCenterWorldX, p.roleSprite.bottomCenterWorldY = p.scene.TileToWorld(float32(tx), float32(ty))
 	}
 
 	// 更新角色方向
@@ -27,7 +27,7 @@ func (p *Role) Update() {
 
 	// 更新角色中心 World 坐标 (脚底中心向上偏移半个角色高度)
 	p.roleSprite.centerWorldX = p.roleSprite.bottomCenterWorldX
-	p.roleSprite.centerWorldY = p.roleSprite.bottomCenterWorldY - float64(p.roleSprite.roleImageSprite.Frame.Height/2)
+	p.roleSprite.centerWorldY = p.roleSprite.bottomCenterWorldY - float32(p.roleSprite.roleImageSprite.Frame.Height/2)
 
 	// 更新摄像机跟随点 (World 坐标)
 	p.camera.FollowX = int(p.roleSprite.centerWorldX)

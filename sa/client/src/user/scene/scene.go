@@ -51,17 +51,17 @@ func (p *Scene) GetMapTileSize() (width, height int) {
 }
 
 // ClampTileBounds 将 tile 坐标限制在地图边界内
-func (p *Scene) ClampTileBounds(tileX, tileY float64) (clampedTX, clampedTY float64) {
+func (p *Scene) ClampTileBounds(tileX, tileY float32) (clampedTX, clampedTY float32) {
 	return p._map.ClampTileBounds(tileX, tileY)
 }
 
 // TileToWorld tile 坐标转换为世界坐标
-func (p *Scene) TileToWorld(tileX, tileY float64) (worldX, worldY float64) {
+func (p *Scene) TileToWorld(tileX, tileY float32) (worldX, worldY float32) {
 	return p._map.cfg.CT.TileToWorld(tileX, tileY)
 }
 
 // WorldToTile 世界坐标转换为 tile 坐标
-func (p *Scene) WorldToTile(worldX, worldY float64) (tileX, tileY float64) {
+func (p *Scene) WorldToTile(worldX, worldY float32) (tileX, tileY float32) {
 	return p._map.cfg.CT.WorldToTile(worldX, worldY)
 }
 

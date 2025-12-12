@@ -9,12 +9,13 @@ import (
 	"strconv"
 	"strings"
 
+	"saClient/src/common"
+	"saClient/src/proto"
+
 	xmap "github.com/75912001/xlib/map"
 	xruntime "github.com/75912001/xlib/runtime"
 	ebitenv2ebitenutil "github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/pkg/errors"
-	"saClient/src/common"
-	"saClient/src/proto"
 )
 
 var GTiledMapMgr = newTiledMapMgr()
@@ -67,7 +68,7 @@ type tmxLayer struct {
 	Width   int     `xml:"width,attr"`
 	Height  int     `xml:"height,attr"`
 	Visible *int    `xml:"visible,attr"`
-	Opacity float64 `xml:"opacity,attr"`
+	Opacity float32 `xml:"opacity,attr"`
 	Data    tmxData `xml:"data"`
 }
 
@@ -94,11 +95,11 @@ type tmxObjectGroup struct {
 type tmxObject struct {
 	ID         int            `xml:"id,attr"`
 	Type       string         `xml:"type,attr"`
-	X          float64        `xml:"x,attr"`
-	Y          float64        `xml:"y,attr"`
-	Width      float64        `xml:"width,attr"`
-	Height     float64        `xml:"height,attr"`
-	Rotation   float64        `xml:"rotation,attr"`
+	X          float32        `xml:"x,attr"`
+	Y          float32        `xml:"y,attr"`
+	Width      float32        `xml:"width,attr"`
+	Height     float32        `xml:"height,attr"`
+	Rotation   float32        `xml:"rotation,attr"`
 	Visible    *int           `xml:"visible,attr"`
 	Polygon    *tmxPolygon    `xml:"polygon"`
 	Properties *tmxProperties `xml:"properties"`
@@ -389,7 +390,7 @@ func parsePolygonPoints(points string) []*TiledPoint {
 		if err1 != nil || err2 != nil {
 			continue
 		}
-		result = append(result, &TiledPoint{X: x, Y: y})
+		result = append(result, &TiledPoint{X: float32(x), Y: float32(y)})
 	}
 	return result
 }

@@ -4,8 +4,9 @@ import (
 	"image"
 	ct "saClient/src/coordinatetransform"
 
-	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
 	"saClient/src/common"
+
+	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
 )
 
 type TiledLayerType uint32 // Tiled图层类型
@@ -41,7 +42,7 @@ type TiledLayer struct {
 	ID      int            // 图层ID
 	Type    TiledLayerType // 图层类型
 	Visible bool           // 是否可见
-	Opacity float64        // 透明度
+	Opacity float32        // 透明度
 	X       int            // 图层X偏移
 	Y       int            // 图层Y偏移
 	Width   int            // 图层宽度
@@ -54,11 +55,11 @@ type TiledLayer struct {
 type TiledObject struct {
 	ID           int             // 对象ID
 	Type         string          // 对象类型
-	X            float64         // 对象X坐标
-	Y            float64         // 对象Y坐标
-	Width        float64         // 对象宽度
-	Height       float64         // 对象高度
-	Rotation     float64         // 旋转角度
+	X            float32         // 对象X坐标
+	Y            float32         // 对象Y坐标
+	Width        float32         // 对象宽度
+	Height       float32         // 对象高度
+	Rotation     float32         // 旋转角度
 	Visible      bool            // 是否可见
 	Polygon      []*TiledPoint   // 多边形顶点（相对坐标）
 	Collision    bool            // 是否碰撞
@@ -67,8 +68,8 @@ type TiledObject struct {
 
 // TiledPoint Tiled 点
 type TiledPoint struct {
-	X float64
-	Y float64
+	X float32
+	Y float32
 }
 
 // TiledTileset Tiled-瓦片集
