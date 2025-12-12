@@ -389,6 +389,7 @@ func parsePolygonPoints(points string) []*TiledPoint {
 
 // Check 检查 Tiled 地图资源
 func (p *MapMgr) Check() error {
+	// todo menglc 检查该资源是否-被地图配置引用
 	return nil
 }
 

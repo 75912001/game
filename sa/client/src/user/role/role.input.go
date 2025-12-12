@@ -59,33 +59,10 @@ func (p *Role) HandleInput() { // 获取当前位置
 	newX := x + dx
 	newY := y + dy
 
-	// 获取角色尺寸(使用当前帧的尺寸)
-	roleHalfWidth := p.roleSprite.roleImageSprite.Frame.Width / 2
-	roleHeight := p.roleSprite.roleImageSprite.Frame.Height
-
-	// 限制在地图范围内(考虑角色尺寸)
-	mapWidth, mapHeight := p.scene.GetMapSize()
-	// 左边界(角色中心点至少要离左边缘半个角色宽度
-	if newX < roleHalfWidth {
-		newX = roleHalfWidth
-	}
-	// 右边界:角色中心点至少要离右边缘半个角色宽度
-	if newX > mapWidth-roleHalfWidth {
-		newX = mapWidth - roleHalfWidth
-	}
-	if true { // 只露脚即可
-		if newY < 20 {
-			newY = 20
-		}
-	} else { // 上边界:脚底Y坐标至少要离上边缘一个角色高度
-		if newY < roleHeight {
-			newY = roleHeight
-		}
-	}
-	// 下边界:脚底Y坐标不能超过地图底部
-	if newY > mapHeight {
-		newY = mapHeight
-	}
+	// 使用场景的边界限制（支持菱形边界）
+	clampedX, clampedY := p.scene.ClampToMapBounds(float64(newX), float64(newY))
+	newX = int(clampedX)
+	newY = int(clampedY)
 
 	// 更新位置和方向
 	p.SetValueU64(proto.AssetIDRecord_AssetIDRecord_BottomCenterX, uint64(newX))

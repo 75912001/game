@@ -12,46 +12,46 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-// TeleportPointID 传送点ID类型
-type TeleportPointID uint32
+// PortalID 传送ID类型
+type PortalID uint32
 
-// TeleportPoint 传送点
-type TeleportPoint struct {
-	ID    TeleportPointID `yaml:"id"`    // 传送点ID (地图ID * 100 + 序号)
-	MapID common.AssetID  `yaml:"mapID"` // 所在地图ID
-	X     int             `yaml:"x"`     // x坐标
-	Y     int             `yaml:"y"`     // y坐标
-	Name  string          `yaml:"name"`  // 传送点名称
+// PortalPoint 传送点
+type PortalPoint struct {
+	ID    PortalID       `yaml:"id"`    // 传送点ID (地图ID * 100 + 序号)
+	Name  string         `yaml:"name"`  // 传送点名称
+	MapID common.AssetID `yaml:"mapID"` // 所在地图ID
+	X     int            `yaml:"x"`     // x坐标
+	Y     int            `yaml:"y"`     // y坐标
 }
 
-var GTeleportMgr = newTeleportMgr()
+var GPortalMgr = newPortalMgr()
 
-// TeleportMgr 传送点配置管理器
-type TeleportMgr struct {
-	Points *xmap.MapMgr[TeleportPointID, *TeleportPoint] // key: 传送点ID
+// PortalMgr 传送点管理器
+type PortalMgr struct {
+	Points *xmap.MapMgr[PortalID, *PortalPoint] // key: 传送点ID
 }
 
-func newTeleportMgr() *TeleportMgr {
-	return &TeleportMgr{
-		Points: xmap.NewMapMgr[TeleportPointID, *TeleportPoint](),
+func newPortalMgr() *PortalMgr {
+	return &PortalMgr{
+		Points: xmap.NewMapMgr[PortalID, *PortalPoint](),
 	}
 }
 
 // Load 加载传送点配置文件
-func (p *TeleportMgr) Load() error {
-	cfgPath := filepath.Join(common.AppCfgDir, "teleport.yaml")
+func (p *PortalMgr) Load() error {
+	cfgPath := filepath.Join(common.AppCfgDir, "portal.yaml")
 	data, err := os.ReadFile(cfgPath)
 	if err != nil {
 		return errors.WithMessagef(err, "读取传送点配置文件失败: %v %v", cfgPath, xruntime.Location())
 	}
 	var config struct {
-		TeleportPoints []*TeleportPoint `yaml:"teleportPoints"`
+		TargetPoints []*PortalPoint `yaml:"targetPoints"`
 	}
 	err = yaml.Unmarshal(data, &config)
 	if err != nil {
 		return errors.WithMessagef(err, "解析传送点配置文件失败: %v %v", cfgPath, xruntime.Location())
 	}
-	for _, point := range config.TeleportPoints {
+	for _, point := range config.TargetPoints {
 		ok := p.Points.AddIfNotExist(point.ID, point)
 		if !ok {
 			return fmt.Errorf("添加传送点失败,传送点已存在: %v %v", point.ID, xruntime.Location())
@@ -61,22 +61,17 @@ func (p *TeleportMgr) Load() error {
 }
 
 // Check 检查传送点配置
-func (p *TeleportMgr) Check() error {
+func (p *PortalMgr) Check() error {
 	var err error
-	p.Points.Foreach(func(id TeleportPointID, point *TeleportPoint) bool {
+	p.Points.Foreach(func(id PortalID, point *PortalPoint) bool {
 		// 检查所在地图是否存在
 		targetMap, exists := GMapMgr.Maps.Find(point.MapID)
 		if !exists {
 			err = fmt.Errorf("传送点 %d 所在地图 %d 不存在", point.ID, point.MapID)
 			return false
 		}
-		// 检查坐标是否在地图范围内
-		if point.X < 0 || point.Y < 0 ||
-			point.X >= targetMap.Width ||
-			point.Y >= targetMap.Height {
-			err = fmt.Errorf("传送点 %d 坐标(%d,%d)超出地图 %d 范围", point.ID, point.X, point.Y, point.MapID)
-			return false
-		}
+		// 检查坐标是否在地图范围内 todo menglc 后续可扩展为检查是否在可行走区域内
+		_ = targetMap
 		// 检查传送点ID是否符合规则 (地图ID * 100 + 序号)
 		expectedMapID := common.AssetID(point.ID / 100)
 		if expectedMapID != point.MapID {
@@ -89,6 +84,6 @@ func (p *TeleportMgr) Check() error {
 }
 
 // Assemble 组装传送点配置
-func (p *TeleportMgr) Assemble() error {
+func (p *PortalMgr) Assemble() error {
 	return nil
 }
