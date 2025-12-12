@@ -89,6 +89,3 @@ tiled 编辑地图
     https://pixian.ai/
 ## 精灵播放器 Sprite Reel
     https://spritereel.com/
-
-C:\game\sa\client\src\user\role\role.update.go
-C:\game\sa\client\src\user\role\role.draw.go

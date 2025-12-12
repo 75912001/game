@@ -93,6 +93,25 @@ func (p *CT) ScreenToWorld(screenX, screenY, cameraX, cameraY float32) (worldX, 
 }
 
 // ============================================================================
+// Tile <-> Screen 转换
+// ============================================================================
+
+// TileToScreen Tile坐标 -> Screen坐标 (tile 菱形中心)
+func (p *CT) TileToScreen(tileX, tileY, cameraX, cameraY float32) (screenX, screenY float32) {
+	worldX, worldY := p.TileToWorld(tileX, tileY)
+	screenX = worldX - cameraX
+	screenY = worldY - cameraY
+	return
+}
+
+// ScreenToTile Screen坐标 -> Tile坐标
+func (p *CT) ScreenToTile(screenX, screenY, cameraX, cameraY float32) (tileX, tileY float32) {
+	worldX := screenX + cameraX
+	worldY := screenY + cameraY
+	return p.WorldToTile(worldX, worldY)
+}
+
+// ============================================================================
 // Tile 图像位置 (用于渲染)
 // ============================================================================
 
