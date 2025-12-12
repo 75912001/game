@@ -2,6 +2,7 @@ package cfg
 
 import (
 	"image"
+	ct "saClient/src/coordinatetransform"
 
 	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
 	"saClient/src/common"
@@ -29,6 +30,10 @@ type TiledMap struct {
 	Layers                  []*TiledLayer   // 图层列表
 	Tilesets                []*TiledTileset // tileset 列表
 	BackgroundMusicFilePath string          // 背景音乐文件路径
+
+	PixelW int    // 地图像素宽度
+	PixelH int    // 地图像素高度
+	CT     *ct.CT // 坐标转换器
 }
 
 // TiledLayer Tiled 图层

@@ -8,7 +8,8 @@ import (
 )
 
 // HandleInput 处理键盘输入
-func (p *Role) HandleInput() { // 获取当前位置
+// 移动按屏幕方向(World坐标系)，而非Tile坐标系
+func (p *Role) HandleInput() {
 	// 检测 WASD 按键
 	up := ebiten.IsKeyPressed(ebiten.KeyW)
 	down := ebiten.IsKeyPressed(ebiten.KeyS)
@@ -20,56 +21,73 @@ func (p *Role) HandleInput() { // 获取当前位置
 		return
 	}
 
-	moveSpeed := int(cfg.GCommon.RoleDefaultMoveSpeed)
-	// 获取当前位置
-	tx := p.GetValueInt(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TX)
-	ty := p.GetValueInt(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TY)
-
-	// 计算方向和位移
+	// 计算屏幕方向的移动向量 (World 坐标系)
+	var dx, dy float64 = 0, 0
 	var orientation proto.AssetOrientation
-	dx, dy := 0, 0
 
+	// 屏幕方向: W=上, S=下, A=左, D=右
 	if up && right {
 		orientation = proto.AssetOrientation_AssetOrientation_UpRight
-		dx, dy = moveSpeed, -moveSpeed
+		dx, dy = 1, -1
 	} else if up && left {
 		orientation = proto.AssetOrientation_AssetOrientation_UpLeft
-		dx, dy = -moveSpeed, -moveSpeed
+		dx, dy = -1, -1
 	} else if down && right {
 		orientation = proto.AssetOrientation_AssetOrientation_DownRight
-		dx, dy = moveSpeed, moveSpeed
+		dx, dy = 1, 1
 	} else if down && left {
 		orientation = proto.AssetOrientation_AssetOrientation_DownLeft
-		dx, dy = -moveSpeed, moveSpeed
+		dx, dy = -1, 1
 	} else if up {
 		orientation = proto.AssetOrientation_AssetOrientation_Up
-		dy = -moveSpeed
+		dy = -1
 	} else if down {
 		orientation = proto.AssetOrientation_AssetOrientation_Down
-		dy = moveSpeed
+		dy = 1
 	} else if left {
 		orientation = proto.AssetOrientation_AssetOrientation_Left
-		dx = -moveSpeed
+		dx = -1
 	} else { // right
 		orientation = proto.AssetOrientation_AssetOrientation_Right
-		dx = moveSpeed
+		dx = 1
 	}
 
-	// 计算新位置
-	newX := tx + dx
-	newY := ty + dy
+	// 归一化对角线移动 (避免对角线移动更快)
+	if dx != 0 && dy != 0 {
+		dx *= 0.707 // 1/sqrt(2) ≈ 0.707
+		dy *= 0.707
+	}
 
-	// 使用场景的边界限制（支持菱形边界）
-	clampedX, clampedY := p.scene.ClampToMapBounds(float64(newX), float64(newY))
-	newX = int(clampedX)
-	newY = int(clampedY)
-
-	// 更新位置和方向
-	p.SetValueU64(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TX, uint64(newX))
-	p.SetValueU64(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TY, uint64(newY))
+	// 更新方向
 	p.SetValueU64(proto.AssetIDRecord_AssetIDRecord_Orientation, uint64(orientation))
 
-	// 更新动画帧（每 6 tick 切换一帧，60 TPS 下约 10 FPS 动画）
+	// 移动速度 (像素/帧)
+	moveSpeed := float64(cfg.GCommon.RoleDefaultMoveSpeed)
+
+	// 计算新的 World 坐标
+	newWorldX := p.roleSprite.bottomCenterWorldX + dx*moveSpeed
+	newWorldY := p.roleSprite.bottomCenterWorldY + dy*moveSpeed
+
+	// 转换为 Tile 坐标进行边界检测
+	tileX, tileY := p.scene.WorldToTile(newWorldX, newWorldY)
+
+	// 限制在地图边界内
+	clampedTX, clampedTY := p.scene.ClampTileBounds(tileX, tileY)
+
+	// 如果被限制了，需要重新计算 World 坐标
+	if clampedTX != tileX || clampedTY != tileY {
+		newWorldX, newWorldY = p.scene.TileToWorld(clampedTX, clampedTY)
+	}
+
+	// 更新 World 坐标
+	p.roleSprite.bottomCenterWorldX = newWorldX
+	p.roleSprite.bottomCenterWorldY = newWorldY
+
+	// 同步 Tile 坐标到 proto (用于记录/网络同步)
+	p.SetValueU64(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TX, uint64(int(clampedTX)))
+	p.SetValueU64(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TY, uint64(int(clampedTY)))
+
+	// 更新动画帧
 	p.frameTick++
 	if p.frameTick >= 6 {
 		p.frameTick = 0

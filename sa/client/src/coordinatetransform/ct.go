@@ -17,6 +17,8 @@ package coordinatetransform
 //    - 原点在屏幕左上角
 //    - Screen = World - Camera
 
+var GCT *CT
+
 // CT 坐标转换器 (等距地图)
 type CT struct {
 	Width      int // 地图宽度(tile 数)
@@ -91,26 +93,11 @@ func (p *CT) ScreenToWorld(screenX, screenY, cameraX, cameraY float64) (worldX, 
 }
 
 // ============================================================================
-// Tile <-> Screen 转换
-// ============================================================================
-
-// TileToScreen Tile坐标 -> Screen坐标
-func (p *CT) TileToScreen(tileX, tileY, cameraX, cameraY float64) (screenX, screenY float64) {
-	worldX, worldY := p.TileToWorld(tileX, tileY)
-	return p.WorldToScreen(worldX, worldY, cameraX, cameraY)
-}
-
-// ScreenToTile Screen坐标 -> Tile坐标
-func (p *CT) ScreenToTile(screenX, screenY, cameraX, cameraY float64) (tileX, tileY float64) {
-	worldX, worldY := p.ScreenToWorld(screenX, screenY, cameraX, cameraY)
-	return p.WorldToTile(worldX, worldY)
-}
-
-// ============================================================================
 // Tile 图像位置 (用于渲染)
 // ============================================================================
 
 // TileToImagePos 获取 Tile 图像左上角的 World 坐标 (用于渲染)
+// todo menglc 可以预先计算出每个 tile 的位置，避免每次绘制都计算一次
 func (p *CT) TileToImagePos(tileX, tileY int) (imageX, imageY int) {
 	halfTW := p.TileWidth / 2
 	halfTH := p.TileHeight / 2
@@ -159,29 +146,9 @@ func (p *CT) ClampTile(tileX, tileY float64) (clampedTX, clampedTY float64) {
 	return
 }
 
-// IsWorldInBounds 检查 World 坐标是否在地图边界内
-func (p *CT) IsWorldInBounds(worldX, worldY float64) bool {
-	tileX, tileY := p.WorldToTile(worldX, worldY)
-	return p.IsInBounds(tileX, tileY)
-}
-
-// ClampWorld 将 World 坐标限制在地图边界内
-func (p *CT) ClampWorld(worldX, worldY float64) (clampedX, clampedY float64) {
-	tileX, tileY := p.WorldToTile(worldX, worldY)
-	clampedTX, clampedTY := p.ClampTile(tileX, tileY)
-	return p.TileToWorld(clampedTX, clampedTY)
-}
-
 // ============================================================================
 // 地图尺寸
 // ============================================================================
-
-// GetMapPixelSize 获取地图像素尺寸
-func (p *CT) GetMapPixelSize() (width, height int) {
-	width = (p.Width + p.Height) * (p.TileWidth / 2)
-	height = (p.Width + p.Height) * (p.TileHeight / 2)
-	return
-}
 
 // GetDiamondCorners 获取菱形边界的四个角点 (World 坐标)
 // 返回: top(顶), right(右), bottom(底), left(左)

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	ct "saClient/src/coordinatetransform"
 	"strconv"
 	"strings"
 
@@ -411,5 +412,14 @@ func (p *TiledMapMgr) Check() error {
 
 // Assemble 装配 Tiled 地图资源
 func (p *TiledMapMgr) Assemble() error {
+	p.Maps.Foreach(
+		func(mapID common.AssetID, tiledMap *TiledMap) (isContinue bool) {
+			tiledMap.PixelW = (tiledMap.Width + tiledMap.Height) * (tiledMap.TileWidth / 2)
+			tiledMap.PixelH = (tiledMap.Width + tiledMap.Height) * (tiledMap.TileHeight / 2)
+			tiledMap.CT = ct.NewCT(tiledMap.Width, tiledMap.Height, tiledMap.TileWidth, tiledMap.TileHeight)
+			return true
+		},
+	)
+
 	return nil
 }

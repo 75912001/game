@@ -11,7 +11,7 @@ import (
 type Scene struct {
 	buildingMgr   *BuildingMgr   // 建筑-管理器
 	decorationMgr *DecorationMgr // 装饰物-管理器
-	tiledMap      *TiledMap      // Tiled 地图
+	_map          *Map           // Tiled 地图
 	plantMgr      *PlantMgr      // 植物-管理器
 	itemMgr       *ItemMgr       // 物品-管理器
 }
@@ -20,36 +20,49 @@ func NewScene(mapID common.AssetID) *Scene {
 	scene := &Scene{
 		buildingMgr:   NewBuildingMgr(),
 		decorationMgr: NewDecorationMgr(),
+		_map:          NewMap(mapID),
 		plantMgr:      NewPlantMgr(),
 		itemMgr:       NewItemMgr(),
 	}
-
-	scene.tiledMap = NewTiledMap(mapID)
 	return scene
 }
 
 func (p *Scene) Update() {
-	p.tiledMap.Update()
+	p._map.Update()
 	p.buildingMgr.Update()
 	p.plantMgr.Update()
 	p.decorationMgr.Update()
 	p.itemMgr.Update()
 }
 
-// GetMapSize 获取地图尺寸
-func (p *Scene) GetMapSize() (width, height int) {
-	return p.tiledMap.GetMapSize()
+// GetMapPixeSize 获取地图像素尺寸
+func (p *Scene) GetMapPixeSize() (width, height int) {
+	return p._map.cfg.PixelW, p._map.cfg.PixelH
 }
 
-// ClampToMapBounds 将坐标限制在地图边界内
-// 对于 Tiled 等距地图，边界是菱形；对于普通地图，边界是矩形
-func (p *Scene) ClampToMapBounds(worldX, worldY float64) (clampedX, clampedY float64) {
-	return p.tiledMap.ClampToMapBounds(worldX, worldY)
+// GetMapID 获取地图ID
+func (p *Scene) GetMapID() common.AssetID {
+	return p._map.cfg.ID
 }
 
-// IsInMapBounds 检查坐标是否在地图边界内
-func (p *Scene) IsInMapBounds(worldX, worldY float64) bool {
-	return p.tiledMap.IsInMapBounds(worldX, worldY)
+// GetMapTileSize 获取地图 tile 尺寸
+func (p *Scene) GetMapTileSize() (width, height int) {
+	return p._map.cfg.Width, p._map.cfg.Height
+}
+
+// ClampTileBounds 将 tile 坐标限制在地图边界内
+func (p *Scene) ClampTileBounds(tileX, tileY float64) (clampedTX, clampedTY float64) {
+	return p._map.ClampTileBounds(tileX, tileY)
+}
+
+// TileToWorld tile 坐标转换为世界坐标
+func (p *Scene) TileToWorld(tileX, tileY float64) (worldX, worldY float64) {
+	return p._map.cfg.CT.TileToWorld(tileX, tileY)
+}
+
+// WorldToTile 世界坐标转换为 tile 坐标
+func (p *Scene) WorldToTile(worldX, worldY float64) (tileX, tileY float64) {
+	return p._map.cfg.CT.WorldToTile(worldX, worldY)
 }
 
 func (p *Scene) Draw(screen *ebitenv2.Image, camera *camera.Camera) {
@@ -61,7 +74,7 @@ func (p *Scene) Draw(screen *ebitenv2.Image, camera *camera.Camera) {
 		A: 255,
 	})
 
-	p.tiledMap.Draw(screen, camera)
+	p._map.Draw(screen, camera)
 	p.buildingMgr.Draw(screen)
 	p.plantMgr.Draw(screen)
 	p.decorationMgr.Draw(screen)
