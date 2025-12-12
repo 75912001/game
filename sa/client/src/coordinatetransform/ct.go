@@ -17,8 +17,6 @@ package coordinatetransform
 //    - 原点在屏幕左上角
 //    - Screen = World - Camera
 
-var GCT *CT
-
 // CT 坐标转换器 (等距地图)
 type CT struct {
 	Width      int // 地图宽度(tile 数)
