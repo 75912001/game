@@ -31,11 +31,7 @@ func LoadCfg() error {
 	if err != nil {
 		return errors.WithMessagef(err, "load mapMgr error %v", xruntime.Location())
 	}
-	err = res.GMapMgr.Load()
-	if err != nil {
-		return errors.WithMessagef(err, "load res mapMgr error %v", xruntime.Location())
-	}
-	err = cfg.GTeleportMgr.Load()
+	err = cfg.GPortalMgr.Load()
 	if err != nil {
 		return errors.WithMessagef(err, "load teleportMgr error %v", xruntime.Location())
 	}
@@ -69,11 +65,7 @@ func CheckCfg() error {
 	if err != nil {
 		return errors.WithMessagef(err, "check mapMgr error %v", xruntime.Location())
 	}
-	err = res.GMapMgr.Check()
-	if err != nil {
-		return errors.WithMessagef(err, "check res mapMgr error %v", xruntime.Location())
-	}
-	err = cfg.GTeleportMgr.Check()
+	err = cfg.GPortalMgr.Check()
 	if err != nil {
 		return errors.WithMessagef(err, "check teleportMgr error %v", xruntime.Location())
 	}
@@ -107,11 +99,7 @@ func AssembleCfg() error {
 	if err != nil {
 		return errors.WithMessagef(err, "Assemble mapMgr error %v", xruntime.Location())
 	}
-	err = res.GMapMgr.Assemble()
-	if err != nil {
-		return errors.WithMessagef(err, "Assemble res mapMgr error %v", xruntime.Location())
-	}
-	err = cfg.GTeleportMgr.Assemble()
+	err = cfg.GPortalMgr.Assemble()
 	if err != nil {
 		return errors.WithMessagef(err, "Assemble teleportMgr error %v", xruntime.Location())
 	}
