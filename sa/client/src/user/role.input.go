@@ -76,7 +76,7 @@ func (p *Role) HandleInput() {
 	clampedTX, clampedTY := p.scene.ClampTileBounds(tileX, tileY)
 
 	// 如果被限制了，需要重新计算 World 坐标
-	if xutil.Float32Equal(clampedTX, tileX) || xutil.Float32Equal(clampedTY, tileY) {
+	if !xutil.Float32Equal(clampedTX, tileX) || !xutil.Float32Equal(clampedTY, tileY) {
 		newWorldX, newWorldY = p.scene.TileToWorld(clampedTX, clampedTY)
 	}
 
