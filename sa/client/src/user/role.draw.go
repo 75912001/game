@@ -25,13 +25,9 @@ func (p *Role) Draw(screen *ebitenv2.Image) {
 
 // drawDebugInfo 绘制调试信息
 func (p *Role) drawDebugInfo(screen *ebitenv2.Image) {
-	// 获取地图信息
-	mapID := p.scene.GetMapID()
-	tileW, tileH := p.scene.GetMapTileSize()
-	pixelW, pixelH := p.scene.GetMapPixeSize()
-
+	mapCfg := p.scene._map.cfg
 	// 获取角色 Tile 坐标
-	tileX, tileY := p.scene.WorldToTile(p.sprite.bottomCenterWorldX, p.sprite.bottomCenterWorldY)
+	tileX, tileY := mapCfg.IsometricCT.W2T(p.sprite.bottomCenterWorldX, p.sprite.bottomCenterWorldY)
 
 	// 获取角色 World 坐标
 	worldX := p.sprite.bottomCenterWorldX
@@ -45,11 +41,11 @@ func (p *Role) drawDebugInfo(screen *ebitenv2.Image) {
 	y := float32(10.0)
 	ui.Printf(screen, 10, y, "=== Map Info ===")
 	y += 20
-	ui.Printf(screen, 10, y, "Map ID: %d", mapID)
+	ui.Printf(screen, 10, y, "Map ID: %d", mapCfg.ID)
 	y += 20
-	ui.Printf(screen, 10, y, "Tile Size: %d x %d", tileW, tileH)
+	ui.Printf(screen, 10, y, "Tile Size: %d x %d", mapCfg.Width, mapCfg.Height)
 	y += 20
-	ui.Printf(screen, 10, y, "Pixel Size: %d x %d", pixelW, pixelH)
+	ui.Printf(screen, 10, y, "Pixel Size: %d x %d", mapCfg.PixelW, mapCfg.PixelH)
 
 	// 显示角色坐标信息
 	y += 30

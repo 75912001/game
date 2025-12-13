@@ -183,8 +183,3 @@ func (p *Map) getTileImage(gid int) (*ebitenv2.Image, *cfg.TiledTileset) {
 	img := tileset.Image.SubImage(image.Rect(x, y, x+tileset.TileWidth, y+tileset.TileHeight)).(*ebitenv2.Image)
 	return img, tileset
 }
-
-// ClampTileBounds 将 tile 坐标限制在地图边界内
-func (p *Map) ClampTileBounds(tileX, tileY float32) (clampedTX, clampedTY float32) {
-	return p.cfg.IsometricCT.ClampTile(tileX, tileY)
-}

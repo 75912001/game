@@ -1,11 +1,11 @@
 package user
 
 import (
+	xutil "github.com/75912001/xlib/util"
 	"log"
 	"saClient/src/cfg"
 	"saClient/src/proto"
 
-	xutil "github.com/75912001/xlib/util"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
@@ -70,15 +70,14 @@ func (p *Role) HandleInput() {
 	newWorldX := p.sprite.bottomCenterWorldX + dx*moveSpeed
 	newWorldY := p.sprite.bottomCenterWorldY + dy*moveSpeed
 
-	// 转换为 Tile 坐标进行边界检测
-	tileX, tileY := p.scene.WorldToTile(newWorldX, newWorldY)
+	mapCfg := p.scene._map.cfg
 
 	// 限制在地图边界内
-	clampedTX, clampedTY := p.scene.ClampTileBounds(tileX, tileY)
-
-	// 如果被限制了，需要重新计算 World 坐标
-	if !xutil.Float32Equal(clampedTX, tileX) || !xutil.Float32Equal(clampedTY, tileY) {
-		newWorldX, newWorldY = p.scene.TileToWorld(clampedTX, clampedTY)
+	tileX, tileY := mapCfg.IsometricCT.W2T(newWorldX, newWorldY)
+	clampedTX, clampedTY := mapCfg.IsometricCT.ClampTileBounds(tileX, tileY)
+	if !xutil.Float32Equal(tileX, clampedTX) || !xutil.Float32Equal(tileY, clampedTY) { // 需要限制
+		newWorldX, newWorldY = mapCfg.IsometricCT.T2W(clampedTX, clampedTY)
+		tileX, tileY = clampedTX, clampedTY
 	}
 
 	// 更新 World 坐标
@@ -86,8 +85,9 @@ func (p *Role) HandleInput() {
 	p.sprite.bottomCenterWorldY = newWorldY
 
 	// 同步 Tile 坐标到 proto (用于记录/网络同步)
-	p.SetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TX, clampedTX)
-	p.SetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TY, clampedTY)
+	//tileX, tileY := mapCfg.IsometricCT.W2T(newWorldX, newWorldY)
+	p.SetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TX, tileX)
+	p.SetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TY, tileY)
 
 	// 更新动画帧
 	p.frameTick++
@@ -97,7 +97,7 @@ func (p *Role) HandleInput() {
 	}
 
 	// 判断角色 wx, wy 是否触发了碰撞
-	collisionObject, ok := p.scene._map.cfg.FindCollisionObject(p.sprite.bottomCenterWorldX, p.sprite.bottomCenterWorldY)
+	collisionObject, ok := mapCfg.FindCollisionObject(p.sprite.bottomCenterWorldX, p.sprite.bottomCenterWorldY)
 	if ok {
 		log.Printf("Role HandleInput collision at world (%.2f, %.2f) collisionObject:%+v", p.sprite.bottomCenterWorldX, p.sprite.bottomCenterWorldY, collisionObject)
 	}

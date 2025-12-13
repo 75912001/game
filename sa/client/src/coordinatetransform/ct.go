@@ -139,13 +139,8 @@ func (p *Isometric) TileImageScreenPos(tileX, tileY, cameraX, cameraY int) (scre
 // 边界检测
 // ============================================================================
 
-// IsInBounds 检查 Tile 坐标是否在地图边界内
-func (p *Isometric) IsInBounds(tileX, tileY float32) bool {
-	return tileX >= 0 && tileX < float32(p.Width) && tileY >= 0 && tileY < float32(p.Height)
-}
-
-// ClampTile 将 Tile 坐标限制在地图边界内
-func (p *Isometric) ClampTile(tileX, tileY float32) (clampedTX, clampedTY float32) {
+// ClampTileBounds 将 Tile 坐标限制在地图边界内
+func (p *Isometric) ClampTileBounds(tileX, tileY float32) (clampedTX, clampedTY float32) {
 	maxTX := float32(p.Width) - 0.01
 	maxTY := float32(p.Height) - 0.01
 

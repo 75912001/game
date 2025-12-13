@@ -81,7 +81,7 @@ func (p *User) Login(account string, password string) error {
 		{
 			tx := p.role.GetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TX)
 			ty := p.role.GetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TY)
-			p.role.sprite.bottomCenterWorldX, p.role.sprite.bottomCenterWorldY = p.role.scene.TileToWorld(float32(tx), float32(ty))
+			p.role.sprite.bottomCenterWorldX, p.role.sprite.bottomCenterWorldY = p.role.scene._map.cfg.IsometricCT.T2W(tx, ty)
 		}
 	}
 	if false {
@@ -136,7 +136,7 @@ func (p *User) Login(account string, password string) error {
 		{
 			tx := p.role.GetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TX)
 			ty := p.role.GetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TY)
-			p.role.sprite.bottomCenterWorldX, p.role.sprite.bottomCenterWorldY = p.role.scene.TileToWorld(float32(tx), float32(ty))
+			p.role.sprite.bottomCenterWorldX, p.role.sprite.bottomCenterWorldY = p.role.scene._map.cfg.IsometricCT.T2W(tx, ty)
 		}
 	}
 	return nil
