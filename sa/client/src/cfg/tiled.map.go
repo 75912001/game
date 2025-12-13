@@ -96,3 +96,105 @@ func (t *TiledTileset) GetTileImage(localID int) *ebitenv2.Image {
 	y := row * t.TileHeight
 	return t.Image.SubImage(image.Rect(x, y, x+t.TileWidth, y+t.TileHeight)).(*ebitenv2.Image)
 }
+
+// ============================================================================
+// 碰撞检测
+// ============================================================================
+
+// ContainsWorldPoint 检查 World 坐标点是否在对象内部
+// worldX, worldY: World 坐标 (像素)
+// tileHeight: 用于将 Tiled 像素坐标转换为 Tile 坐标
+// ct: 坐标转换器
+func (obj *TiledObject) ContainsWorldPoint(worldX, worldY float32, tileHeight int, coordTransform *ct.Isometric) bool {
+	if len(obj.Polygon) > 0 {
+		// 多边形检测: 顶点坐标是相对于 obj.X, obj.Y 的 World 坐标
+		return obj.containsPointInPolygon(worldX, worldY)
+	}
+	// 矩形检测: 需要转换坐标系
+	return obj.containsPointInRect(worldX, worldY, tileHeight, coordTransform)
+}
+
+// containsPointInPolygon 检查点是否在多边形内部 (射线法)
+// 多边形顶点是 World 坐标 (obj.X + point.X, obj.Y + point.Y)
+func (obj *TiledObject) containsPointInPolygon(worldX, worldY float32) bool {
+	n := len(obj.Polygon)
+	if n < 3 {
+		return false
+	}
+
+	inside := false
+	j := n - 1
+
+	for i := 0; i < n; i++ {
+		// 多边形顶点的 World 坐标
+		xi := obj.X + obj.Polygon[i].X
+		yi := obj.Y + obj.Polygon[i].Y
+		xj := obj.X + obj.Polygon[j].X
+		yj := obj.Y + obj.Polygon[j].Y
+
+		// 射线法判断点是否在多边形内
+		if ((yi > worldY) != (yj > worldY)) &&
+			(worldX < (xj-xi)*(worldY-yi)/(yj-yi)+xi) {
+			inside = !inside
+		}
+		j = i
+	}
+
+	return inside
+}
+
+// containsPointInRect 检查点是否在矩形内部
+// Tiled 等距地图中，矩形对象的坐标需要转换
+func (obj *TiledObject) containsPointInRect(worldX, worldY float32, tileHeight int, coordTransform *ct.Isometric) bool {
+	// 将 Tiled 像素坐标转换为 Tile 坐标 (与 drawCollision 相同的转换逻辑)
+	th := float32(tileHeight)
+	tileX := obj.X/th + 0.5
+	tileY := obj.Y/th + 0.5
+	tileW := obj.Width / th
+	tileH := obj.Height / th
+
+	// 将待检测点从 World 转换为 Tile 坐标
+	pointTileX, pointTileY := coordTransform.W2T(worldX, worldY)
+
+	// 检查点是否在 Tile 矩形内
+	return pointTileX >= tileX && pointTileX <= tileX+tileW &&
+		pointTileY >= tileY && pointTileY <= tileY+tileH
+}
+
+// CheckCollision 检查 World 坐标点是否与任何碰撞对象相交
+// 返回: 是否碰撞
+func (m *TiledMap) CheckCollision(worldX, worldY float32) bool {
+	for _, layer := range m.Layers {
+		if layer.Type != TiledLayerType_ObjectLayer {
+			continue
+		}
+		for _, obj := range layer.Objects {
+			if !obj.Collision {
+				continue
+			}
+			if obj.ContainsWorldPoint(worldX, worldY, m.TileHeight, m.IsometricCT) {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+// GetPortalAt 获取 World 坐标点所在的传送门
+// 返回: 传送门对象 (如果存在), nil (如果不存在)
+func (m *TiledMap) GetPortalAt(worldX, worldY float32) *TiledObject {
+	for _, layer := range m.Layers {
+		if layer.Type != TiledLayerType_ObjectLayer {
+			continue
+		}
+		for _, obj := range layer.Objects {
+			if obj.TargetPortal == 0 {
+				continue
+			}
+			if obj.ContainsWorldPoint(worldX, worldY, m.TileHeight, m.IsometricCT) {
+				return obj
+			}
+		}
+	}
+	return nil
+}

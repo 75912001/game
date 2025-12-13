@@ -154,16 +154,19 @@ func (p *Map) drawData(screen *ebitenv2.Image, cam *camera.Camera, data []int, w
 		// 使用 IsometricCT 获取 tile 图像的屏幕位置
 		screenX, screenY := p.cfg.IsometricCT.TileImageScreenPos(tileX, tileY, cam.ViewportX, cam.ViewportY)
 
-		// 裁剪：跳过屏幕外的 tile
-		if screenX < -p.cfg.TileWidth || cfg.GCommon.ScreenMaxWidth < screenX ||
-			screenY < -p.cfg.TileHeight || cfg.GCommon.ScreenMaxHeight < screenY {
+		// 获取 tile 图像
+		// todo menglc 优化：可以缓存 tile 图像，避免重复获取
+		tileImg, tileset := p.getTileImage(gid)
+		if tileImg == nil {
 			continue
 		}
 
-		// 获取 tile 图像
-		// todo menglc 优化：可以缓存 tile 图像，避免重复获取
-		tileImg := p.getTileImage(gid)
-		if tileImg == nil {
+		// 修正 Y 坐标：tileset 高度大于 map tile 高度时，图像底部需对齐到 tile 基准位置
+		screenY -= tileset.TileHeight - p.cfg.TileHeight
+
+		// 裁剪：跳过屏幕外的 tile
+		if screenX < -tileset.TileWidth || cfg.GCommon.ScreenMaxWidth < screenX ||
+			screenY < -tileset.TileHeight || cfg.GCommon.ScreenMaxHeight < screenY {
 			continue
 		}
 
@@ -174,8 +177,8 @@ func (p *Map) drawData(screen *ebitenv2.Image, cam *camera.Camera, data []int, w
 	}
 }
 
-// getTileImage 根据 GID 获取 tile 图像
-func (p *Map) getTileImage(gid int) *ebitenv2.Image {
+// getTileImage 根据 GID 获取 tile 图像和所属的 tileset
+func (p *Map) getTileImage(gid int) (*ebitenv2.Image, *cfg.TiledTileset) {
 	var tileset *cfg.TiledTileset
 	for i := len(p.cfg.Tilesets) - 1; i >= 0; i-- {
 		ts := p.cfg.Tilesets[i]
@@ -185,12 +188,12 @@ func (p *Map) getTileImage(gid int) *ebitenv2.Image {
 		}
 	}
 	if tileset == nil || tileset.Image == nil {
-		return nil
+		return nil, nil
 	}
 
 	localID := gid - tileset.FirstGID
 	if localID < 0 || localID >= tileset.TileCount {
-		return nil
+		return nil, nil
 	}
 
 	col := localID % tileset.Columns
@@ -198,7 +201,8 @@ func (p *Map) getTileImage(gid int) *ebitenv2.Image {
 	x := col * tileset.TileWidth
 	y := row * tileset.TileHeight
 
-	return tileset.Image.SubImage(image.Rect(x, y, x+tileset.TileWidth, y+tileset.TileHeight)).(*ebitenv2.Image)
+	img := tileset.Image.SubImage(image.Rect(x, y, x+tileset.TileWidth, y+tileset.TileHeight)).(*ebitenv2.Image)
+	return img, tileset
 }
 
 // ClampTileBounds 将 tile 坐标限制在地图边界内
