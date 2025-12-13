@@ -32,9 +32,9 @@ type TiledMap struct {
 	Tilesets                []*TiledTileset // tileset 列表
 	BackgroundMusicFilePath string          // 背景音乐文件路径
 
-	PixelW int    // 地图像素宽度
-	PixelH int    // 地图像素高度
-	CT     *ct.CT // 坐标转换器
+	PixelW      int           // 地图像素宽度
+	PixelH      int           // 地图像素高度
+	IsometricCT *ct.Isometric // 坐标转换器
 }
 
 // TiledLayer Tiled 图层
@@ -95,16 +95,4 @@ func (t *TiledTileset) GetTileImage(localID int) *ebitenv2.Image {
 	x := col * t.TileWidth
 	y := row * t.TileHeight
 	return t.Image.SubImage(image.Rect(x, y, x+t.TileWidth, y+t.TileHeight)).(*ebitenv2.Image)
-}
-
-// GetPixelWidth 获取地图像素宽度
-func (m *TiledMap) GetPixelWidth() int {
-	// 等距地图(菱形):宽度 = (Width + Height) * TileWidth / 2
-	return (m.Width + m.Height) * (m.TileWidth / 2)
-}
-
-// GetPixelHeight 获取地图像素高度
-func (m *TiledMap) GetPixelHeight() int {
-	// 等距地图(菱形):高度 = (Width + Height) * TileHeight / 2
-	return (m.Width + m.Height) * (m.TileHeight / 2)
 }

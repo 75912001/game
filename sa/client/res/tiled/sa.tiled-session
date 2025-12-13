@@ -39,16 +39,16 @@
             "scale": 1,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 2010,
-                "y": 995
+                "x": 633,
+                "y": 816
             }
         },
         "map/map.2000002.tmx": {
-            "scale": 0.206328125,
+            "scale": 0.25,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 3198.7883377508515,
-                "y": 2282.7716773949264
+                "x": 2988,
+                "y": 2204
             }
         },
         "tsx/map.isometric_grass_and_water.tsx": {
@@ -59,12 +59,12 @@
     "last.exportedFilePath": "C:/game/sa/client/res/tiled/map",
     "last.imagePath": "C:/game/sa/client/res/tiled/map",
     "map.fixedSize": true,
-    "map.height": 10,
+    "map.height": 3,
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
     "map.lastUsedFormat": "tmx",
     "map.orientation": "2",
     "map.tileWidth": 64,
-    "map.width": 10,
+    "map.width": 6,
     "openFiles": [
         "map/map.2000001.tmx",
         "map/map.2000002.tmx"

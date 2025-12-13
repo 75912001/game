@@ -399,11 +399,26 @@ func parsePolygonPoints(points string) []*TiledPoint {
 func (p *TiledMapMgr) Check() error {
 	var err error
 	p.Maps.Foreach(
-		func(mapID common.AssetID, tiledMap *TiledMap) (isContinue bool) { // 检查地图是否合法
+		func(mapID common.AssetID, tiledMap *TiledMap) (isContinue bool) {
 			exist := GMapMgr.Maps.IsExist(mapID)
-			if !exist {
+			if !exist { // 检查地图是否合法
 				err = fmt.Errorf("Tiled 地图资源 %v 未定义 %v", mapID, xruntime.Location())
 				return false
+			}
+			for _, layer := range tiledMap.Layers {
+				switch layer.Type {
+				case TiledLayerType_TileLayer: // 瓦片图层
+				case TiledLayerType_ObjectLayer: // 对象图层
+					for _, obj := range layer.Objects {
+						if obj.TargetPortal != 0 {
+							exist = GPortalMgr.Points.IsExist(obj.TargetPortal)
+							if !exist {
+								err = fmt.Errorf("Tiled 地图资源 %v 中对象 %d 的目标传送点 %v 不存在 %v", mapID, obj.ID, obj.TargetPortal, xruntime.Location())
+								return false
+							}
+						}
+					}
+				}
 			}
 			return true
 		},
@@ -415,9 +430,11 @@ func (p *TiledMapMgr) Check() error {
 func (p *TiledMapMgr) Assemble() error {
 	p.Maps.Foreach(
 		func(mapID common.AssetID, tiledMap *TiledMap) (isContinue bool) {
+			// 等距地图像素尺寸 (包含完整的菱形内容区域)
+			// +TileHeight 是为了包含第一行 tile 上方和最后一行 tile 下方的菱形边缘
 			tiledMap.PixelW = (tiledMap.Width + tiledMap.Height) * (tiledMap.TileWidth / 2)
 			tiledMap.PixelH = (tiledMap.Width + tiledMap.Height) * (tiledMap.TileHeight / 2)
-			tiledMap.CT = ct.NewCT(tiledMap.Width, tiledMap.Height, tiledMap.TileWidth, tiledMap.TileHeight)
+			tiledMap.IsometricCT = ct.NewIsometric(tiledMap.Width, tiledMap.Height, tiledMap.TileWidth, tiledMap.TileHeight)
 			return true
 		},
 	)

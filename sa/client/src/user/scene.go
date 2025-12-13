@@ -57,12 +57,12 @@ func (p *Scene) ClampTileBounds(tileX, tileY float32) (clampedTX, clampedTY floa
 
 // TileToWorld tile 坐标转换为世界坐标
 func (p *Scene) TileToWorld(tileX, tileY float32) (worldX, worldY float32) {
-	return p._map.cfg.CT.TileToWorld(tileX, tileY)
+	return p._map.cfg.IsometricCT.T2W(tileX, tileY)
 }
 
 // WorldToTile 世界坐标转换为 tile 坐标
 func (p *Scene) WorldToTile(worldX, worldY float32) (tileX, tileY float32) {
-	return p._map.cfg.CT.WorldToTile(worldX, worldY)
+	return p._map.cfg.IsometricCT.W2T(worldX, worldY)
 }
 
 func (p *Scene) Draw(screen *ebitenv2.Image, camera *camera.Camera) {

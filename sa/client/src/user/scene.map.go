@@ -52,16 +52,16 @@ func (p *Map) Draw(screen *ebitenv2.Image, cam *camera.Camera) {
 // drawBorder 绘制地图边界(调试用)-红色加粗线条
 func (p *Map) drawBorder(screen *ebitenv2.Image, cam *camera.Camera) {
 	// 获取菱形四角 (World 坐标)
-	topX, topY, rightX, rightY, bottomX, bottomY, leftX, leftY := p.cfg.CT.GetDiamondCorners()
+	topX, topY, rightX, rightY, bottomX, bottomY, leftX, leftY := p.cfg.IsometricCT.GetDiamondCorners()
 
 	// World -> Screen
 	camX := float32(cam.ViewportX)
 	camY := float32(cam.ViewportY)
 
-	sTopX, sTopY := p.cfg.CT.WorldToScreen(topX, topY, camX, camY)
-	sRightX, sRightY := p.cfg.CT.WorldToScreen(rightX, rightY, camX, camY)
-	sBottomX, sBottomY := p.cfg.CT.WorldToScreen(bottomX, bottomY, camX, camY)
-	sLeftX, sLeftY := p.cfg.CT.WorldToScreen(leftX, leftY, camX, camY)
+	sTopX, sTopY := p.cfg.IsometricCT.W2S(topX, topY, camX, camY)
+	sRightX, sRightY := p.cfg.IsometricCT.W2S(rightX, rightY, camX, camY)
+	sBottomX, sBottomY := p.cfg.IsometricCT.W2S(bottomX, bottomY, camX, camY)
+	sLeftX, sLeftY := p.cfg.IsometricCT.W2S(leftX, leftY, camX, camY)
 
 	// 绘制四条边界线(红色加粗)
 	red := color.RGBA{R: 255, G: 0, B: 0, A: 255}
@@ -104,8 +104,8 @@ func (p *Map) drawCollision(screen *ebitenv2.Image, cam *camera.Camera) {
 					worldY2 := obj.Y + next.Y
 
 					// World -> Screen
-					screenX1, screenY1 := p.cfg.CT.WorldToScreen(worldX1, worldY1, camX, camY)
-					screenX2, screenY2 := p.cfg.CT.WorldToScreen(worldX2, worldY2, camX, camY)
+					screenX1, screenY1 := p.cfg.IsometricCT.W2S(worldX1, worldY1, camX, camY)
+					screenX2, screenY2 := p.cfg.IsometricCT.W2S(worldX2, worldY2, camX, camY)
 
 					vector.StrokeLine(screen, screenX1, screenY1, screenX2, screenY2, strokeWidth, yellow, false)
 				}
@@ -120,10 +120,10 @@ func (p *Map) drawCollision(screen *ebitenv2.Image, cam *camera.Camera) {
 				tileH := obj.Height / float32(p.cfg.TileHeight)
 
 				// 四个角点的 Tile 坐标，直接转换为 Screen 坐标
-				x1, y1 := p.cfg.CT.TileToScreen(tileX, tileY, camX, camY)
-				x2, y2 := p.cfg.CT.TileToScreen(tileX+tileW, tileY, camX, camY)
-				x3, y3 := p.cfg.CT.TileToScreen(tileX+tileW, tileY+tileH, camX, camY)
-				x4, y4 := p.cfg.CT.TileToScreen(tileX, tileY+tileH, camX, camY)
+				x1, y1 := p.cfg.IsometricCT.T2S(tileX, tileY, camX, camY)
+				x2, y2 := p.cfg.IsometricCT.T2S(tileX+tileW, tileY, camX, camY)
+				x3, y3 := p.cfg.IsometricCT.T2S(tileX+tileW, tileY+tileH, camX, camY)
+				x4, y4 := p.cfg.IsometricCT.T2S(tileX, tileY+tileH, camX, camY)
 
 				vector.StrokeLine(screen, x1, y1, x2, y2, strokeWidth, yellow, false)
 				vector.StrokeLine(screen, x2, y2, x3, y3, strokeWidth, yellow, false)
@@ -151,8 +151,8 @@ func (p *Map) drawData(screen *ebitenv2.Image, cam *camera.Camera, data []int, w
 		tileX := i % width
 		tileY := i / width
 
-		// 使用 CT 获取 tile 图像的屏幕位置
-		screenX, screenY := p.cfg.CT.TileToImageScreenPos(tileX, tileY, cam.ViewportX, cam.ViewportY)
+		// 使用 IsometricCT 获取 tile 图像的屏幕位置
+		screenX, screenY := p.cfg.IsometricCT.TileImageScreenPos(tileX, tileY, cam.ViewportX, cam.ViewportY)
 
 		// 裁剪：跳过屏幕外的 tile
 		if screenX < -p.cfg.TileWidth || cfg.GCommon.ScreenMaxWidth < screenX ||
@@ -203,5 +203,5 @@ func (p *Map) getTileImage(gid int) *ebitenv2.Image {
 
 // ClampTileBounds 将 tile 坐标限制在地图边界内
 func (p *Map) ClampTileBounds(tileX, tileY float32) (clampedTX, clampedTY float32) {
-	return p.cfg.CT.ClampTile(tileX, tileY)
+	return p.cfg.IsometricCT.ClampTile(tileX, tileY)
 }
