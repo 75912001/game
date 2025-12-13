@@ -1,6 +1,7 @@
 package user
 
 import (
+	"saClient/src/common"
 	"saClient/src/proto"
 )
 
@@ -101,7 +102,7 @@ func (p *Role) GetValueF32(assetID proto.AssetIDRecord) float32 {
 	if !ok {
 		return 0
 	}
-	return float32(v / 1000.0)
+	return float32(v / uint64(common.Float32Ratio))
 }
 
 // SetValueF32 设置属性值-float32 (*1000倍)

@@ -13,7 +13,8 @@ const TiledObjectTag_TargetPortal = "targetPortal" // 传送目标-标签 传送
 type TiledObjectType string
 
 const (
-	TiledObjectType_Portal TiledObjectType = "portal" // 传送点
+	TiledObjectType_Portal        TiledObjectType = "portal"        // 传送点
+	TiledObjectType_ArrivalPortal TiledObjectType = "arrivalPortal" // 到达传送点
 )
 
 // TiledObject Tiled 对象(用于碰撞等)

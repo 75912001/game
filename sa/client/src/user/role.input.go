@@ -1,10 +1,13 @@
 package user
 
 import (
-	xutil "github.com/75912001/xlib/util"
 	"log"
 	"saClient/src/cfg"
+	"saClient/src/common"
 	"saClient/src/proto"
+	"saClient/src/user/camera"
+
+	xutil "github.com/75912001/xlib/util"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -65,6 +68,7 @@ func (p *Role) handleKeyMove(up, down, left, right bool) {
 	}
 
 	// 更新方向
+	p.sprite.orientation = uint32(orientation)
 	p.SetValueU64(proto.AssetIDRecord_AssetIDRecord_Orientation, uint64(orientation))
 
 	// 移动速度 (像素/帧)
@@ -89,7 +93,7 @@ func (p *Role) handleKeyMove(up, down, left, right bool) {
 	p.sprite.bottomCenterWorldY = newWorldY
 
 	// 同步 Tile 坐标到 proto (用于记录/网络同步)
-	//tileX, tileY := mapCfg.IsometricCT.W2T(newWorldX, newWorldY)
+	// tileX, tileY := mapCfg.IsometricCT.W2T(newWorldX, newWorldY)
 	p.SetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TX, tileX)
 	p.SetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TY, tileY)
 
@@ -106,13 +110,16 @@ func (p *Role) handleKeyMove(up, down, left, right bool) {
 		log.Printf("Role HandleInput collision at world (%.2f, %.2f) collisionObject:%+v", p.sprite.bottomCenterWorldX, p.sprite.bottomCenterWorldY, collisionObject)
 		switch collisionObject.Type {
 		case cfg.TiledObjectType_Portal: // 传送点
-			p.SwitchScene(collisionObject.PortalCfg)
+			p.SwitchScene(collisionObject.PortalCfg.MapID, collisionObject.PortalCfg.TX, collisionObject.PortalCfg.TY)
+		case cfg.TiledObjectType_ArrivalPortal: // 传送点-到达
 		}
 	}
 }
 
-// 切换场景
-func (p *Role) SwitchScene(portal *cfg.PortalPoint) {
-	// todo menglc 切换场景逻辑
-
+// SwitchScene 切换场景
+func (p *Role) SwitchScene(mapID common.AssetID, tx, ty float32) {
+	p.scene = NewScene(mapID)
+	p.camera = camera.NewCamera()
+	// 初始化角色的 World 坐标
+	p.sprite.bottomCenterWorldX, p.sprite.bottomCenterWorldY = p.scene._map.cfg.IsometricCT.T2W(tx, ty)
 }

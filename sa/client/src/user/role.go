@@ -15,16 +15,13 @@ type Role struct {
 	frameTick uint32     // 帧计数器（用于控制动画速度）
 	sprite    RoleSprite // 角色-精灵
 
-	debugDrawImageBounds bool // 是否画出图像边界(调试用)
-
 	scene  *Scene         // 角色所在场景
 	camera *camera.Camera // 角色摄像机
 }
 
 func NewRole(roleRecord *proto.RoleRecord) *Role {
 	role := &Role{
-		roleRecord:           roleRecord,
-		debugDrawImageBounds: true,
+		roleRecord: roleRecord,
 	}
 	roleAssetID := role.GetAssetID()
 	role.cfgRole = cfg.GRoleMgr.Roles.Get(roleAssetID)
@@ -32,12 +29,11 @@ func NewRole(roleRecord *proto.RoleRecord) *Role {
 		// todo menglc  日志记录错误: 角色配置不存在 roleAssetID
 		return nil
 	}
-	role.scene = NewScene(common.AssetID(role.GetValueU32(proto.AssetIDRecord_AssetIDRecord_MapID)))
-	if role.scene == nil {
-		// todo menglc 日志记录错误: 场景创建失败 mapID
-		return nil
-	}
-	role.camera = camera.NewCamera()
+
+	mapID := role.GetValueU32(proto.AssetIDRecord_AssetIDRecord_MapID)
+	tx := role.GetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TX)
+	ty := role.GetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TY)
+	role.SwitchScene(common.AssetID(mapID), tx, ty)
 	return role
 }
 

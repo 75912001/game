@@ -16,7 +16,7 @@ type RoleSprite struct {
 	centerWorldX float32
 	centerWorldY float32
 
-	orientation     int                  // 方向
+	orientation     uint32               // 方向
 	image           *ebitenv2.Image      // 角色图片
 	roleImageSprite *res.RoleImageSprite // 角色图片配置
 }

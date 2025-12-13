@@ -173,6 +173,7 @@ func (p *TiledMapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*Tiled
 			}
 			switch objXML.Type {
 			case TiledObjectType_Portal: // 传送点对象
+			case TiledObjectType_ArrivalPortal: // 到达传送点对象
 			default:
 				return nil, fmt.Errorf("不支持的对象类型, 当前地图 %v 对象 %d 类型: %s %v", mapID, objXML.ID, objXML.Type, xruntime.Location())
 			}
@@ -304,6 +305,7 @@ func (p *TiledMapMgr) Check() error {
 								err = fmt.Errorf("Tiled 地图资源 %v 中对象 %d 的目标传送点 %v 不存在 %v", mapID, obj.ID, obj.TargetPortal, xruntime.Location())
 								return false
 							}
+						case TiledObjectType_ArrivalPortal: // 到达传送点对象
 						}
 					}
 				}
@@ -332,6 +334,7 @@ func (p *TiledMapMgr) Assemble() error {
 						switch obj.Type {
 						case TiledObjectType_Portal: // 传送点对象
 							obj.PortalCfg = GPortalMgr.Points.Get(obj.TargetPortal)
+						case TiledObjectType_ArrivalPortal: // 到达传送点对象
 						}
 					}
 				}

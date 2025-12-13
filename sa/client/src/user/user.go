@@ -48,8 +48,8 @@ func (p *User) Login(account string, password string) error {
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_LastLoginTimestamp)] = now                                           // 上次登录时间戳
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_LastLogoutTimestamp)] = 0                                            // 上次登出时间戳
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_MapID)] = 2000001                                                    // 所在地图ID (地图ID范围起始)
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TX)] = 24 * 1000                                        // 当前位置tx
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TY)] = 24 * 1000                                        // 当前位置ty
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TX)] = 24 * uint64(common.Float32Ratio)                 // 当前位置tx
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TY)] = 24 * uint64(common.Float32Ratio)                 // 当前位置ty
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Orientation)] = uint64(proto.AssetOrientation_AssetOrientation_Down) // 当前朝向-下
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Pose)] = uint64(proto.RoleAction_RoleAction_Stand)                   // 姿势 0:站立
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_AvailablePoint)] = uint64(cfg.GCommon.RoleInitialAvailablePoint)     // 可用点数
@@ -72,72 +72,14 @@ func (p *User) Login(account string, password string) error {
 		if roleObject == nil {
 			return fmt.Errorf("new role failed, roleUUID %d", roleUUID)
 		}
+		// 设置初始方向
+		roleObject.sprite.orientation = roleObject.GetValueU32(proto.AssetIDRecord_AssetIDRecord_Orientation)
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_HP)] = uint64(roleObject.GetHpMax()) // 将生命值设为最大值
 		ok := p.roleMgr.Roles.AddIfNotExist(roleUUID, roleObject)
 		if !ok {
 			return fmt.Errorf("add role failed, roleUUID %d already exists", roleUUID)
 		}
 		p.role = roleObject
-		{
-			tx := p.role.GetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TX)
-			ty := p.role.GetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TY)
-			p.role.sprite.bottomCenterWorldX, p.role.sprite.bottomCenterWorldY = p.role.scene._map.cfg.IsometricCT.T2W(tx, ty)
-		}
-	}
-	if false {
-		var roleUUID common.RoleUUID = 2
-		now := uint64(time.Now().Unix())
-		p.userRecord.RoleRecordMap[uint64(roleUUID)] = &proto.RoleRecord{
-			UUID:             uint64(roleUUID),
-			Nick:             "role.uuid.2",
-			AssetIDRecordMap: make(map[uint32]uint64),
-			RecordMap:        map[uint64]*proto.RecordPrimary{},
-			PetRecordMap:     map[uint64]*proto.PetRecord{},
-		}
-		roleRecord := p.userRecord.RoleRecordMap[uint64(roleUUID)]
-
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Exp)] = 0                                                            // 经验值
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_HP)] = 9999                                                          // 生命值
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_MP)] = uint64(cfg.GCommon.RoleMPMax)                                 // 魔法值
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_CreateTimestamp)] = now                                              // 创建时间戳
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_LastLoginTimestamp)] = now                                           // 上次登录时间戳
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_LastLogoutTimestamp)] = 0                                            // 上次登出时间戳
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_MapID)] = 2000001                                                    // 所在地图ID (地图ID范围起始)
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TX)] = 200 * 1000                                       // 当前位置tx
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TY)] = 200 * 1000                                       // 当前位置ty
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Orientation)] = uint64(proto.AssetOrientation_AssetOrientation_Down) // 当前朝向-下
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Pose)] = uint64(proto.RoleAction_RoleAction_Stand)                   // 姿势 0:站立
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_AvailablePoint)] = uint64(cfg.GCommon.RoleInitialAvailablePoint)     // 可用点数
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_RebirthCount)] = 0                                                   // 转生次数
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_AssetID)] = 1000101                                                  // 资产ID (角色ID范围起始)
-
-		// 元素属性 (101-104)
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_ElementalEarth)] = 0 // 元素属性-土
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_ElementalWater)] = 5 // 元素属性-水
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_ElementalFire)] = 5  // 元素属性-火
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_ElementalWind)] = 0  // 元素属性-风
-
-		// 角色属性 (201-204)
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Strength)] = 10  // 腕力
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Endurance)] = 10 // 耐力
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Agility)] = 10   // 速度
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Stamina)] = 10   // 体力
-
-		roleObject := NewRole(roleRecord)
-		if roleObject == nil {
-			return fmt.Errorf("new role failed, roleUUID %d", roleUUID)
-		}
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_HP)] = uint64(roleObject.GetHpMax()) // 将生命值设为最大值
-		ok := p.roleMgr.Roles.AddIfNotExist(roleUUID, roleObject)
-		if !ok {
-			return fmt.Errorf("add role failed, roleUUID %d already exists", roleUUID)
-		}
-		p.role = roleObject
-		{
-			tx := p.role.GetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TX)
-			ty := p.role.GetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TY)
-			p.role.sprite.bottomCenterWorldX, p.role.sprite.bottomCenterWorldY = p.role.scene._map.cfg.IsometricCT.T2W(tx, ty)
-		}
 	}
 	return nil
 }

@@ -17,8 +17,8 @@ type PortalPoint struct {
 	ID    common.PortalID `yaml:"id"`    // 传送点ID (地图ID * 100 + 序号)
 	Name  string          `yaml:"name"`  // 传送点名称
 	MapID common.AssetID  `yaml:"mapID"` // 所在地图ID
-	WX    int             `yaml:"x"`     // wx坐标
-	WY    int             `yaml:"y"`     // wy坐标
+	TX    float32         `yaml:"x"`     // tx坐标
+	TY    float32         `yaml:"y"`     // ty坐标
 }
 
 var GPortalMgr = newPortalMgr()

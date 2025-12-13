@@ -5,11 +5,138 @@
     },
     "activeFile": "map/map.2000002.tmx",
     "expandedProjectPaths": [
-        "map",
         ".",
-        "tsx"
+        "tsx",
+        "map"
     ],
     "fileStates": {
+        "": {
+            "scaleInDock": 1
+        },
+        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_001.tmx": {
+            "scale": 12.123809523809523,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 84.00824823252161,
+                "y": 36.00353495679497
+            }
+        },
+        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_001.tmx#rules_sewers": {
+            "scaleInDock": 1
+        },
+        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_001.tmx#sewer_tileset": {
+            "scaleInDock": 1
+        },
+        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_002.tmx": {
+            "scale": 10.608333333333333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 96.00942655145327,
+                "y": 60.00000000000001
+            }
+        },
+        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_002.tmx#rules_sewers": {
+            "scaleInDock": 1
+        },
+        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_002.tmx#sewer_tileset": {
+            "scaleInDock": 1
+        },
+        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_003.tmx": {
+            "scale": 10.608333333333333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 96.00942655145327,
+                "y": 71.97172034564022
+            }
+        },
+        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_003.tmx#rules_sewers": {
+            "scaleInDock": 1
+        },
+        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_003.tmx#sewer_tileset": {
+            "scaleInDock": 1
+        },
+        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_005.tmx": {
+            "scale": 6.528205128205127,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 156.01531814611158,
+                "y": 72.07187745483112
+            }
+        },
+        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_005.tmx#rules_sewers": {
+            "scaleInDock": 1
+        },
+        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_005.tmx#sewer_tileset": {
+            "scaleInDock": 1
+        },
+        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_006.tmx": {
+            "scale": 12.123809523809523,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 84.00824823252161,
+                "y": 60.00589159465828
+            }
+        },
+        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_006.tmx#rules_sewers": {
+            "scaleInDock": 1
+        },
+        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_006.tmx#sewer_tileset": {
+            "scaleInDock": 1
+        },
+        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_007.tmx": {
+            "scale": 10.6875,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 83.9766081871345,
+                "y": 83.9766081871345
+            }
+        },
+        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_007.tmx#rules_sewers": {
+            "scaleInDock": 1
+        },
+        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_007.tmx#sewer_tileset": {
+            "scaleInDock": 1
+        },
+        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_008.tmx": {
+            "scale": 8,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 21.5625,
+                "y": 83.4375
+            }
+        },
+        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_009.tmx": {
+            "scale": 21.216666666666665,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 48.00471327572664,
+                "y": 35.98586017282011
+            }
+        },
+        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_009.tmx#rules_sewers": {
+            "scaleInDock": 1
+        },
+        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_009.tmx#sewer_tileset": {
+            "scaleInDock": 1
+        },
+        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/sewers.tmx": {
+            "scale": 2.4133064516129035,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 371.8964076858813,
+                "y": 371.89640768588134
+            }
+        },
+        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/sewers.tmx#rules_sewers": {
+            "scaleInDock": 1
+        },
+        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/sewers.tmx#sewer_tileset": {
+            "scaleInDock": 1
+        },
+        "map/backgroundTower.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
         "map/block.tsx": {
             "scaleInDock": 1,
             "scaleInEditor": 1
@@ -36,19 +163,22 @@
             "expandedObjectLayers": [
                 7
             ],
-            "scale": 3,
-            "selectedLayer": 5,
+            "scale": 8,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 1684.6666666666665,
-                "y": 579.3333333333333
+                "x": 1600.0625,
+                "y": 799.9375
             }
         },
         "map/map.2000002.tmx": {
-            "scale": 0.25,
-            "selectedLayer": 0,
+            "expandedObjectLayers": [
+                6
+            ],
+            "scale": 5.5,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 2988,
-                "y": 2204
+                "x": 3248.3636363636365,
+                "y": 1544.090909090909
             }
         },
         "tsx/map.isometric_grass_and_water.tsx": {
@@ -57,7 +187,7 @@
         }
     },
     "last.exportedFilePath": "C:/game/sa/client/res/tiled/map",
-    "last.imagePath": "C:/game/sa/client/res/tiled/map",
+    "last.imagePath": "D:/src/github.com/game/sa/client/res/tiled/map",
     "map.fixedSize": true,
     "map.height": 3,
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
@@ -67,22 +197,28 @@
     "map.width": 6,
     "openFiles": [
         "map/map.2000001.tmx",
-        "map/map.2000002.tmx"
+        "map/map.2000002.tmx",
+        "map/iso-64x64-building.tsx"
     ],
     "project": "sa.tiled-project",
     "property.type": "string",
     "recentFiles": [
         "map/map.2000001.tmx",
-        "map/map.2000002.tmx",
         "map/iso-64x64-building.tsx",
-        "map/isometric_grass_and_water.tsx",
-        "tsx/map.isometric_grass_and_water.tsx",
-        "map/map.2000001.json",
-        "map/block.tsx"
+        "map/map.2000002.tmx",
+        "map/backgroundTower.tsx",
+        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_001.tmx",
+        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_002.tmx",
+        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_003.tmx",
+        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_005.tmx",
+        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_006.tmx",
+        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_007.tmx",
+        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/sewers.tmx",
+        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_009.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {
-        "height": 64,
+        "height": 32,
         "width": 64
     }
 }

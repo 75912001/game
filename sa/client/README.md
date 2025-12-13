@@ -92,3 +92,4 @@ tiled 编辑地图
 
 
 C:\game\sa\client\src\user
+    D:\src\github.com\game\sa\client\src\user\role.update.go
