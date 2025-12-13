@@ -114,8 +114,8 @@ func (p *Map) drawCollision(screen *ebitenv2.Image, cam *camera.Camera) {
 				// obj.X, obj.Y 是 Tiled 中的像素坐标，需要转换为 Tile 坐标
 				// Tiled 等距地图中，像素坐标除以 TileHeight 得到 Tile 坐标
 				// 需要调整偏移：x 减小，y 增大
-				tileX := obj.X/float32(p.cfg.TileHeight) + 0.5
-				tileY := obj.Y/float32(p.cfg.TileHeight) + 0.5
+				tileX := obj.X/float32(p.cfg.TileHeight) - 0.5
+				tileY := obj.Y/float32(p.cfg.TileHeight) - 0.5
 				tileW := obj.Width / float32(p.cfg.TileHeight)
 				tileH := obj.Height / float32(p.cfg.TileHeight)
 
