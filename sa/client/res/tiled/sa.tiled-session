@@ -3,18 +3,24 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "map/map.2000001.tmx",
+    "activeFile": "map/map.2000002.tmx",
     "expandedProjectPaths": [
-        "tsx",
         "map",
-        "."
+        ".",
+        "tsx"
     ],
     "fileStates": {
         "map/block.tsx": {
             "scaleInDock": 1,
             "scaleInEditor": 1
         },
+        "map/iso-64x64-building.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
         "map/isometric_grass_and_water.tsx": {
+            "dynamicWrapping": true,
             "scaleInDock": 1,
             "scaleInEditor": 1
         },
@@ -30,19 +36,19 @@
             "expandedObjectLayers": [
                 7
             ],
-            "scale": 0.75,
-            "selectedLayer": 0,
+            "scale": 1,
+            "selectedLayer": 5,
             "viewCenter": {
-                "x": 1944.6666666666665,
-                "y": 904.6666666666665
+                "x": 2010,
+                "y": 995
             }
         },
         "map/map.2000002.tmx": {
             "scale": 0.206328125,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 3690.72321090496,
-                "y": 1596.9708443771306
+                "x": 3198.7883377508515,
+                "y": 2282.7716773949264
             }
         },
         "tsx/map.isometric_grass_and_water.tsx": {
@@ -60,13 +66,16 @@
     "map.tileWidth": 64,
     "map.width": 10,
     "openFiles": [
-        "map/map.2000001.tmx"
+        "map/map.2000001.tmx",
+        "map/map.2000002.tmx"
     ],
     "project": "sa.tiled-project",
     "property.type": "string",
     "recentFiles": [
-        "map/isometric_grass_and_water.tsx",
         "map/map.2000001.tmx",
+        "map/map.2000002.tmx",
+        "map/iso-64x64-building.tsx",
+        "map/isometric_grass_and_water.tsx",
         "tsx/map.isometric_grass_and_water.tsx",
         "map/map.2000001.json",
         "map/block.tsx"
