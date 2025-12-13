@@ -97,8 +97,8 @@ func (p *Role) HandleInput() {
 	}
 
 	// 判断角色 wx, wy 是否触发了碰撞
-	isCollision := p.scene._map.cfg.FindCollisionObject(p.sprite.bottomCenterWorldX, p.sprite.bottomCenterWorldY)
-	if isCollision {
-		log.Printf("Role HandleInput collision at world (%.2f, %.2f)", p.sprite.bottomCenterWorldX, p.sprite.bottomCenterWorldY)
+	collisionObject, ok := p.scene._map.cfg.FindCollisionObject(p.sprite.bottomCenterWorldX, p.sprite.bottomCenterWorldY)
+	if ok {
+		log.Printf("Role HandleInput collision at world (%.2f, %.2f) collisionObject:%+v", p.sprite.bottomCenterWorldX, p.sprite.bottomCenterWorldY, collisionObject)
 	}
 }
