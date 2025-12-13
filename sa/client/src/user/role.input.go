@@ -19,10 +19,14 @@ func (p *Role) HandleInput() {
 	right := ebiten.IsKeyPressed(ebiten.KeyD)
 
 	// 无按键则不处理
-	if !up && !down && !left && !right {
+	if up || down || left || right { // 角色移动
+		p.handleKeyMove(up, down, left, right)
 		return
 	}
+}
 
+// 处理角色移动
+func (p *Role) handleKeyMove(up, down, left, right bool) {
 	// 计算屏幕方向的移动向量 (World 坐标系)
 	var dx, dy float32 = 0, 0
 	var orientation proto.AssetOrientation
@@ -100,5 +104,15 @@ func (p *Role) HandleInput() {
 	collisionObject, ok := mapCfg.FindCollisionObject(p.sprite.bottomCenterWorldX, p.sprite.bottomCenterWorldY)
 	if ok {
 		log.Printf("Role HandleInput collision at world (%.2f, %.2f) collisionObject:%+v", p.sprite.bottomCenterWorldX, p.sprite.bottomCenterWorldY, collisionObject)
+		switch collisionObject.Type {
+		case cfg.TiledObjectType_Portal: // 传送点
+			p.SwitchScene(collisionObject.PortalCfg)
+		}
 	}
+}
+
+// 切换场景
+func (p *Role) SwitchScene(portal *cfg.PortalPoint) {
+	// todo menglc 切换场景逻辑
+
 }

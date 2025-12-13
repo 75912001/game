@@ -323,9 +323,21 @@ func (p *TiledMapMgr) Assemble() error {
 			tiledMap.PixelW = (tiledMap.Width + tiledMap.Height) * (tiledMap.TileWidth / 2)
 			tiledMap.PixelH = (tiledMap.Width + tiledMap.Height) * (tiledMap.TileHeight / 2)
 			tiledMap.IsometricCT = ct.NewIsometric(tiledMap.Width, tiledMap.Height, tiledMap.TileWidth, tiledMap.TileHeight)
+
+			for _, layer := range tiledMap.Layers {
+				switch layer.Type {
+				case TiledLayerType_TileLayer: // 瓦片图层
+				case TiledLayerType_ObjectLayer: // 对象图层
+					for _, obj := range layer.Objects {
+						switch obj.Type {
+						case TiledObjectType_Portal: // 传送点对象
+							obj.PortalCfg = GPortalMgr.Points.Get(obj.TargetPortal)
+						}
+					}
+				}
+			}
 			return true
 		},
 	)
-
 	return nil
 }

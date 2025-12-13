@@ -27,6 +27,7 @@ type TiledObject struct {
 	Visible      bool            // 是否可见
 	Collision    bool            // 是否碰撞
 	TargetPortal common.PortalID // 目标传送点ID
+	PortalCfg    *PortalPoint    // 传送点配置
 }
 
 // ============================================================================

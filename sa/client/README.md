@@ -91,4 +91,4 @@ tiled 编辑地图
     https://spritereel.com/
 
 
-func (obj *TiledObject) containsPointInRect(worldX, worldY float32, coordTransform *ct.Isometric) bool {
+C:\game\sa\client\src\user
