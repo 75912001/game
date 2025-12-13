@@ -33,13 +33,6 @@ type TiledObject struct {
 // 碰撞检测
 // ============================================================================
 
-// ContainsWorldPoint 检查 World 坐标点是否在对象内部
-// worldX, worldY: World 坐标 (像素)
-// ct: 坐标转换器
-func (obj *TiledObject) ContainsWorldPoint(worldX, worldY float32, coordTransform *ct.Isometric) bool {
-	return obj.containsPointInRect(worldX, worldY, coordTransform)
-}
-
 // containsPointInRect 检查点是否在矩形内部
 // Tiled 等距地图中，矩形对象的坐标需要转换
 func (obj *TiledObject) containsPointInRect(worldX, worldY float32, coordTransform *ct.Isometric) bool {
@@ -58,40 +51,20 @@ func (obj *TiledObject) containsPointInRect(worldX, worldY float32, coordTransfo
 		pointTileY >= tileY && pointTileY <= tileY+tileH
 }
 
-// CheckCollision 检查 World 坐标点是否与任何碰撞对象相交
-// 返回: 是否碰撞
-func (m *TiledMap) CheckCollision(worldX, worldY float32) bool {
+// FindCollisionObject 查找 World 坐标点所在的碰撞对象
+func (m *TiledMap) FindCollisionObject(worldX, worldY float32) (*TiledObject, bool) {
 	for _, layer := range m.Layers {
-		if layer.Type != TiledLayerType_ObjectLayer {
+		if layer.Type != TiledLayerType_ObjectLayer { // 只检查对象图层
 			continue
 		}
-		for _, obj := range layer.Objects {
-			if !obj.Collision {
+		for _, obj := range layer.Objects { // 遍历对象
+			if !obj.Collision { // 只检查碰撞对象
 				continue
 			}
-			if obj.ContainsWorldPoint(worldX, worldY, m.IsometricCT) {
-				return true
+			if obj.containsPointInRect(worldX, worldY, m.IsometricCT) {
+				return obj, true
 			}
 		}
 	}
-	return false
-}
-
-// GetPortalAt 获取 World 坐标点所在的传送门
-// 返回: 传送门对象 (如果存在), nil (如果不存在)
-func (m *TiledMap) GetPortalAt(worldX, worldY float32) *TiledObject {
-	for _, layer := range m.Layers {
-		if layer.Type != TiledLayerType_ObjectLayer {
-			continue
-		}
-		for _, obj := range layer.Objects {
-			if obj.TargetPortal == 0 {
-				continue
-			}
-			if obj.ContainsWorldPoint(worldX, worldY, m.IsometricCT) {
-				return obj
-			}
-		}
-	}
-	return nil
+	return nil, false
 }

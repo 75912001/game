@@ -1,6 +1,7 @@
 package user
 
 import (
+	"log"
 	"saClient/src/cfg"
 	"saClient/src/proto"
 
@@ -93,5 +94,11 @@ func (p *Role) HandleInput() {
 	if p.frameTick >= 6 {
 		p.frameTick = 0
 		p.frameIdx++
+	}
+
+	// 判断角色 wx, wy 是否触发了碰撞
+	isCollision := p.scene._map.cfg.FindCollisionObject(p.sprite.bottomCenterWorldX, p.sprite.bottomCenterWorldY)
+	if isCollision {
+		log.Printf("Role HandleInput collision at world (%.2f, %.2f)", p.sprite.bottomCenterWorldX, p.sprite.bottomCenterWorldY)
 	}
 }

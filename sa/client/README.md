@@ -89,3 +89,6 @@ tiled 编辑地图
     https://pixian.ai/
 ## 精灵播放器 Sprite Reel
     https://spritereel.com/
+
+
+func (obj *TiledObject) containsPointInRect(worldX, worldY float32, coordTransform *ct.Isometric) bool {

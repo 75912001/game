@@ -294,9 +294,14 @@ func (p *TiledMapMgr) Check() error {
 				case TiledLayerType_TileLayer: // 瓦片图层
 				case TiledLayerType_ObjectLayer: // 对象图层
 					for _, obj := range layer.Objects {
-						if obj.TargetPortal != 0 {
+						switch obj.Type {
+						case TiledObjectType_Portal: // 传送点对象
+							if obj.TargetPortal == 0 { // 必须设置目标传送点
+								err = fmt.Errorf("Tiled 地图资源 %v 中对象 %d 的目标传送点未设置 %v", mapID, obj.ID, xruntime.Location())
+								return false
+							}
 							exist = GPortalMgr.Points.IsExist(obj.TargetPortal)
-							if !exist {
+							if !exist { // 检查目标传送点是否存在
 								err = fmt.Errorf("Tiled 地图资源 %v 中对象 %d 的目标传送点 %v 不存在 %v", mapID, obj.ID, obj.TargetPortal, xruntime.Location())
 								return false
 							}
