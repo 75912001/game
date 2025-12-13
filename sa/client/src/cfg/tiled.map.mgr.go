@@ -14,6 +14,7 @@ import (
 
 	xmap "github.com/75912001/xlib/map"
 	xruntime "github.com/75912001/xlib/runtime"
+	xutil "github.com/75912001/xlib/util"
 	ebitenv2ebitenutil "github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/pkg/errors"
 )
@@ -29,101 +30,6 @@ func newTiledMapMgr() *TiledMapMgr {
 	return &TiledMapMgr{
 		Maps: xmap.NewMapMgr[common.AssetID, *TiledMap](),
 	}
-}
-
-// TMX XML 结构定义
-type tmxMap struct {
-	Orientation  string           `xml:"orientation,attr"`
-	RenderOrder  string           `xml:"renderorder,attr"`
-	Width        int              `xml:"width,attr"`
-	Height       int              `xml:"height,attr"`
-	TileWidth    int              `xml:"tilewidth,attr"`
-	TileHeight   int              `xml:"tileheight,attr"`
-	Infinite     *int             `xml:"infinite,attr"`
-	Properties   *tmxProperties   `xml:"properties"`
-	Tilesets     []tmxTilesetRef  `xml:"tileset"`
-	Layers       []tmxLayer       `xml:"layer"`
-	ObjectGroups []tmxObjectGroup `xml:"objectgroup"`
-}
-
-// tmxProperties 地图属性集合
-type tmxProperties struct {
-	Properties []tmxProperty `xml:"property"`
-}
-
-// tmxProperty 单个属性
-type tmxProperty struct {
-	Name  string `xml:"name,attr"`
-	Type  string `xml:"type,attr"`
-	Value string `xml:"value,attr"`
-}
-
-type tmxTilesetRef struct {
-	FirstGID int    `xml:"firstgid,attr"`
-	Source   string `xml:"source,attr"`
-}
-
-type tmxLayer struct {
-	ID      int     `xml:"id,attr"`
-	Width   int     `xml:"width,attr"`
-	Height  int     `xml:"height,attr"`
-	Visible *int    `xml:"visible,attr"`
-	Opacity float32 `xml:"opacity,attr"`
-	Data    tmxData `xml:"data"`
-}
-
-type tmxData struct {
-	Encoding string     `xml:"encoding,attr"`
-	Chunks   []tmxChunk `xml:"chunk"`
-	Content  string     `xml:",chardata"`
-}
-
-type tmxChunk struct {
-	X       int    `xml:"x,attr"`
-	Y       int    `xml:"y,attr"`
-	Width   int    `xml:"width,attr"`
-	Height  int    `xml:"height,attr"`
-	Content string `xml:",chardata"`
-}
-
-type tmxObjectGroup struct {
-	ID      int         `xml:"id,attr"`
-	Visible *int        `xml:"visible,attr"`
-	Objects []tmxObject `xml:"object"`
-}
-
-type tmxObject struct {
-	ID         int            `xml:"id,attr"`
-	Type       string         `xml:"type,attr"`
-	X          float32        `xml:"x,attr"`
-	Y          float32        `xml:"y,attr"`
-	Width      float32        `xml:"width,attr"`
-	Height     float32        `xml:"height,attr"`
-	Rotation   float32        `xml:"rotation,attr"`
-	Visible    *int           `xml:"visible,attr"`
-	Polygon    *tmxPolygon    `xml:"polygon"`
-	Properties *tmxProperties `xml:"properties"`
-}
-
-type tmxPolygon struct {
-	Points string `xml:"points,attr"`
-}
-
-// TSX XML 结构定义
-type tsxTileset struct {
-	XMLName    xml.Name `xml:"tileset"`
-	Name       string   `xml:"name,attr"`
-	TileWidth  int      `xml:"tilewidth,attr"`
-	TileHeight int      `xml:"tileheight,attr"`
-	TileCount  int      `xml:"tilecount,attr"`
-	Columns    int      `xml:"columns,attr"`
-	Image      tsxImage `xml:"image"`
-}
-
-type tsxImage struct {
-	Source string `xml:"source,attr"`
-	Width  int    `xml:"width,attr"`
-	Height int    `xml:"height,attr"`
 }
 
 // Load 加载 Tiled 地图资源
@@ -211,7 +117,7 @@ func (p *TiledMapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*Tiled
 	if mapXML.Properties != nil { // 解析地图属性
 		for _, prop := range mapXML.Properties.Properties {
 			switch prop.Name {
-			case TiledMapBgmFilePathTag: // 背景音乐文件路径
+			case TiledMapTag_BgmFilePath: // 背景音乐文件路径
 				tiledMap.BackgroundMusicFilePath = prop.Value
 			default: // 未知属性 忽略
 			}
@@ -262,29 +168,35 @@ func (p *TiledMapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*Tiled
 		}
 
 		for _, objXML := range ogXML.Objects {
+			if !xutil.Float32Equal(objXML.Rotation, 0) {
+				return nil, fmt.Errorf("为了提高效能, 不支持旋转对象, 当前地图 %v 对象 %d 旋转角度: %f %v", mapID, objXML.ID, objXML.Rotation, xruntime.Location())
+			}
+			switch objXML.Type {
+			case TiledObjectType_Portal: // 传送点对象
+			default:
+				return nil, fmt.Errorf("不支持的对象类型, 当前地图 %v 对象 %d 类型: %s %v", mapID, objXML.ID, objXML.Type, xruntime.Location())
+			}
 			obj := &TiledObject{
-				ID:       objXML.ID,
-				Type:     objXML.Type,
-				X:        objXML.X,
-				Y:        objXML.Y,
-				Width:    objXML.Width,
-				Height:   objXML.Height,
-				Rotation: objXML.Rotation,
-				Visible:  objXML.Visible == nil || *objXML.Visible != 0,
+				ID:      objXML.ID,
+				Type:    objXML.Type,
+				X:       objXML.X,
+				Y:       objXML.Y,
+				Width:   objXML.Width,
+				Height:  objXML.Height,
+				Visible: objXML.Visible == nil || *objXML.Visible != 0,
 			}
 
-			// 解析多边形
-			if objXML.Polygon != nil {
-				obj.Polygon = parsePolygonPoints(objXML.Polygon.Points)
+			if objXML.Polygon != nil { // 多边形对象
+				return nil, fmt.Errorf("为了提高效能, 不支持多边形对象, 当前地图 %v 对象 %d 类型: polygon %v", mapID, objXML.ID, xruntime.Location())
 			}
 
 			// 解析对象属性
 			if objXML.Properties != nil {
 				for _, prop := range objXML.Properties.Properties {
 					switch prop.Name {
-					case TiledObjectCollisionTag:
+					case TiledObjectTag_Collision:
 						obj.Collision = prop.Value == "true"
-					case TiledObjectTargetPortal:
+					case TiledObjectTag_TargetPortal:
 						v, err := strconv.ParseUint(prop.Value, 10, 32)
 						if err != nil {
 							return nil, errors.WithMessagef(err, "解析对象 %d 的目标传送点失败: %v %v", obj.ID, tmxPath, xruntime.Location())
@@ -365,34 +277,6 @@ func parseCSVData(content string) ([]int, error) {
 		result = append(result, val)
 	}
 	return result, nil
-}
-
-// parsePolygonPoints 解析多边形点 "x1,y1 x2,y2 x3,y3"
-func parsePolygonPoints(points string) []*TiledPoint {
-	points = strings.TrimSpace(points)
-	if points == "" {
-		return nil
-	}
-
-	var result []*TiledPoint
-	pairs := strings.Split(points, " ")
-	for _, pair := range pairs {
-		pair = strings.TrimSpace(pair)
-		if pair == "" {
-			continue
-		}
-		coords := strings.Split(pair, ",")
-		if len(coords) != 2 {
-			continue
-		}
-		x, err1 := strconv.ParseFloat(strings.TrimSpace(coords[0]), 64)
-		y, err2 := strconv.ParseFloat(strings.TrimSpace(coords[1]), 64)
-		if err1 != nil || err2 != nil {
-			continue
-		}
-		result = append(result, &TiledPoint{X: float32(x), Y: float32(y)})
-	}
-	return result
 }
 
 // Check 检查 Tiled 地图资源

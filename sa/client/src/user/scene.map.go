@@ -90,46 +90,25 @@ func (p *Map) drawCollision(screen *ebitenv2.Image, cam *camera.Camera) {
 			if !obj.Collision {
 				continue
 			}
-			// 绘制多边形碰撞区域
-			if len(obj.Polygon) > 0 {
-				for i := 0; i < len(obj.Polygon); i++ {
-					// 获取当前点和下一个点（形成闭合多边形）
-					curr := obj.Polygon[i]
-					next := obj.Polygon[(i+1)%len(obj.Polygon)]
+			// 绘制矩形碰撞区域
+			// obj.X, obj.Y 是 Tiled 中的像素坐标，需要转换为 Tile 坐标
+			// Tiled 等距地图中，像素坐标除以 TileHeight 得到 Tile 坐标
+			// 需要调整偏移：x 减小，y 增大
+			tileX := obj.X/float32(p.cfg.TileHeight) - 0.5
+			tileY := obj.Y/float32(p.cfg.TileHeight) - 0.5
+			tileW := obj.Width / float32(p.cfg.TileHeight)
+			tileH := obj.Height / float32(p.cfg.TileHeight)
 
-					// 多边形顶点是相对于对象位置的坐标，转换为 World 坐标
-					worldX1 := obj.X + curr.X
-					worldY1 := obj.Y + curr.Y
-					worldX2 := obj.X + next.X
-					worldY2 := obj.Y + next.Y
+			// 四个角点的 Tile 坐标，直接转换为 Screen 坐标
+			x1, y1 := p.cfg.IsometricCT.T2S(tileX, tileY, camX, camY)
+			x2, y2 := p.cfg.IsometricCT.T2S(tileX+tileW, tileY, camX, camY)
+			x3, y3 := p.cfg.IsometricCT.T2S(tileX+tileW, tileY+tileH, camX, camY)
+			x4, y4 := p.cfg.IsometricCT.T2S(tileX, tileY+tileH, camX, camY)
 
-					// World -> Screen
-					screenX1, screenY1 := p.cfg.IsometricCT.W2S(worldX1, worldY1, camX, camY)
-					screenX2, screenY2 := p.cfg.IsometricCT.W2S(worldX2, worldY2, camX, camY)
-
-					vector.StrokeLine(screen, screenX1, screenY1, screenX2, screenY2, strokeWidth, yellow, false)
-				}
-			} else {
-				// 绘制矩形碰撞区域
-				// obj.X, obj.Y 是 Tiled 中的像素坐标，需要转换为 Tile 坐标
-				// Tiled 等距地图中，像素坐标除以 TileHeight 得到 Tile 坐标
-				// 需要调整偏移：x 减小，y 增大
-				tileX := obj.X/float32(p.cfg.TileHeight) - 0.5
-				tileY := obj.Y/float32(p.cfg.TileHeight) - 0.5
-				tileW := obj.Width / float32(p.cfg.TileHeight)
-				tileH := obj.Height / float32(p.cfg.TileHeight)
-
-				// 四个角点的 Tile 坐标，直接转换为 Screen 坐标
-				x1, y1 := p.cfg.IsometricCT.T2S(tileX, tileY, camX, camY)
-				x2, y2 := p.cfg.IsometricCT.T2S(tileX+tileW, tileY, camX, camY)
-				x3, y3 := p.cfg.IsometricCT.T2S(tileX+tileW, tileY+tileH, camX, camY)
-				x4, y4 := p.cfg.IsometricCT.T2S(tileX, tileY+tileH, camX, camY)
-
-				vector.StrokeLine(screen, x1, y1, x2, y2, strokeWidth, yellow, false)
-				vector.StrokeLine(screen, x2, y2, x3, y3, strokeWidth, yellow, false)
-				vector.StrokeLine(screen, x3, y3, x4, y4, strokeWidth, yellow, false)
-				vector.StrokeLine(screen, x4, y4, x1, y1, strokeWidth, yellow, false)
-			}
+			vector.StrokeLine(screen, x1, y1, x2, y2, strokeWidth, yellow, false)
+			vector.StrokeLine(screen, x2, y2, x3, y3, strokeWidth, yellow, false)
+			vector.StrokeLine(screen, x3, y3, x4, y4, strokeWidth, yellow, false)
+			vector.StrokeLine(screen, x4, y4, x1, y1, strokeWidth, yellow, false)
 		}
 	}
 }
