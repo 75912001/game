@@ -85,7 +85,6 @@ type tmxPolygon struct {
 // TSX XML 结构定义
 type tsxTileset struct {
 	XMLName    xml.Name `xml:"tileset"`
-	Name       string   `xml:"name,attr"`
 	TileWidth  int      `xml:"tilewidth,attr"`
 	TileHeight int      `xml:"tileheight,attr"`
 	TileCount  int      `xml:"tilecount,attr"`

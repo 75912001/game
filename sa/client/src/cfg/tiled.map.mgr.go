@@ -233,7 +233,6 @@ func (p *TiledMapMgr) loadTileset(tmxDir string, tsRef tmxTilesetRef) (*TiledTil
 
 	tileset := &TiledTileset{
 		FirstGID:    tsRef.FirstGID,
-		Name:        tsxXML.Name,
 		TileWidth:   tsxXML.TileWidth,
 		TileHeight:  tsxXML.TileHeight,
 		TileCount:   tsxXML.TileCount,
