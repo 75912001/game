@@ -1,9 +1,11 @@
 package user
 
 import (
+	"image/color"
 	"saClient/src/ui"
 
 	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/vector"
 )
 
 func (p *Role) Draw(screen *ebitenv2.Image) {
@@ -36,6 +38,13 @@ func (p *Role) drawDebugInfo(screen *ebitenv2.Image) {
 	// 获取角色 Screen 坐标
 	roleScreenX := p.sprite.centerWorldX - float32(p.camera.ViewportX)
 	roleScreenY := p.sprite.centerWorldY - float32(p.camera.ViewportY)
+
+	if true { // 绘制脚底中心点 (红色圆形)
+		bottomCenterScreenX := p.sprite.bottomCenterWorldX - float32(p.camera.ViewportX)
+		bottomCenterScreenY := p.sprite.bottomCenterWorldY - float32(p.camera.ViewportY)
+		red := color.RGBA{R: 255, G: 0, B: 0, A: 255}
+		vector.FillCircle(screen, bottomCenterScreenX, bottomCenterScreenY, 5, red, false)
+	}
 
 	// 显示地图信息
 	y := float32(10.0)
