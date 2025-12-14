@@ -121,15 +121,17 @@ func (p *Role) handleKeyMove(up, down, left, right bool) {
 // SwitchScene 切换场景 (带过渡动画)
 func (p *Role) SwitchScene(mapID common.AssetID, tx, ty float32) {
 	// 如果已经在过渡中，忽略新的切换请求
-	if p.scene.IsTransitionActive() || p.pendingScene != nil {
+	if p.scene.transition.IsActive() || p.pendingScene != nil {
 		return
 	}
-	// 预创建新场景
+	// 获取目标地图的过渡配置
+	targetMapCfg := cfg.GMapMgr.Maps.Get(mapID)
+	// 预创建新场景 (使用目标地图的过渡配置)
 	p.pendingScene = NewScene(mapID)
 	p.pendingTX = tx
 	p.pendingTY = ty
-	// 当前场景转场退出
-	p.scene.TransitionOut()
+	// 当前场景转场退出 (使用目标地图的过渡配置)
+	p.scene.transition.TransitionOut(targetMapCfg.SceneTransition)
 }
 
 // doSwitchScene 执行实际的场景切换 (无过渡动画)
