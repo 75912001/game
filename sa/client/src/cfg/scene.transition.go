@@ -25,7 +25,6 @@ type SceneTransition struct {
 	Speed float32 `yaml:"speed"` // 过渡速度 (每帧进度增量)
 }
 
-// DefaultSceneTransition 默认过渡效果配置
 func DefaultSceneTransition() *SceneTransition {
 	return &SceneTransition{
 		ID:    SceneTransitionIDVertical,
@@ -86,15 +85,6 @@ func (p *SceneTransitionMgr) Load() error {
 // Get 获取过渡效果配置
 func (p *SceneTransitionMgr) Get(id uint32) *SceneTransition {
 	return p.Transitions.Get(id)
-}
-
-// GetOrDefault 获取过渡效果配置，如果不存在则返回默认配置
-func (p *SceneTransitionMgr) GetOrDefault(id uint32) *SceneTransition {
-	t := p.Transitions.Get(id)
-	if t == nil {
-		return DefaultSceneTransition()
-	}
-	return t
 }
 
 // Check 检查地图配置
