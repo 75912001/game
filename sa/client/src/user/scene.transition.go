@@ -13,36 +13,50 @@ type TransitionState int
 
 const (
 	TransitionNone    TransitionState = iota // 无过渡
-	TransitionClosing                        // 关闭中 (黑幕从上下向中间合拢)
-	TransitionOpening                        // 打开中 (黑幕从中间向上下展开)
+	TransitionClosing                        // 关闭中 (黑幕合拢)
+	TransitionOpening                        // 打开中 (黑幕展开)
 )
 
 // SceneTransition 场景过渡效果
 type SceneTransition struct {
-	state    TransitionState
-	progress float32 // 进度 0-1
-	speed    float32 // 每帧增加的进度
+	state        TransitionState
+	progress     float32 // 进度 0-1
+	transitionID uint32  // 过渡效果ID
+	speed        float32 // 每帧增加的进度
 }
 
-// newSceneTransition 创建场景过渡
-func newSceneTransition() *SceneTransition {
+// newSceneTransition 创建场景过渡 (使用配置)
+func newSceneTransition(transCfg *cfg.SceneTransition) *SceneTransition {
 	return &SceneTransition{
-		state:    TransitionNone,
-		progress: 0,
-		speed:    0.1,
+		state:        TransitionNone,
+		progress:     0,
+		transitionID: transCfg.ID,
+		speed:        transCfg.Speed,
 	}
 }
 
-// TransitionIn 转场进入 (黑幕从中间向上下展开，显示新场景)
+// TransitionIn 转场进入 (黑幕展开，显示新场景)
 func (t *SceneTransition) TransitionIn() {
 	t.state = TransitionOpening
 	t.progress = 0
 }
 
-// TransitionOut 转场退出 (黑幕从上下向中间合拢，隐藏当前场景)
-func (t *SceneTransition) TransitionOut() {
+// TransitionOut 转场退出 (黑幕合拢，隐藏当前场景)
+func (t *SceneTransition) TransitionOut(transCfg *cfg.SceneTransition) {
+	t.SetConfig(transCfg)
 	t.state = TransitionClosing
 	t.progress = 0
+}
+
+// SetConfig 设置过渡效果配置
+func (t *SceneTransition) SetConfig(transCfg *cfg.SceneTransition) {
+	t.transitionID = transCfg.ID
+	t.speed = transCfg.Speed
+}
+
+// IsActive 是否正在过渡中
+func (t *SceneTransition) IsActive() bool {
+	return t.state != TransitionNone
 }
 
 // Update 更新过渡状态
@@ -74,6 +88,20 @@ func (t *SceneTransition) Draw(screen *ebitenv2.Image) {
 		return
 	}
 
+	switch t.transitionID {
+	case cfg.SceneTransitionIDVertical:
+		t.drawVertical(screen)
+	case cfg.SceneTransitionIDHorizontal:
+		t.drawHorizontal(screen)
+	case cfg.SceneTransitionIDFade:
+		t.drawFade(screen)
+	default: // SceneTransitionIDVertical
+		t.drawVertical(screen)
+	}
+}
+
+// drawVertical 绘制垂直过渡效果 (上下合拢/展开)
+func (t *SceneTransition) drawVertical(screen *ebitenv2.Image) {
 	screenW := float32(cfg.GCommon.ScreenMaxWidth)
 	screenH := float32(cfg.GCommon.ScreenMaxHeight)
 	halfH := screenH / 2
@@ -82,10 +110,10 @@ func (t *SceneTransition) Draw(screen *ebitenv2.Image) {
 
 	var topHeight, bottomY float32
 
-	if t.state == TransitionClosing { // 关闭中: 黑幕从上下向中间合拢
+	if t.state == TransitionClosing { // 黑幕从上下向中间合拢
 		topHeight = halfH * t.progress
 		bottomY = screenH - halfH*t.progress
-	} else { // 打开中: 黑幕从中间向上下展开
+	} else { // 黑幕从中间向上下展开
 		topHeight = halfH * (1 - t.progress)
 		bottomY = screenH - halfH*(1-t.progress)
 	}
@@ -102,17 +130,49 @@ func (t *SceneTransition) Draw(screen *ebitenv2.Image) {
 	}
 }
 
-// IsActive 是否正在过渡中
-func (t *SceneTransition) IsActive() bool {
-	return t.state != TransitionNone
+// drawHorizontal 绘制水平过渡效果 (左右合拢/展开)
+func (t *SceneTransition) drawHorizontal(screen *ebitenv2.Image) {
+	screenW := float32(cfg.GCommon.ScreenMaxWidth)
+	screenH := float32(cfg.GCommon.ScreenMaxHeight)
+	halfW := screenW / 2
+
+	black := color.RGBA{R: 0, G: 0, B: 0, A: 255}
+
+	var leftWidth, rightX float32
+
+	if t.state == TransitionClosing { // 黑幕从左右向中间合拢
+		leftWidth = halfW * t.progress
+		rightX = screenW - halfW*t.progress
+	} else { // 黑幕从中间向左右展开
+		leftWidth = halfW * (1 - t.progress)
+		rightX = screenW - halfW*(1-t.progress)
+	}
+
+	// 绘制左半部分黑幕
+	if leftWidth > 0 {
+		vector.FillRect(screen, 0, 0, leftWidth, screenH, black, false)
+	}
+
+	// 绘制右半部分黑幕
+	rightWidth := screenW - rightX
+	if rightWidth > 0 {
+		vector.FillRect(screen, rightX, 0, rightWidth, screenH, black, false)
+	}
 }
 
-// IsClosing 是否正在关闭中
-func (t *SceneTransition) IsClosing() bool {
-	return t.state == TransitionClosing
-}
+// drawFade 绘制淡入淡出效果
+func (t *SceneTransition) drawFade(screen *ebitenv2.Image) {
+	screenW := float32(cfg.GCommon.ScreenMaxWidth)
+	screenH := float32(cfg.GCommon.ScreenMaxHeight)
 
-// IsOpening 是否正在打开中
-func (t *SceneTransition) IsOpening() bool {
-	return t.state == TransitionOpening
+	var alpha uint8
+
+	if t.state == TransitionClosing { // 淡出 (透明度增加)
+		alpha = uint8(255 * t.progress)
+	} else { // 淡入 (透明度减少)
+		alpha = uint8(255 * (1 - t.progress))
+	}
+
+	black := color.RGBA{R: 0, G: 0, B: 0, A: alpha}
+	vector.FillRect(screen, 0, 0, screenW, screenH, black, false)
 }
