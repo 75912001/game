@@ -78,7 +78,7 @@ func (p *Role) handleKeyMove(up, down, left, right bool) {
 	newWorldX := p.sprite.bottomCenterWorldX + dx*moveSpeed
 	newWorldY := p.sprite.bottomCenterWorldY + dy*moveSpeed
 
-	mapCfg := p.scene._map.cfg
+	mapCfg := p.scene._map.tiledMapCfg
 
 	// 限制在地图边界内
 	tileX, tileY := mapCfg.IsometricCT.W2T(newWorldX, newWorldY)
@@ -139,5 +139,5 @@ func (p *Role) doSwitchScene(mapID common.AssetID, tx, ty float32) {
 	p.scene = NewScene(mapID)
 	p.camera = camera.NewCamera()
 	// 初始化角色的 World 坐标
-	p.sprite.bottomCenterWorldX, p.sprite.bottomCenterWorldY = p.scene._map.cfg.IsometricCT.T2W(tx, ty)
+	p.sprite.bottomCenterWorldX, p.sprite.bottomCenterWorldY = p.scene._map.tiledMapCfg.IsometricCT.T2W(tx, ty)
 }

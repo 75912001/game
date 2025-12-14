@@ -27,7 +27,7 @@ func (p *Role) Draw(screen *ebitenv2.Image) {
 
 // drawDebugInfo 绘制调试信息
 func (p *Role) drawDebugInfo(screen *ebitenv2.Image) {
-	mapCfg := p.scene._map.cfg
+	mapCfg := p.scene._map.tiledMapCfg
 	// 获取角色 Tile 坐标
 	tileX, tileY := mapCfg.IsometricCT.W2T(p.sprite.bottomCenterWorldX, p.sprite.bottomCenterWorldY)
 
