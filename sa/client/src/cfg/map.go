@@ -2,6 +2,7 @@ package cfg
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"saClient/src/common"
@@ -15,10 +16,12 @@ import (
 
 // Map 地图信息
 type Map struct {
-	AssetID common.AssetID `yaml:"assetID"` // 地图资产ID
-	Name    string         `yaml:"name"`    // 地图名称
+	AssetID      common.AssetID `yaml:"assetID"`      // 地图资产ID
+	Name         string         `yaml:"name"`         // 地图名称
+	transitionID uint32         `yaml:"transitionID"` // 过渡效果ID
 
-	ResMap *TiledMap // 资源-地图
+	ResMap          *TiledMap        // 资源-地图
+	SceneTransition *SceneTransition // 过渡效果配置
 }
 
 var GMapMgr = newMapMgr()
@@ -70,7 +73,16 @@ func (p *MapMgr) Check() error {
 			err = fmt.Errorf("地图资源不存在: %d %v", id, xruntime.Location())
 			return false
 		}
-		// todo menglc 检查地图是否有出口, 有入口
+		// 检查过渡效果配置
+		switch m.transitionID {
+		case SceneTransitionIDVertical, SceneTransitionIDHorizontal, SceneTransitionIDFade:
+			if !GSceneTransitionMgr.Transitions.IsExist(m.transitionID) {
+				err = fmt.Errorf("地图 %d 引用的过渡效果不存在: %d %v", id, m.transitionID, xruntime.Location())
+				return false
+			}
+		default:
+			log.Printf("地图 %d 未指定过渡效果ID%v", id, xruntime.Location())
+		}
 		return true
 	})
 	return err
@@ -78,10 +90,18 @@ func (p *MapMgr) Check() error {
 
 // Assemble 组装地图配置
 func (p *MapMgr) Assemble() error {
-	var err error
-	p.Maps.Foreach(func(id common.AssetID, m *Map) bool { // 关联-地图资源
+	p.Maps.Foreach(func(id common.AssetID, m *Map) bool {
+		// 关联-地图资源
 		m.ResMap = GTiledMapMgr.Maps.Get(m.AssetID)
+		// 关联-过渡效果配置
+		switch m.transitionID {
+		case SceneTransitionIDVertical, SceneTransitionIDHorizontal, SceneTransitionIDFade:
+			m.SceneTransition = GSceneTransitionMgr.Transitions.Get(m.transitionID)
+		default:
+			m.SceneTransition = DefaultSceneTransition()
+			log.Printf("地图 %d 引用的场景过渡效果不存在: %d, 使用默认过渡效果 %d %v", id, m.transitionID, m.SceneTransition.ID, xruntime.Location())
+		}
 		return true
 	})
-	return err
+	return nil
 }
