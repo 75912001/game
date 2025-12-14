@@ -26,6 +26,10 @@ func LoadCfg() error {
 	if err != nil {
 		return errors.WithMessagef(err, "load petMgr error %v", xruntime.Location())
 	}
+	err = cfg.GSceneTransitionMgr.Load()
+	if err != nil {
+		return errors.WithMessagef(err, "load transitionMgr error %v", xruntime.Location())
+	}
 	err = cfg.GMapMgr.Load()
 	if err != nil {
 		return errors.WithMessagef(err, "load mapMgr error %v", xruntime.Location())
@@ -60,6 +64,10 @@ func CheckCfg() error {
 	if err != nil {
 		return errors.WithMessagef(err, "check petMgr error %v", xruntime.Location())
 	}
+	err = cfg.GSceneTransitionMgr.Check()
+	if err != nil {
+		return errors.WithMessagef(err, "check sceneTransitionMgr error %v", xruntime.Location())
+	}
 	err = cfg.GMapMgr.Check()
 	if err != nil {
 		return errors.WithMessagef(err, "check mapMgr error %v", xruntime.Location())
@@ -93,6 +101,10 @@ func AssembleCfg() error {
 	err = cfg.GPetMgr.Assemble()
 	if err != nil {
 		return errors.WithMessagef(err, "Assemble petMgr error %v", xruntime.Location())
+	}
+	err = cfg.GSceneTransitionMgr.Assemble()
+	if err != nil {
+		return errors.WithMessagef(err, "Assemble sceneTransitionMgr error %v", xruntime.Location())
 	}
 	err = cfg.GMapMgr.Assemble()
 	if err != nil {
