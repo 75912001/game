@@ -118,8 +118,22 @@ func (p *Role) handleKeyMove(up, down, left, right bool) {
 	p.UpdateWithAction()
 }
 
-// SwitchScene 切换场景
+// SwitchScene 切换场景 (带过渡动画)
 func (p *Role) SwitchScene(mapID common.AssetID, tx, ty float32) {
+	// 如果已经在过渡中，忽略新的切换请求
+	if p.scene.IsTransitionActive() || p.pendingScene != nil {
+		return
+	}
+	// 预创建新场景
+	p.pendingScene = NewScene(mapID)
+	p.pendingTX = tx
+	p.pendingTY = ty
+	// 当前场景转场退出
+	p.scene.TransitionOut()
+}
+
+// doSwitchScene 执行实际的场景切换 (无过渡动画)
+func (p *Role) doSwitchScene(mapID common.AssetID, tx, ty float32) {
 	p.scene = NewScene(mapID)
 	p.camera = camera.NewCamera()
 	// 初始化角色的 World 坐标

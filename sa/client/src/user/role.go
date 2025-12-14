@@ -17,6 +17,11 @@ type Role struct {
 
 	scene  *Scene         // 角色所在场景
 	camera *camera.Camera // 角色摄像机
+
+	// 场景切换相关
+	pendingScene *Scene  // 待切换的新场景
+	pendingTX    float32 // 待切换的目标 Tile X
+	pendingTY    float32 // 待切换的目标 Tile Y
 }
 
 func NewRole(roleRecord *proto.RoleRecord) *Role {
@@ -33,7 +38,7 @@ func NewRole(roleRecord *proto.RoleRecord) *Role {
 	mapID := role.GetValueU32(proto.AssetIDRecord_AssetIDRecord_MapID)
 	tx := role.GetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TX)
 	ty := role.GetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TY)
-	role.SwitchScene(common.AssetID(mapID), tx, ty)
+	role.doSwitchScene(common.AssetID(mapID), tx, ty)
 
 	role.UpdateWithAction()
 

@@ -9,7 +9,7 @@ import (
 )
 
 func (p *Role) Draw(screen *ebitenv2.Image) {
-	// 绘制场景
+	// 绘制场景 (包含过渡效果)
 	p.scene.Draw(screen, p.camera)
 
 	// 绘制角色
