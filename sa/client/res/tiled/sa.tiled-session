@@ -3,11 +3,11 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "map/map.2000002.tmx",
+    "activeFile": "map/map.2000001.tmx",
     "expandedProjectPaths": [
-        ".",
+        "map",
         "tsx",
-        "map"
+        "."
     ],
     "fileStates": {
         "": {
@@ -163,22 +163,22 @@
             "expandedObjectLayers": [
                 7
             ],
-            "scale": 8,
+            "scale": 0.5,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 1600.0625,
-                "y": 799.9375
+                "x": 1620,
+                "y": 785
             }
         },
         "map/map.2000002.tmx": {
             "expandedObjectLayers": [
                 6
             ],
-            "scale": 5.5,
+            "scale": 0.25,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 3248.3636363636365,
-                "y": 1544.090909090909
+                "x": 3320,
+                "y": 1814
             }
         },
         "tsx/map.isometric_grass_and_water.tsx": {
@@ -203,9 +203,9 @@
     "project": "sa.tiled-project",
     "property.type": "string",
     "recentFiles": [
-        "map/map.2000001.tmx",
         "map/iso-64x64-building.tsx",
         "map/map.2000002.tmx",
+        "map/map.2000001.tmx",
         "map/backgroundTower.tsx",
         "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_001.tmx",
         "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_002.tmx",

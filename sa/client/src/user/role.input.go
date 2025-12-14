@@ -114,6 +114,8 @@ func (p *Role) handleKeyMove(up, down, left, right bool) {
 		case cfg.TiledObjectType_ArrivalPortal: // 传送点-到达
 		}
 	}
+
+	p.UpdateWithAction()
 }
 
 // SwitchScene 切换场景

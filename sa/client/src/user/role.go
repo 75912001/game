@@ -34,7 +34,64 @@ func NewRole(roleRecord *proto.RoleRecord) *Role {
 	tx := role.GetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TX)
 	ty := role.GetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TY)
 	role.SwitchScene(common.AssetID(mapID), tx, ty)
+
+	role.UpdateWithAction()
+
 	return role
+}
+
+// UpdateWithAction 更新角色状态和摄像机位置
+func (p *Role) UpdateWithAction() {
+	// 设置方向
+	p.sprite.orientation = p.GetValueU32(proto.AssetIDRecord_AssetIDRecord_Orientation)
+
+	// 设置图像
+	images := p.cfgRole.ResRole.Move.Frames[p.sprite.orientation]
+	p.sprite.image = images[p.frameIdx%uint32(len(images))]
+
+	frames := p.cfgRole.ResRole.Move.FrameInfo[p.sprite.orientation]
+	p.sprite.roleImageSprite = frames[p.frameIdx%uint32(len(frames))]
+
+	// 更新角色中心 World 坐标 (脚底中心向上偏移半个角色高度)
+	p.sprite.centerWorldX = p.sprite.bottomCenterWorldX
+	p.sprite.centerWorldY = p.sprite.bottomCenterWorldY - float32(p.sprite.roleImageSprite.Frame.Height/2)
+
+	// 更新摄像机跟随点 (World 坐标)
+	p.camera.FollowX = int(p.sprite.centerWorldX)
+	p.camera.FollowY = int(p.sprite.centerWorldY)
+
+	// 计算摄像机视口左上角 (World 坐标)
+	viewportX := p.camera.FollowX - cfg.GCommon.ScreenMaxWidth/2
+	viewportY := p.camera.FollowY - cfg.GCommon.ScreenMaxHeight/2
+
+	// 获取地图尺寸
+	mapWidth, mapHeight := p.scene._map.cfg.PixelW, p.scene._map.cfg.PixelH
+
+	// 限制摄像机不显示地图边界之外
+	if mapWidth <= cfg.GCommon.ScreenMaxWidth {
+		viewportX = -(cfg.GCommon.ScreenMaxWidth - mapWidth) / 2
+	} else {
+		if viewportX < 0 {
+			viewportX = 0
+		}
+		if viewportX > mapWidth-cfg.GCommon.ScreenMaxWidth {
+			viewportX = mapWidth - cfg.GCommon.ScreenMaxWidth
+		}
+	}
+
+	if mapHeight <= cfg.GCommon.ScreenMaxHeight {
+		viewportY = -(cfg.GCommon.ScreenMaxHeight - mapHeight) / 2
+	} else {
+		if viewportY < 0 {
+			viewportY = 0
+		}
+		if viewportY > mapHeight-cfg.GCommon.ScreenMaxHeight {
+			viewportY = mapHeight - cfg.GCommon.ScreenMaxHeight
+		}
+	}
+
+	p.camera.ViewportX = viewportX
+	p.camera.ViewportY = viewportY
 }
 
 // GetUUID 获取-角色UUID

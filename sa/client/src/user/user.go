@@ -72,9 +72,8 @@ func (p *User) Login(account string, password string) error {
 		if roleObject == nil {
 			return fmt.Errorf("new role failed, roleUUID %d", roleUUID)
 		}
-		// 设置初始方向
-		roleObject.sprite.orientation = roleObject.GetValueU32(proto.AssetIDRecord_AssetIDRecord_Orientation)
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_HP)] = uint64(roleObject.GetHpMax()) // 将生命值设为最大值
+		roleObject.roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_HP)] = uint64(roleObject.GetHpMax()) // 将生命值设为最大值
+
 		ok := p.roleMgr.Roles.AddIfNotExist(roleUUID, roleObject)
 		if !ok {
 			return fmt.Errorf("add role failed, roleUUID %d already exists", roleUUID)
