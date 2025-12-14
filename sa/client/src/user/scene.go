@@ -2,6 +2,7 @@ package user
 
 import (
 	"image/color"
+	"saClient/src/cfg"
 	"saClient/src/common"
 	"saClient/src/user/camera"
 
@@ -24,8 +25,8 @@ func NewScene(mapID common.AssetID) *Scene {
 		_map:          NewMap(mapID),
 		plantMgr:      NewPlantMgr(),
 		itemMgr:       NewItemMgr(),
-		transition:    newSceneTransition(),
 	}
+	scene.transition = newSceneTransition(scene._map.cfgMap.SceneTransition)
 	return scene
 }
 
@@ -42,8 +43,9 @@ func (p *Scene) TransitionIn() {
 	p.transition.TransitionIn()
 }
 
-// TransitionOut 转场退出 (黑幕合拢，隐藏场景)
-func (p *Scene) TransitionOut() {
+// TransitionOut 转场退出 (使用指定配置)
+func (p *Scene) TransitionOut(transCfg *cfg.SceneTransition) {
+	p.transition.SetConfig(transCfg)
 	p.transition.TransitionOut()
 }
 
