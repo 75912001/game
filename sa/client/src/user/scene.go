@@ -25,7 +25,7 @@ func NewScene(mapID common.AssetID) *Scene {
 		plantMgr:      NewPlantMgr(),
 		itemMgr:       NewItemMgr(),
 	}
-	scene.transition = newSceneTransition(scene._map.cfgMap.SceneTransition)
+	scene.transition = newSceneTransition(scene._map.mapCfg.SceneTransition)
 	return scene
 }
 
@@ -39,7 +39,7 @@ func (p *Scene) Update() {
 
 // GetMapTileSize 获取地图 tile 尺寸
 func (p *Scene) GetMapTileSize() (width, height int) {
-	return p._map.cfg.Width, p._map.cfg.Height
+	return p._map.tiledMapCfg.Width, p._map.tiledMapCfg.Height
 }
 
 func (p *Scene) Draw(screen *ebitenv2.Image, camera *camera.Camera) {
