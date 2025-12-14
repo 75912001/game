@@ -123,6 +123,7 @@ func (p *Map) drawLayer(screen *ebitenv2.Image, cam *camera.Camera, layer *cfg.T
 }
 
 // drawData 绘制 tile 数据
+// todo menglc 研究逻辑, 优化计算, 让相关的瓦片挂载在地图上, 不用每次绘制的时候都放在内存中. 每次加载地图.都将该地图资源全量加载, 离开地图时,卸载地图所占资源
 func (p *Map) drawData(screen *ebitenv2.Image, cam *camera.Camera, data []int, width, height int) {
 	for i, gid := range data {
 		if gid == 0 {

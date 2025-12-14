@@ -54,21 +54,9 @@
 
 # todo
 
-// drawData 绘制 tile 数据
-func (p *TiledMap) drawData(screen *ebitenv2.Image, cam *camera.Camera, data []int, startX, startY, width, height int) {
-研究逻辑, 优化计算, 让相关的瓦片挂载在地图上, 不用每次绘制的时候都放在内存中. 每次加载地图.都将该地图资源全量加载, 离开地图时,卸载地图所占资源
 
 tiled 编辑地图
-    制作2张地图
-        1. 新手村
-            2个传送点
-                1. 野外.位置1
-                2. 野外.位置2
-        2. 野外
-            2个传送点
-                1. 新手村.位置1
-                2. 新手村.位置2
-开发地图跳转功能
+
 
 # 相关工具
 ## 地图编辑器 Tiled
@@ -89,7 +77,3 @@ tiled 编辑地图
     https://pixian.ai/
 ## 精灵播放器 Sprite Reel
     https://spritereel.com/
-
-
-C:\game\sa\client\src\user
-    D:\src\github.com\game\sa\client\src\user\role.update.go
