@@ -8,7 +8,7 @@
  </properties>
  <tileset firstgid="1" source="iso-64x64-building.tsx"/>
  <objectgroup id="7" name="Collision">
-  <object id="9" name="传送点-&gt;玛丽娜丝" type="portal" x="1472.69" y="736.833" width="126.396" height="126.542">
+  <object id="9" name="传送点-&gt;玛丽娜丝" type="portal" x="1567.18" y="736" width="31.2142" height="126.542">
    <properties>
     <property name="collision" type="bool" value="true"/>
     <property name="targetPortal" type="int" value="200000201"/>
