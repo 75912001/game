@@ -2,7 +2,6 @@ package user
 
 import (
 	"image/color"
-	"saClient/src/cfg"
 	"saClient/src/common"
 	"saClient/src/user/camera"
 
@@ -36,31 +35,6 @@ func (p *Scene) Update() {
 	p.plantMgr.Update()
 	p.decorationMgr.Update()
 	p.itemMgr.Update()
-}
-
-// TransitionIn 转场进入 (黑幕展开，显示场景)
-func (p *Scene) TransitionIn() {
-	p.transition.TransitionIn()
-}
-
-// TransitionOut 转场退出 (使用指定配置)
-func (p *Scene) TransitionOut(transCfg *cfg.SceneTransition) {
-	p.transition.SetConfig(transCfg)
-	p.transition.TransitionOut()
-}
-
-// UpdateTransition 更新过渡状态
-// 返回值:
-//   - isActive: 是否正在过渡中
-//   - isCloseComplete: 转场退出完成
-//   - isOpenComplete: 转场进入完成
-func (p *Scene) UpdateTransition() (isActive bool, isCloseComplete bool, isOpenComplete bool) {
-	return p.transition.Update()
-}
-
-// IsTransitionActive 是否正在过渡中
-func (p *Scene) IsTransitionActive() bool {
-	return p.transition.IsActive()
 }
 
 // GetMapTileSize 获取地图 tile 尺寸
