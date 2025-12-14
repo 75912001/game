@@ -19,19 +19,17 @@ const (
 
 // SceneTransition 场景过渡效果
 type SceneTransition struct {
-	state        TransitionState
-	progress     float32 // 进度 0-1
-	transitionID uint32  // 过渡效果ID
-	speed        float32 // 每帧增加的进度
+	state    TransitionState
+	progress float32              // 进度 0-1
+	cfg      *cfg.SceneTransition // 过渡效果配置
 }
 
 // newSceneTransition 创建场景过渡 (使用配置)
 func newSceneTransition(transCfg *cfg.SceneTransition) *SceneTransition {
 	return &SceneTransition{
-		state:        TransitionNone,
-		progress:     0,
-		transitionID: transCfg.ID,
-		speed:        transCfg.Speed,
+		state:    TransitionNone,
+		progress: 0,
+		cfg:      transCfg,
 	}
 }
 
@@ -43,15 +41,9 @@ func (t *SceneTransition) TransitionIn() {
 
 // TransitionOut 转场退出 (黑幕合拢，隐藏当前场景)
 func (t *SceneTransition) TransitionOut(transCfg *cfg.SceneTransition) {
-	t.SetConfig(transCfg)
+	t.cfg = transCfg
 	t.state = TransitionClosing
 	t.progress = 0
-}
-
-// SetConfig 设置过渡效果配置
-func (t *SceneTransition) SetConfig(transCfg *cfg.SceneTransition) {
-	t.transitionID = transCfg.ID
-	t.speed = transCfg.Speed
 }
 
 // IsActive 是否正在过渡中
@@ -69,7 +61,7 @@ func (t *SceneTransition) Update() (isActive bool, isCloseComplete bool, isOpenC
 		return false, false, false
 	}
 
-	t.progress += t.speed
+	t.progress += t.cfg.Speed
 
 	if t.progress >= 1 {
 		t.progress = 1
@@ -88,14 +80,14 @@ func (t *SceneTransition) Draw(screen *ebitenv2.Image) {
 		return
 	}
 
-	switch t.transitionID {
+	switch t.cfg.ID {
 	case cfg.SceneTransitionIDVertical:
 		t.drawVertical(screen)
 	case cfg.SceneTransitionIDHorizontal:
 		t.drawHorizontal(screen)
 	case cfg.SceneTransitionIDFade:
 		t.drawFade(screen)
-	default: // SceneTransitionIDVertical
+	default:
 		t.drawVertical(screen)
 	}
 }

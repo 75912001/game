@@ -18,7 +18,7 @@ import (
 type Map struct {
 	AssetID      common.AssetID `yaml:"assetID"`      // 地图资产ID
 	Name         string         `yaml:"name"`         // 地图名称
-	transitionID uint32         `yaml:"transitionID"` // 过渡效果ID
+	TransitionID uint32         `yaml:"transitionID"` // 过渡效果ID
 
 	ResMap          *TiledMap        // 资源-地图
 	SceneTransition *SceneTransition // 过渡效果配置
@@ -74,10 +74,10 @@ func (p *MapMgr) Check() error {
 			return false
 		}
 		// 检查过渡效果配置
-		switch m.transitionID {
+		switch m.TransitionID {
 		case SceneTransitionIDVertical, SceneTransitionIDHorizontal, SceneTransitionIDFade:
-			if !GSceneTransitionMgr.Transitions.IsExist(m.transitionID) {
-				err = fmt.Errorf("地图 %d 引用的过渡效果不存在: %d %v", id, m.transitionID, xruntime.Location())
+			if !GSceneTransitionMgr.Transitions.IsExist(m.TransitionID) {
+				err = fmt.Errorf("地图 %d 引用的过渡效果不存在: %d %v", id, m.TransitionID, xruntime.Location())
 				return false
 			}
 		default:
@@ -94,12 +94,12 @@ func (p *MapMgr) Assemble() error {
 		// 关联-地图资源
 		m.ResMap = GTiledMapMgr.Maps.Get(m.AssetID)
 		// 关联-过渡效果配置
-		switch m.transitionID {
+		switch m.TransitionID {
 		case SceneTransitionIDVertical, SceneTransitionIDHorizontal, SceneTransitionIDFade:
-			m.SceneTransition = GSceneTransitionMgr.Transitions.Get(m.transitionID)
+			m.SceneTransition = GSceneTransitionMgr.Transitions.Get(m.TransitionID)
 		default:
 			m.SceneTransition = DefaultSceneTransition()
-			log.Printf("地图 %d 引用的场景过渡效果不存在: %d, 使用默认过渡效果 %d %v", id, m.transitionID, m.SceneTransition.ID, xruntime.Location())
+			log.Printf("地图 %d 引用的场景过渡效果不存在: %d, 使用默认过渡效果 %d %v", id, m.TransitionID, m.SceneTransition.ID, xruntime.Location())
 		}
 		return true
 	})
