@@ -13,7 +13,7 @@ func (p *Role) Update() {
 		p.sprite.bottomCenterWX, p.sprite.bottomCenterWY = p.scene._map.tiledMapCfg.IsometricCT.T2W(p.pendingTX, p.pendingTY)
 		p.pendingScene = nil
 		// 新场景转场进入
-		p.scene.transition.TransitionIn()
+		p.scene.transition.In(p.scene._map.mapCfg.SceneTransition)
 		p.UpdateWithAction()
 		return
 	}

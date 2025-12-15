@@ -33,14 +33,15 @@ func newSceneTransition(transCfg *cfg.SceneTransition) *SceneTransition {
 	}
 }
 
-// TransitionIn 转场进入 (黑幕展开，显示新场景)
-func (t *SceneTransition) TransitionIn() {
+// In 转场进入 (黑幕展开，显示新场景)
+func (t *SceneTransition) In(transCfg *cfg.SceneTransition) {
+	t.cfg = transCfg
 	t.state = TransitionOpening
 	t.progress = 0
 }
 
-// TransitionOut 转场退出 (黑幕合拢，隐藏当前场景)
-func (t *SceneTransition) TransitionOut(transCfg *cfg.SceneTransition) {
+// Out 转场退出 (黑幕合拢，隐藏当前场景)
+func (t *SceneTransition) Out(transCfg *cfg.SceneTransition) {
 	t.cfg = transCfg
 	t.state = TransitionClosing
 	t.progress = 0

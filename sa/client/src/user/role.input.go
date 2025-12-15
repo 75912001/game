@@ -129,7 +129,7 @@ func (p *Role) SwitchScene(mapID common.AssetID, tx, ty float32) {
 	p.pendingTX = tx
 	p.pendingTY = ty
 	// 当前场景转场退出 (使用目标地图的过渡配置)
-	p.scene.transition.TransitionOut(targetMapCfg.SceneTransition)
+	p.scene.transition.Out(targetMapCfg.SceneTransition)
 }
 
 // doSwitchScene 执行实际的场景切换 (无过渡动画)
