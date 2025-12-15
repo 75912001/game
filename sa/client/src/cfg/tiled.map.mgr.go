@@ -171,11 +171,8 @@ func (p *TiledMapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*Tiled
 			if !xutil.Float32Equal(objXML.Rotation, 0) {
 				return nil, fmt.Errorf("为了提高效能, 不支持旋转对象, 当前地图 %v 对象 %d 旋转角度: %f %v", mapID, objXML.ID, objXML.Rotation, xruntime.Location())
 			}
-			switch objXML.Type {
-			case TiledObjectType_Portal: // 传送点对象
-			case TiledObjectType_ArrivalPortal: // 到达传送点对象
-			default:
-				return nil, fmt.Errorf("不支持的对象类型, 当前地图 %v 对象 %d 类型: %s %v", mapID, objXML.ID, objXML.Type, xruntime.Location())
+			if objXML.Polygon != nil { // 多边形对象
+				return nil, fmt.Errorf("为了提高效能, 不支持多边形对象, 当前地图 %v 对象 %d 类型: polygon %v", mapID, objXML.ID, xruntime.Location())
 			}
 			obj := &TiledObject{
 				ID:      objXML.ID,
@@ -186,34 +183,33 @@ func (p *TiledMapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*Tiled
 				Height:  objXML.Height,
 				Visible: objXML.Visible == nil || *objXML.Visible != 0,
 			}
-
-			if objXML.Polygon != nil { // 多边形对象
-				return nil, fmt.Errorf("为了提高效能, 不支持多边形对象, 当前地图 %v 对象 %d 类型: polygon %v", mapID, objXML.ID, xruntime.Location())
-			}
-
-			// 解析对象属性
-			if objXML.Properties != nil {
-				for _, prop := range objXML.Properties.Properties {
-					switch prop.Name {
-					case TiledObjectTag_Collision:
-						obj.Collision = prop.Value == "true"
-					case TiledObjectTag_TargetPortal:
-						v, err := strconv.ParseUint(prop.Value, 10, 32)
-						if err != nil {
-							return nil, errors.WithMessagef(err, "解析对象 %d 的目标传送点失败: %v %v", obj.ID, tmxPath, xruntime.Location())
+			switch objXML.Type {
+			case TiledObjectType_Portal: // 传送点对象
+				// 解析对象属性
+				if objXML.Properties != nil {
+					for _, prop := range objXML.Properties.Properties {
+						switch prop.Name {
+						case TiledObjectTag_Collision:
+							obj.Collision = prop.Value == "true"
+						case TiledObjectTag_TargetPortal:
+							v, err := strconv.ParseUint(prop.Value, 10, 32)
+							if err != nil {
+								return nil, errors.WithMessagef(err, "解析对象 %d 的目标传送点失败: %v %v", obj.ID, tmxPath, xruntime.Location())
+							}
+							obj.TargetPortal = common.PortalID(v)
 						}
-						obj.TargetPortal = common.PortalID(v)
-
 					}
 				}
+			case TiledObjectType_ArrivalPortal: // 到达传送点对象
+			case TiledObjectType_Unreachable: // 不可到达(障碍物)
+				obj.Unreachable = true
+			default:
+				return nil, fmt.Errorf("不支持的对象类型, 当前地图 %v 对象 %d 类型: %s %v", mapID, objXML.ID, objXML.Type, xruntime.Location())
 			}
-
 			layer.Objects = append(layer.Objects, obj)
 		}
-
 		tiledMap.Layers = append(tiledMap.Layers, layer)
 	}
-
 	return tiledMap, nil
 }
 
@@ -306,6 +302,7 @@ func (p *TiledMapMgr) Check() error {
 								return false
 							}
 						case TiledObjectType_ArrivalPortal: // 到达传送点对象
+						case TiledObjectType_Unreachable: // 不可到达(障碍物)
 						}
 					}
 				}
@@ -335,6 +332,7 @@ func (p *TiledMapMgr) Assemble() error {
 						case TiledObjectType_Portal: // 传送点对象
 							obj.PortalCfg = GPortalMgr.Points.Get(obj.TargetPortal)
 						case TiledObjectType_ArrivalPortal: // 到达传送点对象
+						case TiledObjectType_Unreachable: // 不可到达(障碍物)
 						}
 					}
 				}

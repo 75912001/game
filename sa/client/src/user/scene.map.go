@@ -48,6 +48,7 @@ func (p *Map) Draw(screen *ebitenv2.Image, cam *camera.Camera) {
 	if true { // 绘制调试边界
 		p.drawBorder(screen, cam)
 		p.drawCollision(screen, cam)
+		p.drawUnreachable(screen, cam)
 	}
 }
 
@@ -111,6 +112,46 @@ func (p *Map) drawCollision(screen *ebitenv2.Image, cam *camera.Camera) {
 			vector.StrokeLine(screen, x2, y2, x3, y3, strokeWidth, yellow, false)
 			vector.StrokeLine(screen, x3, y3, x4, y4, strokeWidth, yellow, false)
 			vector.StrokeLine(screen, x4, y4, x1, y1, strokeWidth, yellow, false)
+		}
+	}
+}
+
+// drawUnreachable 绘制不可到达区域(调试用)-红色加粗线条
+func (p *Map) drawUnreachable(screen *ebitenv2.Image, cam *camera.Camera) {
+	red := color.RGBA{R: 255, G: 0, B: 0, A: 255}
+	strokeWidth := float32(3.0)
+
+	camX := float32(cam.ViewportX)
+	camY := float32(cam.ViewportY)
+
+	// 遍历所有图层，查找对象图层中的碰撞对象
+	for _, layer := range p.tiledMapCfg.Layers {
+		if layer.Type != cfg.TiledLayerType_ObjectLayer {
+			continue
+		}
+		for _, obj := range layer.Objects {
+			if !obj.Unreachable {
+				continue
+			}
+			// 绘制矩形碰撞区域
+			// obj.X, obj.Y 是 Tiled 中的像素坐标，需要转换为 Tile 坐标
+			// Tiled 等距地图中，像素坐标除以 TileHeight 得到 Tile 坐标
+			// 需要调整偏移：x 减小，y 增大
+			tileX := obj.X/float32(p.tiledMapCfg.TileHeight) - 0.5
+			tileY := obj.Y/float32(p.tiledMapCfg.TileHeight) - 0.5
+			tileW := obj.Width / float32(p.tiledMapCfg.TileHeight)
+			tileH := obj.Height / float32(p.tiledMapCfg.TileHeight)
+
+			// 四个角点的 Tile 坐标，直接转换为 Screen 坐标
+			x1, y1 := p.tiledMapCfg.IsometricCT.T2S(tileX, tileY, camX, camY)
+			x2, y2 := p.tiledMapCfg.IsometricCT.T2S(tileX+tileW, tileY, camX, camY)
+			x3, y3 := p.tiledMapCfg.IsometricCT.T2S(tileX+tileW, tileY+tileH, camX, camY)
+			x4, y4 := p.tiledMapCfg.IsometricCT.T2S(tileX, tileY+tileH, camX, camY)
+
+			vector.StrokeLine(screen, x1, y1, x2, y2, strokeWidth, red, false)
+			vector.StrokeLine(screen, x2, y2, x3, y3, strokeWidth, red, false)
+			vector.StrokeLine(screen, x3, y3, x4, y4, strokeWidth, red, false)
+			vector.StrokeLine(screen, x4, y4, x1, y1, strokeWidth, red, false)
 		}
 	}
 }

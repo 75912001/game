@@ -58,12 +58,12 @@ func (p *Role) UpdateWithAction() {
 	p.sprite.roleImageSprite = frames[p.frameIdx%uint32(len(frames))]
 
 	// 更新角色中心 World 坐标 (脚底中心向上偏移半个角色高度)
-	p.sprite.centerWorldX = p.sprite.bottomCenterWorldX
-	p.sprite.centerWorldY = p.sprite.bottomCenterWorldY - float32(p.sprite.roleImageSprite.Frame.Height/2)
+	p.sprite.centerWX = p.sprite.bottomCenterWX
+	p.sprite.centerWY = p.sprite.bottomCenterWY - float32(p.sprite.roleImageSprite.Frame.Height/2)
 
 	// 更新摄像机跟随点 (World 坐标)
-	p.camera.FollowX = int(p.sprite.centerWorldX)
-	p.camera.FollowY = int(p.sprite.centerWorldY)
+	p.camera.FollowX = int(p.sprite.centerWX)
+	p.camera.FollowY = int(p.sprite.centerWY)
 
 	// 计算摄像机视口左上角 (World 坐标)
 	viewportX := p.camera.FollowX - cfg.GCommon.ScreenMaxWidth/2

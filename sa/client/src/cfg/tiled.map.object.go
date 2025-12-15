@@ -15,6 +15,7 @@ type TiledObjectType string
 const (
 	TiledObjectType_Portal        TiledObjectType = "portal"        // 传送点
 	TiledObjectType_ArrivalPortal TiledObjectType = "arrivalPortal" // 到达传送点
+	TiledObjectType_Unreachable   TiledObjectType = "unreachable"   // 不可到达(障碍物)
 )
 
 // TiledObject Tiled 对象(用于碰撞等)
@@ -29,6 +30,7 @@ type TiledObject struct {
 	Collision    bool            // 是否碰撞
 	TargetPortal common.PortalID // 目标传送点ID
 	PortalCfg    *PortalPoint    // 传送点配置
+	Unreachable  bool            // 是否不可达
 }
 
 // ============================================================================
@@ -60,7 +62,25 @@ func (m *TiledMap) FindCollisionObject(worldX, worldY float32) (*TiledObject, bo
 			continue
 		}
 		for _, obj := range layer.Objects { // 遍历对象
-			if !obj.Collision { // 只检查碰撞对象
+			if !obj.Collision { // 不是碰撞
+				continue
+			}
+			if obj.containsPointInRect(worldX, worldY, m.IsometricCT) {
+				return obj, true
+			}
+		}
+	}
+	return nil, false
+}
+
+// FindUnreachableObject 查找 World 坐标点所在的不可达对象
+func (m *TiledMap) FindUnreachableObject(worldX, worldY float32) (*TiledObject, bool) {
+	for _, layer := range m.Layers {
+		if layer.Type != TiledLayerType_ObjectLayer { // 只检查对象图层
+			continue
+		}
+		for _, obj := range layer.Objects { // 遍历对象
+			if !obj.Unreachable { // 不是-不可达
 				continue
 			}
 			if obj.containsPointInRect(worldX, worldY, m.IsometricCT) {

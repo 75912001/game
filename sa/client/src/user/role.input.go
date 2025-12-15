@@ -30,6 +30,7 @@ func (p *Role) HandleInput() {
 
 // 处理角色移动
 func (p *Role) handleKeyMove(up, down, left, right bool) {
+	newRoleSprite := p.sprite // 复制当前角色状态
 	// 计算屏幕方向的移动向量 (World 坐标系)
 	var dx, dy float32 = 0, 0
 	var orientation proto.AssetOrientation
@@ -68,51 +69,48 @@ func (p *Role) handleKeyMove(up, down, left, right bool) {
 	}
 
 	// 更新方向
-	p.sprite.orientation = uint32(orientation)
-	p.SetValueU64(proto.AssetIDRecord_AssetIDRecord_Orientation, uint64(orientation))
-
+	newRoleSprite.orientation = uint32(orientation)
 	// 移动速度 (像素/帧)
 	moveSpeed := cfg.GCommon.RoleDefaultMoveSpeed
-
 	// 计算新的 World 坐标
-	newWorldX := p.sprite.bottomCenterWorldX + dx*moveSpeed
-	newWorldY := p.sprite.bottomCenterWorldY + dy*moveSpeed
-
+	newWorldX := newRoleSprite.bottomCenterWX + dx*moveSpeed
+	newWorldY := newRoleSprite.bottomCenterWY + dy*moveSpeed
 	mapCfg := p.scene._map.tiledMapCfg
-
 	// 限制在地图边界内
-	tileX, tileY := mapCfg.IsometricCT.W2T(newWorldX, newWorldY)
-	clampedTX, clampedTY := mapCfg.IsometricCT.ClampTileBounds(tileX, tileY)
-	if !xutil.Float32Equal(tileX, clampedTX) || !xutil.Float32Equal(tileY, clampedTY) { // 需要限制
+	newRoleSprite.bottomCenterTX, newRoleSprite.bottomCenterTY = mapCfg.IsometricCT.W2T(newWorldX, newWorldY)
+	clampedTX, clampedTY := mapCfg.IsometricCT.ClampTileBounds(newRoleSprite.bottomCenterTX, newRoleSprite.bottomCenterTY)
+	if !xutil.Float32Equal(newRoleSprite.bottomCenterTX, clampedTX) || !xutil.Float32Equal(newRoleSprite.bottomCenterTY, clampedTY) { // 需要限制
 		newWorldX, newWorldY = mapCfg.IsometricCT.T2W(clampedTX, clampedTY)
-		tileX, tileY = clampedTX, clampedTY
+		newRoleSprite.bottomCenterTX, newRoleSprite.bottomCenterTY = clampedTX, clampedTY
 	}
-
 	// 更新 World 坐标
-	p.sprite.bottomCenterWorldX = newWorldX
-	p.sprite.bottomCenterWorldY = newWorldY
-
-	// 同步 Tile 坐标到 proto (用于记录/网络同步)
-	// tileX, tileY := mapCfg.IsometricCT.W2T(newWorldX, newWorldY)
-	p.SetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TX, tileX)
-	p.SetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TY, tileY)
-
+	newRoleSprite.bottomCenterWX = newWorldX
+	newRoleSprite.bottomCenterWY = newWorldY
 	// 更新动画帧
 	p.frameTick++
 	if p.frameTick >= 6 {
 		p.frameTick = 0
 		p.frameIdx++
 	}
-
-	// 判断角色 wx, wy 是否触发了碰撞
-	collisionObject, ok := mapCfg.FindCollisionObject(p.sprite.bottomCenterWorldX, p.sprite.bottomCenterWorldY)
-	if ok {
-		log.Printf("Role HandleInput collision at world (%.2f, %.2f) collisionObject:%+v", p.sprite.bottomCenterWorldX, p.sprite.bottomCenterWorldY, collisionObject)
+	// 是否使用预设的角色状态(用于回退)
+	var rollBack = false
+	if unreachableObject, ok := mapCfg.FindUnreachableObject(newRoleSprite.bottomCenterWX, newRoleSprite.bottomCenterWY); ok { // 判断角色 wx, wy 是否触发了-不可达区域
+		log.Printf("Role HandleInput unreachable at world (%.2f, %.2f) unreachableObject:%+v", newRoleSprite.bottomCenterWX, newRoleSprite.bottomCenterWY, unreachableObject)
+		// 回退到之前的位置
+		rollBack = true
+	} else if collisionObject, ok := mapCfg.FindCollisionObject(newRoleSprite.bottomCenterWX, newRoleSprite.bottomCenterWY); ok { // 判断角色 wx, wy 是否触发了碰撞
+		log.Printf("Role HandleInput collision at world (%.2f, %.2f) collisionObject:%+v", newRoleSprite.bottomCenterWX, newRoleSprite.bottomCenterWY, collisionObject)
 		switch collisionObject.Type {
 		case cfg.TiledObjectType_Portal: // 传送点
 			p.SwitchScene(collisionObject.PortalCfg.MapID, collisionObject.PortalCfg.TX, collisionObject.PortalCfg.TY)
 		case cfg.TiledObjectType_ArrivalPortal: // 传送点-到达
 		}
+	}
+	if !rollBack { // 正常移动，更新动画帧索引
+		p.sprite = newRoleSprite
+		p.SetValueU64(proto.AssetIDRecord_AssetIDRecord_Orientation, uint64(newRoleSprite.orientation))
+		p.SetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TX, newRoleSprite.bottomCenterTX)
+		p.SetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TY, newRoleSprite.bottomCenterTY)
 	}
 
 	p.UpdateWithAction()
@@ -139,5 +137,5 @@ func (p *Role) doSwitchScene(mapID common.AssetID, tx, ty float32) {
 	p.scene = NewScene(mapID)
 	p.camera = camera.NewCamera()
 	// 初始化角色的 World 坐标
-	p.sprite.bottomCenterWorldX, p.sprite.bottomCenterWorldY = p.scene._map.tiledMapCfg.IsometricCT.T2W(tx, ty)
+	p.sprite.bottomCenterWX, p.sprite.bottomCenterWY = p.scene._map.tiledMapCfg.IsometricCT.T2W(tx, ty)
 }

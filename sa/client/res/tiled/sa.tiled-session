@@ -5,9 +5,9 @@
     },
     "activeFile": "map/map.2000001.tmx",
     "expandedProjectPaths": [
-        ".",
         "map",
-        "tsx"
+        "tsx",
+        "."
     ],
     "fileStates": {
         "": {
@@ -134,6 +134,7 @@
             "scaleInDock": 1
         },
         "map/backgroundTower.tsx": {
+            "dynamicWrapping": false,
             "scaleInDock": 1,
             "scaleInEditor": 1
         },
@@ -163,23 +164,32 @@
             "expandedObjectLayers": [
                 7
             ],
-            "scale": 5.5,
-            "selectedLayer": 0,
+            "scale": 2,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 2411.909090909091,
-                "y": 1183.909090909091
+                "x": 2023,
+                "y": 756
             }
+        },
+        "map/map.2000001.tmx#backgroundTower": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
         },
         "map/map.2000002.tmx": {
             "expandedObjectLayers": [
                 6
             ],
-            "scale": 2,
-            "selectedLayer": 0,
+            "scale": 1.5,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 2764.75,
-                "y": 1188.25
+                "x": 4511.333333333333,
+                "y": 1159.3333333333333
             }
+        },
+        "map/ss.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
         },
         "tsx/map.isometric_grass_and_water.tsx": {
             "scaleInDock": 1,
@@ -187,7 +197,7 @@
         }
     },
     "last.exportedFilePath": "C:/game/sa/client/res/tiled/map",
-    "last.imagePath": "D:/src/github.com/game/sa/client/res/tiled/map",
+    "last.imagePath": "C:/game/sa/client/res/tiled/map",
     "map.fixedSize": true,
     "map.height": 3,
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
@@ -201,24 +211,25 @@
         "map/iso-64x64-building.tsx"
     ],
     "project": "sa.tiled-project",
-    "property.type": "int",
+    "property.type": "bool",
     "recentFiles": [
+        "map/backgroundTower.tsx",
+        "map/ss.tsx",
         "map/iso-64x64-building.tsx",
         "map/map.2000002.tmx",
         "map/map.2000001.tmx",
-        "map/backgroundTower.tsx",
         "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_001.tmx",
         "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_002.tmx",
         "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_003.tmx",
         "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_005.tmx",
         "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_006.tmx",
         "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_007.tmx",
-        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/sewers.tmx",
-        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_009.tmx"
+        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/sewers.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {
-        "height": 32,
-        "width": 64
-    }
+        "height": 332,
+        "width": 129
+    },
+    "tileset.type": 0
 }
