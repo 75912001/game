@@ -164,11 +164,11 @@
             "expandedObjectLayers": [
                 7
             ],
-            "scale": 2,
-            "selectedLayer": 2,
+            "scale": 1,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 2023,
-                "y": 756
+                "x": 2026,
+                "y": 958
             }
         },
         "map/map.2000001.tmx#backgroundTower": {
