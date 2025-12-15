@@ -52,7 +52,7 @@ func (p *Map) Draw(screen *ebitenv2.Image, cam *camera.Camera) {
 	}
 }
 
-// drawBorder 绘制地图边界(调试用)-红色加粗线条
+// drawBorder 绘制地图边界(调试用)
 func (p *Map) drawBorder(screen *ebitenv2.Image, cam *camera.Camera) {
 	// 获取菱形四角 (World 坐标)
 	topX, topY, rightX, rightY, bottomX, bottomY, leftX, leftY := p.tiledMapCfg.IsometricCT.GetDiamondCorners()
@@ -66,25 +66,15 @@ func (p *Map) drawBorder(screen *ebitenv2.Image, cam *camera.Camera) {
 	sBottomX, sBottomY := p.tiledMapCfg.IsometricCT.W2S(bottomX, bottomY, camX, camY)
 	sLeftX, sLeftY := p.tiledMapCfg.IsometricCT.W2S(leftX, leftY, camX, camY)
 
-	// 绘制四条边界线(红色加粗)
-	red := color.RGBA{R: 255, G: 0, B: 0, A: 255}
-	strokeWidth := float32(3.0)
-
-	vector.StrokeLine(screen, float32(sTopX), float32(sTopY), float32(sRightX), float32(sRightY), strokeWidth, red, false)
-	vector.StrokeLine(screen, float32(sRightX), float32(sRightY), float32(sBottomX), float32(sBottomY), strokeWidth, red, false)
-	vector.StrokeLine(screen, float32(sBottomX), float32(sBottomY), float32(sLeftX), float32(sLeftY), strokeWidth, red, false)
-	vector.StrokeLine(screen, float32(sLeftX), float32(sLeftY), float32(sTopX), float32(sTopY), strokeWidth, red, false)
+	// 绘制四条边界线
+	drawDiamond(screen, sTopX, sTopY, sRightX, sRightY, sBottomX, sBottomY, sLeftX, sLeftY, common.Colors_Red, 3.0)
 }
 
-// drawCollision 绘制碰撞区域(调试用)-黄色加粗线条
+// drawCollision 绘制碰撞区域(调试用)
 func (p *Map) drawCollision(screen *ebitenv2.Image, cam *camera.Camera) {
-	yellow := color.RGBA{R: 255, G: 255, B: 0, A: 255}
-	strokeWidth := float32(3.0)
-
 	camX := float32(cam.ViewportX)
 	camY := float32(cam.ViewportY)
 
-	// 遍历所有图层，查找对象图层中的碰撞对象
 	for _, layer := range p.tiledMapCfg.Layers {
 		if layer.Type != cfg.TiledLayerType_ObjectLayer {
 			continue
@@ -93,38 +83,16 @@ func (p *Map) drawCollision(screen *ebitenv2.Image, cam *camera.Camera) {
 			if !obj.Collision {
 				continue
 			}
-			// 绘制矩形碰撞区域
-			// obj.X, obj.Y 是 Tiled 中的像素坐标，需要转换为 Tile 坐标
-			// Tiled 等距地图中，像素坐标除以 TileHeight 得到 Tile 坐标
-			// 需要调整偏移：x 减小，y 增大
-			tileX := obj.X/float32(p.tiledMapCfg.TileHeight) - 0.5
-			tileY := obj.Y/float32(p.tiledMapCfg.TileHeight) - 0.5
-			tileW := obj.Width / float32(p.tiledMapCfg.TileHeight)
-			tileH := obj.Height / float32(p.tiledMapCfg.TileHeight)
-
-			// 四个角点的 Tile 坐标，直接转换为 Screen 坐标
-			x1, y1 := p.tiledMapCfg.IsometricCT.T2S(tileX, tileY, camX, camY)
-			x2, y2 := p.tiledMapCfg.IsometricCT.T2S(tileX+tileW, tileY, camX, camY)
-			x3, y3 := p.tiledMapCfg.IsometricCT.T2S(tileX+tileW, tileY+tileH, camX, camY)
-			x4, y4 := p.tiledMapCfg.IsometricCT.T2S(tileX, tileY+tileH, camX, camY)
-
-			vector.StrokeLine(screen, x1, y1, x2, y2, strokeWidth, yellow, false)
-			vector.StrokeLine(screen, x2, y2, x3, y3, strokeWidth, yellow, false)
-			vector.StrokeLine(screen, x3, y3, x4, y4, strokeWidth, yellow, false)
-			vector.StrokeLine(screen, x4, y4, x1, y1, strokeWidth, yellow, false)
+			p.drawTiledObjectRect(screen, obj, camX, camY, common.Colors_Yellow, 3.0)
 		}
 	}
 }
 
-// drawUnreachable 绘制不可到达区域(调试用)-红色加粗线条
+// drawUnreachable 绘制不可到达区域(调试用)
 func (p *Map) drawUnreachable(screen *ebitenv2.Image, cam *camera.Camera) {
-	red := color.RGBA{R: 255, G: 0, B: 0, A: 255}
-	strokeWidth := float32(3.0)
-
 	camX := float32(cam.ViewportX)
 	camY := float32(cam.ViewportY)
 
-	// 遍历所有图层，查找对象图层中的碰撞对象
 	for _, layer := range p.tiledMapCfg.Layers {
 		if layer.Type != cfg.TiledLayerType_ObjectLayer {
 			continue
@@ -133,27 +101,35 @@ func (p *Map) drawUnreachable(screen *ebitenv2.Image, cam *camera.Camera) {
 			if !obj.Unreachable {
 				continue
 			}
-			// 绘制矩形碰撞区域
-			// obj.X, obj.Y 是 Tiled 中的像素坐标，需要转换为 Tile 坐标
-			// Tiled 等距地图中，像素坐标除以 TileHeight 得到 Tile 坐标
-			// 需要调整偏移：x 减小，y 增大
-			tileX := obj.X/float32(p.tiledMapCfg.TileHeight) - 0.5
-			tileY := obj.Y/float32(p.tiledMapCfg.TileHeight) - 0.5
-			tileW := obj.Width / float32(p.tiledMapCfg.TileHeight)
-			tileH := obj.Height / float32(p.tiledMapCfg.TileHeight)
-
-			// 四个角点的 Tile 坐标，直接转换为 Screen 坐标
-			x1, y1 := p.tiledMapCfg.IsometricCT.T2S(tileX, tileY, camX, camY)
-			x2, y2 := p.tiledMapCfg.IsometricCT.T2S(tileX+tileW, tileY, camX, camY)
-			x3, y3 := p.tiledMapCfg.IsometricCT.T2S(tileX+tileW, tileY+tileH, camX, camY)
-			x4, y4 := p.tiledMapCfg.IsometricCT.T2S(tileX, tileY+tileH, camX, camY)
-
-			vector.StrokeLine(screen, x1, y1, x2, y2, strokeWidth, red, false)
-			vector.StrokeLine(screen, x2, y2, x3, y3, strokeWidth, red, false)
-			vector.StrokeLine(screen, x3, y3, x4, y4, strokeWidth, red, false)
-			vector.StrokeLine(screen, x4, y4, x1, y1, strokeWidth, red, false)
+			p.drawTiledObjectRect(screen, obj, camX, camY, common.Colors_Red, 3.0)
 		}
 	}
+}
+
+// drawTiledObjectRect 绘制 TiledObject 的等距矩形边界
+func (p *Map) drawTiledObjectRect(screen *ebitenv2.Image, obj *cfg.TiledObject, camX, camY float32, clr color.RGBA, strokeWidth float32) {
+	// obj.X, obj.Y 是 Tiled 中的像素坐标，转换为 Tile 坐标
+	th := float32(p.tiledMapCfg.TileHeight)
+	tileX := obj.X/th - 0.5
+	tileY := obj.Y/th - 0.5
+	tileW := obj.Width / th
+	tileH := obj.Height / th
+
+	// 四个角点的 Tile 坐标 -> Screen 坐标
+	x1, y1 := p.tiledMapCfg.IsometricCT.T2S(tileX, tileY, camX, camY)
+	x2, y2 := p.tiledMapCfg.IsometricCT.T2S(tileX+tileW, tileY, camX, camY)
+	x3, y3 := p.tiledMapCfg.IsometricCT.T2S(tileX+tileW, tileY+tileH, camX, camY)
+	x4, y4 := p.tiledMapCfg.IsometricCT.T2S(tileX, tileY+tileH, camX, camY)
+
+	drawDiamond(screen, x1, y1, x2, y2, x3, y3, x4, y4, clr, strokeWidth)
+}
+
+// drawDiamond 绘制菱形边框
+func drawDiamond(screen *ebitenv2.Image, x1, y1, x2, y2, x3, y3, x4, y4 float32, clr color.RGBA, strokeWidth float32) {
+	vector.StrokeLine(screen, x1, y1, x2, y2, strokeWidth, clr, false)
+	vector.StrokeLine(screen, x2, y2, x3, y3, strokeWidth, clr, false)
+	vector.StrokeLine(screen, x3, y3, x4, y4, strokeWidth, clr, false)
+	vector.StrokeLine(screen, x4, y4, x1, y1, strokeWidth, clr, false)
 }
 
 // drawLayer 绘制单个图层
