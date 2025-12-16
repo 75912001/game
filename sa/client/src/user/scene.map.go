@@ -47,8 +47,8 @@ func (p *Map) Draw(screen *ebitenv2.Image, cam *camera.Camera) {
 
 	if true { // 绘制调试边界
 		p.drawBorder(screen, cam)
-		p.drawCollision(screen, cam)
-		p.drawUnreachable(screen, cam)
+		p.drawPortal(screen, cam)
+		p.drawBlocked(screen, cam)
 	}
 }
 
@@ -70,8 +70,8 @@ func (p *Map) drawBorder(screen *ebitenv2.Image, cam *camera.Camera) {
 	drawDiamond(screen, sTopX, sTopY, sRightX, sRightY, sBottomX, sBottomY, sLeftX, sLeftY, common.Colors_Red, 3.0)
 }
 
-// drawCollision 绘制碰撞区域(调试用)
-func (p *Map) drawCollision(screen *ebitenv2.Image, cam *camera.Camera) {
+// drawPortal 绘制传送区域(调试用)
+func (p *Map) drawPortal(screen *ebitenv2.Image, cam *camera.Camera) {
 	camX := float32(cam.ViewportX)
 	camY := float32(cam.ViewportY)
 
@@ -80,7 +80,7 @@ func (p *Map) drawCollision(screen *ebitenv2.Image, cam *camera.Camera) {
 			continue
 		}
 		for _, obj := range layer.Objects {
-			if !obj.Collision {
+			if obj.PortalCfg == nil { // 非-传送点
 				continue
 			}
 			p.drawTiledObjectRect(screen, obj, camX, camY, common.Colors_Yellow, 3.0)
@@ -88,8 +88,8 @@ func (p *Map) drawCollision(screen *ebitenv2.Image, cam *camera.Camera) {
 	}
 }
 
-// drawUnreachable 绘制不可到达区域(调试用)
-func (p *Map) drawUnreachable(screen *ebitenv2.Image, cam *camera.Camera) {
+// drawBlocked 绘制阻挡(调试用)
+func (p *Map) drawBlocked(screen *ebitenv2.Image, cam *camera.Camera) {
 	camX := float32(cam.ViewportX)
 	camY := float32(cam.ViewportY)
 
@@ -98,7 +98,7 @@ func (p *Map) drawUnreachable(screen *ebitenv2.Image, cam *camera.Camera) {
 			continue
 		}
 		for _, obj := range layer.Objects {
-			if !obj.Unreachable {
+			if !obj.Blocked { // 非-阻挡
 				continue
 			}
 			p.drawTiledObjectRect(screen, obj, camX, camY, common.Colors_Red, 3.0)

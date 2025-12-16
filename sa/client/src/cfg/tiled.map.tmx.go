@@ -37,12 +37,13 @@ type tmxTilesetRef struct {
 }
 
 type tmxLayer struct {
-	ID      int     `xml:"id,attr"`
-	Width   int     `xml:"width,attr"`
-	Height  int     `xml:"height,attr"`
-	Visible *int    `xml:"visible,attr"`
-	Opacity float32 `xml:"opacity,attr"`
-	Data    tmxData `xml:"data"`
+	ID         int            `xml:"id,attr"`
+	Width      int            `xml:"width,attr"`
+	Height     int            `xml:"height,attr"`
+	Visible    *int           `xml:"visible,attr"`
+	Opacity    float32        `xml:"opacity,attr"`
+	Data       tmxData        `xml:"data"`
+	Properties *tmxProperties `xml:"properties"`
 }
 
 type tmxData struct {

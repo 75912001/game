@@ -118,24 +118,22 @@ func (p *TiledMapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*Tiled
 		for _, prop := range mapXML.Properties.Properties {
 			switch prop.Name {
 			case TiledMapTag_BgmFilePath: // 背景音乐文件路径
-				tiledMap.BackgroundMusicFilePath = prop.Value
+				tiledMap.BackgroundMusicFilePath = prop.Value // todo menglc 需要检查合法性
 			default: // 未知属性 忽略
 			}
 		}
 	}
 
-	// 加载 tilesets
 	tmxDir := filepath.Dir(tmxPath)
-	for _, tsRef := range mapXML.Tilesets {
+	for _, tsRef := range mapXML.Tilesets { // 加载 tilesets
 		tileset, err := p.loadTileset(tmxDir, tsRef)
 		if err != nil {
-			return nil, err
+			return nil, errors.WithMessagef(err, "加载地图 %v 的 tileset 失败: %v %v", mapID, tmxPath, xruntime.Location())
 		}
 		tiledMap.Tilesets = append(tiledMap.Tilesets, tileset) // todo menglc 这里不同的 mapID, 相同的 tileset 会重复加载,可以考虑缓存优化
 	}
 
-	// 加载 tile layers
-	for _, layerXML := range mapXML.Layers {
+	for _, layerXML := range mapXML.Layers { // 加载 tile layers
 		layer := &TiledLayer{
 			ID:      layerXML.ID,
 			Type:    TiledLayerType_TileLayer,
@@ -147,19 +145,24 @@ func (p *TiledMapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*Tiled
 		if layer.Opacity == 0 {
 			layer.Opacity = 1.0
 		}
-		if layerXML.Data.Encoding == "csv" || layerXML.Data.Encoding == "" {
-			// 解析非 infinite map 的 data
+		if layerXML.Data.Encoding == "csv" || layerXML.Data.Encoding == "" { // 解析有限地图的 data
 			layer.Data, err = parseCSVData(layerXML.Data.Content)
 			if err != nil {
 				return nil, errors.WithMessagef(err, "解析 %v 图层 %d 的 CSV 数据失败: %v %v", mapID, layer.ID, tmxPath, xruntime.Location())
 			}
 		}
-
+		if layerXML.Properties != nil { // 解析属性
+			for _, prop := range layerXML.Properties.Properties {
+				switch prop.Name {
+				case TileLayerProperty_Blocked:
+					layer.BlockedLayer = prop.Value == "true"
+				}
+			}
+		}
 		tiledMap.Layers = append(tiledMap.Layers, layer)
 	}
 
-	// 加载 object groups
-	for _, ogXML := range mapXML.ObjectGroups {
+	for _, ogXML := range mapXML.ObjectGroups { // 加载 object groups
 		layer := &TiledLayer{
 			ID:      ogXML.ID,
 			Type:    TiledLayerType_ObjectLayer,
@@ -183,28 +186,22 @@ func (p *TiledMapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*Tiled
 				Height:  objXML.Height,
 				Visible: objXML.Visible == nil || *objXML.Visible != 0,
 			}
-			switch objXML.Type {
-			case TiledObjectType_Portal: // 传送点对象
-				// 解析对象属性
-				if objXML.Properties != nil {
-					for _, prop := range objXML.Properties.Properties {
-						switch prop.Name {
-						case TiledObjectTag_Collision:
-							obj.Collision = prop.Value == "true"
-						case TiledObjectTag_TargetPortal:
-							v, err := strconv.ParseUint(prop.Value, 10, 32)
-							if err != nil {
-								return nil, errors.WithMessagef(err, "解析对象 %d 的目标传送点失败: %v %v", obj.ID, tmxPath, xruntime.Location())
-							}
-							obj.TargetPortal = common.PortalID(v)
+			if objXML.Properties != nil {
+				for _, prop := range objXML.Properties.Properties {
+					switch prop.Name {
+					case TiledObjectProperty_Blocked:
+						obj.Blocked = prop.Value == "true"
+					case TiledObjectProperty_ArrivalPortal:
+					case TiledObjectProperty_TargetPortal:
+						v, err := strconv.ParseUint(prop.Value, 10, 32)
+						if err != nil {
+							return nil, errors.WithMessagef(err, "解析对象 %d 的目标传送点失败: %v %v", obj.ID, tmxPath, xruntime.Location())
 						}
+						obj.TargetPortal = common.PortalID(v)
+					default:
+						return nil, fmt.Errorf("不支持的对象类型, 当前地图 %v 对象 %d 类型: %s %v", mapID, objXML.ID, objXML.Type, xruntime.Location())
 					}
 				}
-			case TiledObjectType_ArrivalPortal: // 到达传送点对象
-			case TiledObjectType_Unreachable: // 不可到达(障碍物)
-				obj.Unreachable = true
-			default:
-				return nil, fmt.Errorf("不支持的对象类型, 当前地图 %v 对象 %d 类型: %s %v", mapID, objXML.ID, objXML.Type, xruntime.Location())
 			}
 			layer.Objects = append(layer.Objects, obj)
 		}
@@ -287,22 +284,14 @@ func (p *TiledMapMgr) Check() error {
 			}
 			for _, layer := range tiledMap.Layers {
 				switch layer.Type {
-				case TiledLayerType_TileLayer: // 瓦片图层
 				case TiledLayerType_ObjectLayer: // 对象图层
 					for _, obj := range layer.Objects {
-						switch obj.Type {
-						case TiledObjectType_Portal: // 传送点对象
-							if obj.TargetPortal == 0 { // 必须设置目标传送点
-								err = fmt.Errorf("Tiled 地图资源 %v 中对象 %d 的目标传送点未设置 %v", mapID, obj.ID, xruntime.Location())
-								return false
-							}
+						if obj.TargetPortal != 0 {
 							exist = GPortalMgr.Points.IsExist(obj.TargetPortal)
 							if !exist { // 检查目标传送点是否存在
 								err = fmt.Errorf("Tiled 地图资源 %v 中对象 %d 的目标传送点 %v 不存在 %v", mapID, obj.ID, obj.TargetPortal, xruntime.Location())
 								return false
 							}
-						case TiledObjectType_ArrivalPortal: // 到达传送点对象
-						case TiledObjectType_Unreachable: // 不可到达(障碍物)
 						}
 					}
 				}
@@ -323,16 +312,31 @@ func (p *TiledMapMgr) Assemble() error {
 			tiledMap.PixelH = (tiledMap.Width + tiledMap.Height) * (tiledMap.TileHeight / 2)
 			tiledMap.IsometricCT = ct.NewIsometric(tiledMap.Width, tiledMap.Height, tiledMap.TileWidth, tiledMap.TileHeight)
 
+			// 初始化碰撞网格
+			gridSize := tiledMap.Width * tiledMap.Height
+			// 创建二维布尔切片，按 [width][height]
+			tiledMap.TileBlocked = make([][]bool, tiledMap.Width)
+			for x := 0; x < tiledMap.Width; x++ {
+				tiledMap.TileBlocked[x] = make([]bool, tiledMap.Height)
+			}
+
 			for _, layer := range tiledMap.Layers {
 				switch layer.Type {
-				case TiledLayerType_TileLayer: // 瓦片图层
-				case TiledLayerType_ObjectLayer: // 对象图层
+				case TiledLayerType_TileLayer: // tile 图层
+					// 如果图层有碰撞或阻挡属性，将非空 tile 标记为阻挡
+					if layer.BlockedLayer && 0 < len(layer.Data) {
+						for i, gid := range layer.Data {
+							if gid != 0 && i < gridSize {
+								x := i % tiledMap.Width
+								y := i / tiledMap.Width
+								tiledMap.TileBlocked[x][y] = true
+							}
+						}
+					}
+				case TiledLayerType_ObjectLayer: // object 图层
 					for _, obj := range layer.Objects {
-						switch obj.Type {
-						case TiledObjectType_Portal: // 传送点对象
+						if obj.TargetPortal != 0 { // 传送点对象
 							obj.PortalCfg = GPortalMgr.Points.Get(obj.TargetPortal)
-						case TiledObjectType_ArrivalPortal: // 到达传送点对象
-						case TiledObjectType_Unreachable: // 不可到达(障碍物)
 						}
 					}
 				}

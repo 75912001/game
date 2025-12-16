@@ -5,12 +5,14 @@
  </properties>
  <tileset firstgid="1" source="iso-64x64-building.tsx"/>
  <objectgroup id="6" name="Collision">
-  <object id="1" name="玛丽娜丝.到达" type="arrivalPortal" x="1600" y="1600">
+  <object id="1" name="玛丽娜丝.到达" x="1600" y="1600">
+   <properties>
+    <property name="arrivalPortal" type="bool" value="true"/>
+   </properties>
    <point/>
   </object>
-  <object id="2" name="传送点-&gt;玛丽娜丝.村长家" type="portal" x="895.455" y="1376" width="32.5455" height="128">
+  <object id="2" name="传送点-&gt;玛丽娜丝.村长家" x="895.455" y="1376" width="32.5455" height="128">
    <properties>
-    <property name="collision" type="bool" value="true"/>
     <property name="targetPortal" type="int" value="200000101"/>
    </properties>
   </object>

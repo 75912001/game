@@ -92,18 +92,19 @@ func (p *Role) handleKeyMove(up, down, left, right bool) {
 		p.frameTick = 0
 		p.frameIdx++
 	}
+
 	// 是否使用预设的角色状态(用于回退)
 	var rollBack = false
-	if unreachableObject, ok := mapCfg.FindUnreachableObject(newRoleSprite.bottomCenterWX, newRoleSprite.bottomCenterWY); ok { // 判断角色 wx, wy 是否触发了-不可达区域
-		log.Printf("Role HandleInput unreachable at world (%.2f, %.2f) unreachableObject:%+v", newRoleSprite.bottomCenterWX, newRoleSprite.bottomCenterWY, unreachableObject)
-		// 回退到之前的位置
-		rollBack = true
-	} else if collisionObject, ok := mapCfg.FindCollisionObject(newRoleSprite.bottomCenterWX, newRoleSprite.bottomCenterWY); ok { // 判断角色 wx, wy 是否触发了碰撞
-		log.Printf("Role HandleInput collision at world (%.2f, %.2f) collisionObject:%+v", newRoleSprite.bottomCenterWX, newRoleSprite.bottomCenterWY, collisionObject)
-		switch collisionObject.Type {
-		case cfg.TiledObjectType_Portal: // 传送点
-			p.SwitchScene(collisionObject.PortalCfg.MapID, collisionObject.PortalCfg.TX, collisionObject.PortalCfg.TY)
-		case cfg.TiledObjectType_ArrivalPortal: // 传送点-到达
+	if portalObject, ok := mapCfg.FindPortalByObject(newRoleSprite.bottomCenterWX, newRoleSprite.bottomCenterWY); ok { // 判断角色 wx, wy 是否触发了-传送
+		log.Printf("Role HandleInput portal at world (%.3f, %.3f) portalObject:%+v", newRoleSprite.bottomCenterWX, newRoleSprite.bottomCenterWY, portalObject)
+		p.SwitchScene(portalObject.PortalCfg.MapID, portalObject.PortalCfg.TX, portalObject.PortalCfg.TY)
+	} else {
+		if blockedObject, ok := mapCfg.FindBlockedByObject(newRoleSprite.bottomCenterWX, newRoleSprite.bottomCenterWY); ok { // 判断角色 wx, wy 是否触发了-阻挡
+			log.Printf("Role HandleInput blocked at world (%.2f, %.2f) blockedObject:%+v", newRoleSprite.bottomCenterWX, newRoleSprite.bottomCenterWY, blockedObject)
+			// 回退到之前的位置
+			rollBack = true
+		} else if true { // todo menglc  使用图块碰撞检测
+
 		}
 	}
 	if !rollBack { // 正常移动，更新动画帧索引
@@ -112,7 +113,6 @@ func (p *Role) handleKeyMove(up, down, left, right bool) {
 		p.SetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TX, newRoleSprite.bottomCenterTX)
 		p.SetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TY, newRoleSprite.bottomCenterTY)
 	}
-
 	p.UpdateWithAction()
 }
 
