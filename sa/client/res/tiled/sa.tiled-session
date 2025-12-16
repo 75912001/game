@@ -134,6 +134,7 @@
             "scaleInDock": 1
         },
         "map/64x64.empty.tsx": {
+            "dynamicWrapping": true,
             "scaleInDock": 1,
             "scaleInEditor": 1
         },
@@ -171,8 +172,8 @@
             "scale": 0.75,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 1890.6666666666665,
-                "y": 969.3333333333333
+                "x": 1891.3333333333335,
+                "y": 1205.3333333333333
             }
         },
         "map/map.2000001.tmx#backgroundTower": {
@@ -186,7 +187,7 @@
             "scale": 1,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 2947,
+                "x": 2947.5,
                 "y": 1368
             }
         },

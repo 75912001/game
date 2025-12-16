@@ -102,10 +102,10 @@ func (p *Role) GetValueF32(assetID proto.AssetIDRecord) float32 {
 	if !ok {
 		return 0
 	}
-	return float32(v / uint64(common.Float32Ratio))
+	return float32(v) / float32(common.Float32Ratio)
 }
 
 // SetValueF32 设置属性值-float32 (*1000倍)
 func (p *Role) SetValueF32(assetID proto.AssetIDRecord, value float32) {
-	p.roleRecord.AssetIDRecordMap[uint32(assetID)] = uint64(value * 1000)
+	p.roleRecord.AssetIDRecordMap[uint32(assetID)] = uint64(value * float32(common.Float32Ratio))
 }

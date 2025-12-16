@@ -54,17 +54,14 @@ func (p *Map) Draw(screen *ebitenv2.Image, cam *camera.Camera) {
 
 // drawBorder 绘制地图边界(调试用)
 func (p *Map) drawBorder(screen *ebitenv2.Image, cam *camera.Camera) {
-	// 获取菱形四角 (World 坐标)
-	topX, topY, rightX, rightY, bottomX, bottomY, leftX, leftY := p.tiledMapCfg.IsometricCT.GetDiamondCorners()
-
 	// World -> Screen
 	camX := float32(cam.ViewportX)
 	camY := float32(cam.ViewportY)
 
-	sTopX, sTopY := p.tiledMapCfg.IsometricCT.W2S(topX, topY, camX, camY)
-	sRightX, sRightY := p.tiledMapCfg.IsometricCT.W2S(rightX, rightY, camX, camY)
-	sBottomX, sBottomY := p.tiledMapCfg.IsometricCT.W2S(bottomX, bottomY, camX, camY)
-	sLeftX, sLeftY := p.tiledMapCfg.IsometricCT.W2S(leftX, leftY, camX, camY)
+	sTopX, sTopY := p.tiledMapCfg.IsometricCT.W2S(p.tiledMapCfg.TopWX, p.tiledMapCfg.TopWY, camX, camY)
+	sRightX, sRightY := p.tiledMapCfg.IsometricCT.W2S(p.tiledMapCfg.RightWX, p.tiledMapCfg.RightWY, camX, camY)
+	sBottomX, sBottomY := p.tiledMapCfg.IsometricCT.W2S(p.tiledMapCfg.BottomWX, p.tiledMapCfg.BottomWY, camX, camY)
+	sLeftX, sLeftY := p.tiledMapCfg.IsometricCT.W2S(p.tiledMapCfg.LeftWX, p.tiledMapCfg.LeftWY, camX, camY)
 
 	// 绘制四条边界线
 	drawDiamond(screen, sTopX, sTopY, sRightX, sRightY, sBottomX, sBottomY, sLeftX, sLeftY, common.Colors_Red, 3.0)

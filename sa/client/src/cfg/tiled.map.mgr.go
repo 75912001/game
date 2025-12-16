@@ -311,7 +311,7 @@ func (p *TiledMapMgr) Assemble() error {
 			tiledMap.PixelW = (tiledMap.Width + tiledMap.Height) * (tiledMap.TileWidth / 2)
 			tiledMap.PixelH = (tiledMap.Width + tiledMap.Height) * (tiledMap.TileHeight / 2)
 			tiledMap.IsometricCT = ct.NewIsometric(tiledMap.Width, tiledMap.Height, tiledMap.TileWidth, tiledMap.TileHeight)
-
+			tiledMap.TopWX, tiledMap.TopWY, tiledMap.RightWX, tiledMap.RightWY, tiledMap.BottomWX, tiledMap.BottomWY, tiledMap.LeftWX, tiledMap.LeftWY = tiledMap.IsometricCT.GetDiamondCorners()
 			// 初始化碰撞网格
 			gridSize := tiledMap.Width * tiledMap.Height
 			// 创建二维布尔切片，按 [width][height]
