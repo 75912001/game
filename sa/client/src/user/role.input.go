@@ -98,14 +98,13 @@ func (p *Role) handleKeyMove(up, down, left, right bool) {
 	if portalObject, ok := mapCfg.FindPortalByObject(newRoleSprite.bottomCenterWX, newRoleSprite.bottomCenterWY); ok { // 判断角色 wx, wy 是否触发了-传送
 		log.Printf("Role HandleInput portal at world (%.3f, %.3f) portalObject:%+v", newRoleSprite.bottomCenterWX, newRoleSprite.bottomCenterWY, portalObject)
 		p.SwitchScene(portalObject.PortalCfg.MapID, portalObject.PortalCfg.TX, portalObject.PortalCfg.TY)
-	} else {
-		if blockedObject, ok := mapCfg.FindBlockedByObject(newRoleSprite.bottomCenterWX, newRoleSprite.bottomCenterWY); ok { // 判断角色 wx, wy 是否触发了-阻挡
-			log.Printf("Role HandleInput blocked at world (%.2f, %.2f) blockedObject:%+v", newRoleSprite.bottomCenterWX, newRoleSprite.bottomCenterWY, blockedObject)
-			// 回退到之前的位置
-			rollBack = true
-		} else if true { // todo menglc  使用图块碰撞检测
-
-		}
+	} else if mapCfg.IsBlockedByTileWithT(int(newRoleSprite.bottomCenterTX), int(newRoleSprite.bottomCenterTY)) { // 使用 tile 图层 图块 阻挡检测
+		log.Printf("Role HandleInput tile blocked at world (%.2f, %.2f)", newRoleSprite.bottomCenterWX, newRoleSprite.bottomCenterWY)
+		rollBack = true
+	} else if blockedObject, ok := mapCfg.FindBlockedByObject(newRoleSprite.bottomCenterWX, newRoleSprite.bottomCenterWY); ok { // 判断角色 wx, wy 是否触发了-阻挡
+		log.Printf("Role HandleInput blocked at world (%.2f, %.2f) blockedObject:%+v", newRoleSprite.bottomCenterWX, newRoleSprite.bottomCenterWY, blockedObject)
+		// 回退到之前的位置
+		rollBack = true
 	}
 	if !rollBack { // 正常移动，更新动画帧索引
 		p.sprite = newRoleSprite

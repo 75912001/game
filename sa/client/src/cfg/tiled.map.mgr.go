@@ -323,8 +323,8 @@ func (p *TiledMapMgr) Assemble() error {
 			for _, layer := range tiledMap.Layers {
 				switch layer.Type {
 				case TiledLayerType_TileLayer: // tile 图层
-					// 如果图层有碰撞或阻挡属性，将非空 tile 标记为阻挡
-					if layer.BlockedLayer && 0 < len(layer.Data) {
+					// 如果图层有阻挡属性，该图层所有非空 tile 都阻挡
+					if layer.BlockedLayer && len(layer.Data) > 0 {
 						for i, gid := range layer.Data {
 							if gid != 0 && i < gridSize {
 								x := i % tiledMap.Width

@@ -31,7 +31,7 @@ type TiledMap struct {
 	PixelW      int           // 地图像素宽度
 	PixelH      int           // 地图像素高度
 	IsometricCT *ct.Isometric // 坐标转换器
-	TileBlocked [][]bool      // 阻挡2维数组 [Width][Height] true 表示阻挡
+	TileBlocked [][]bool      // 阻挡2维数组 [Width][Height] true 表示阻挡 (由多个图层合成)
 }
 
 // TiledLayer Tiled 图层
