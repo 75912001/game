@@ -7,8 +7,6 @@ import (
 	"saClient/src/proto"
 	"saClient/src/user/camera"
 
-	xutil "github.com/75912001/xlib/util"
-
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
@@ -76,13 +74,10 @@ func (p *Role) handleKeyMove(up, down, left, right bool) {
 	newWorldX := newRoleSprite.bottomCenterWX + dx*moveSpeed
 	newWorldY := newRoleSprite.bottomCenterWY + dy*moveSpeed
 	mapCfg := p.scene._map.tiledMapCfg
-	// 限制在地图边界内
+	// 限制在菱形地图边界内 (World 坐标)
+	newWorldX, newWorldY = mapCfg.ClampMapBoundaryWithW(newWorldX, newWorldY)
+
 	newRoleSprite.bottomCenterTX, newRoleSprite.bottomCenterTY = mapCfg.IsometricCT.W2T(newWorldX, newWorldY)
-	clampedTX, clampedTY := mapCfg.IsometricCT.ClampTileBounds(newRoleSprite.bottomCenterTX, newRoleSprite.bottomCenterTY)
-	if !xutil.Float32Equal(newRoleSprite.bottomCenterTX, clampedTX) || !xutil.Float32Equal(newRoleSprite.bottomCenterTY, clampedTY) { // 需要限制
-		newWorldX, newWorldY = mapCfg.IsometricCT.T2W(clampedTX, clampedTY)
-		newRoleSprite.bottomCenterTX, newRoleSprite.bottomCenterTY = clampedTX, clampedTY
-	}
 	// 更新 World 坐标
 	newRoleSprite.bottomCenterWX = newWorldX
 	newRoleSprite.bottomCenterWY = newWorldY
@@ -98,7 +93,7 @@ func (p *Role) handleKeyMove(up, down, left, right bool) {
 	if portalObject, ok := mapCfg.FindPortalByObject(newRoleSprite.bottomCenterWX, newRoleSprite.bottomCenterWY); ok { // 判断角色 wx, wy 是否触发了-传送
 		log.Printf("Role HandleInput portal at world (%.3f, %.3f) portalObject:%+v", newRoleSprite.bottomCenterWX, newRoleSprite.bottomCenterWY, portalObject)
 		p.SwitchScene(portalObject.PortalCfg.MapID, portalObject.PortalCfg.TX, portalObject.PortalCfg.TY)
-	} else if mapCfg.IsBlockedByTileWithT(int(newRoleSprite.bottomCenterTX), int(newRoleSprite.bottomCenterTY)) { // 使用 tile 图层 图块 阻挡检测
+	} else if mapCfg.IsBlockedByTileWithTF(newRoleSprite.bottomCenterTX, newRoleSprite.bottomCenterTY) { // 使用 tile 图层 图块 阻挡检测
 		log.Printf("Role HandleInput tile blocked at world (%.2f, %.2f)", newRoleSprite.bottomCenterWX, newRoleSprite.bottomCenterWY)
 		rollBack = true
 	} else if blockedObject, ok := mapCfg.FindBlockedByObject(newRoleSprite.bottomCenterWX, newRoleSprite.bottomCenterWY); ok { // 判断角色 wx, wy 是否触发了-阻挡

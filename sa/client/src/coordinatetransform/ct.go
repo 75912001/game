@@ -134,28 +134,3 @@ func (p *Isometric) TileImageScreenPos(tileX, tileY, cameraX, cameraY int) (scre
 	imageX, imageY := p.TileImagePos(tileX, tileY)
 	return imageX - cameraX, imageY - cameraY
 }
-
-// ============================================================================
-// 边界检测
-// ============================================================================
-
-// ClampTileBounds 将 Tile 坐标限制在地图边界内
-func (p *Isometric) ClampTileBounds(tileX, tileY float32) (clampedTX, clampedTY float32) {
-	maxTX := float32(p.Width) - 0.01
-	maxTY := float32(p.Height) - 0.01
-
-	clampedTX, clampedTY = tileX, tileY
-
-	if clampedTX < 0 {
-		clampedTX = 0
-	} else if clampedTX > maxTX {
-		clampedTX = maxTX
-	}
-
-	if clampedTY < 0 {
-		clampedTY = 0
-	} else if clampedTY > maxTY {
-		clampedTY = maxTY
-	}
-	return
-}
