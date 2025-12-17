@@ -57,6 +57,4 @@ func (p *Scene) Draw(screen *ebitenv2.Image, camera *camera.Camera) {
 	p.decorationMgr.Draw(screen)
 	p.itemMgr.Draw(screen)
 
-	// 绘制过渡效果 (最上层)
-	p.transition.Draw(screen)
 }

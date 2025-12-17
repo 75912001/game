@@ -21,6 +21,9 @@ func (p *Role) Draw(screen *ebitenv2.Image) {
 	op.GeoM.Translate(float64(screenX), float64(screenY))
 	screen.DrawImage(p.sprite.image, op)
 
+	// 绘制过渡效果 (最上层)
+	p.scene.transition.Draw(screen)
+
 	// 绘制调试信息
 	p.drawDebugInfo(screen)
 }
