@@ -14,8 +14,8 @@ func (p *Role) Draw(screen *ebitenv2.Image) {
 
 	// 绘制角色
 	// 角色屏幕位置 = 角色 World 坐标 - 摄像机视口 World 坐标 - 角色图片偏移
-	screenX := p.sprite.centerWX - float32(p.camera.ViewportX) - float32(p.sprite.roleImageSprite.Frame.Width/2)
-	screenY := p.sprite.centerWY - float32(p.camera.ViewportY) - float32(p.sprite.roleImageSprite.Frame.Height/2)
+	screenX := p.sprite.cameraAnchorPointWX - float32(p.camera.ViewportX) - float32(p.sprite.roleImageSprite.Frame.Width/2)
+	screenY := p.sprite.cameraAnchorPointWY - float32(p.camera.ViewportY) - float32(p.sprite.roleImageSprite.Frame.Height/2)
 
 	op := &ebitenv2.DrawImageOptions{}
 	op.GeoM.Translate(float64(screenX), float64(screenY))
@@ -29,19 +29,19 @@ func (p *Role) Draw(screen *ebitenv2.Image) {
 func (p *Role) drawDebugInfo(screen *ebitenv2.Image) {
 	mapCfg := p.scene._map.tiledMapCfg
 	// 获取角色 Tile 坐标
-	tileX, tileY := mapCfg.IsometricCT.W2T(p.sprite.bottomCenterWX, p.sprite.bottomCenterWY)
+	tileX, tileY := mapCfg.IsometricCT.W2T(p.sprite.actionAnchorPointWX, p.sprite.actionAnchorPointWY)
 
 	// 获取角色 World 坐标
-	worldX := p.sprite.bottomCenterWX
-	worldY := p.sprite.bottomCenterWY
+	worldX := p.sprite.actionAnchorPointWX
+	worldY := p.sprite.actionAnchorPointWY
 
 	// 获取角色 Screen 坐标
-	roleScreenX := p.sprite.centerWX - float32(p.camera.ViewportX)
-	roleScreenY := p.sprite.centerWY - float32(p.camera.ViewportY)
+	roleScreenX := p.sprite.cameraAnchorPointWX - float32(p.camera.ViewportX)
+	roleScreenY := p.sprite.cameraAnchorPointWY - float32(p.camera.ViewportY)
 
 	if true { // 绘制脚底中心点 (红色圆形)
-		bottomCenterScreenX := p.sprite.bottomCenterWX - float32(p.camera.ViewportX)
-		bottomCenterScreenY := p.sprite.bottomCenterWY - float32(p.camera.ViewportY)
+		bottomCenterScreenX := p.sprite.actionAnchorPointWX - float32(p.camera.ViewportX)
+		bottomCenterScreenY := p.sprite.actionAnchorPointWY - float32(p.camera.ViewportY)
 		red := color.RGBA{R: 255, G: 0, B: 0, A: 255}
 		vector.FillCircle(screen, bottomCenterScreenX, bottomCenterScreenY, 5, red, false)
 	}

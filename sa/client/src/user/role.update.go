@@ -10,7 +10,7 @@ func (p *Role) Update() {
 	if isCloseComplete && p.pendingScene != nil {
 		p.scene = p.pendingScene
 		p.camera = camera.NewCamera()
-		p.sprite.bottomCenterWX, p.sprite.bottomCenterWY = p.scene._map.tiledMapCfg.IsometricCT.T2W(p.pendingTX, p.pendingTY)
+		p.sprite.actionAnchorPointWX, p.sprite.actionAnchorPointWY = p.scene._map.tiledMapCfg.IsometricCT.T2W(p.pendingTX, p.pendingTY)
 		p.pendingScene = nil
 		// 新场景转场进入
 		p.scene.transition.In(p.scene._map.mapCfg.SceneTransition)
