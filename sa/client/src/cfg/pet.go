@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"saClient/src/common"
-	"saClient/src/elemental"
+	commonelemental "saClient/src/common/elemental"
 	"saClient/src/proto"
 
 	xmap "github.com/75912001/xlib/map"
@@ -88,7 +88,7 @@ func (p *PetMgr) Load() error {
 	}
 	p.Pets.Foreach(
 		func(id common.AssetID, pet *Pet) bool { // 验证元素属性是否合法
-			err = elemental.Validate(pet.Elemental.Earth, pet.Elemental.Water, pet.Elemental.Fire, pet.Elemental.Wind)
+			err = commonelemental.Validate(pet.Elemental.Earth, pet.Elemental.Water, pet.Elemental.Fire, pet.Elemental.Wind)
 			if err != nil {
 				err = fmt.Errorf("宠物ID %d 元素属性验证失败: %v", pet.ID, err)
 				return false

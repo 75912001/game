@@ -1,11 +1,11 @@
 package user
 
 import (
-	"image/color"
-	"saClient/src/ui"
-
 	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"image/color"
+	commonrenderable "saClient/src/common/renderable"
+	"saClient/src/ui"
 )
 
 func (p *Role) Draw(screen *ebitenv2.Image) {
@@ -19,29 +19,48 @@ func (p *Role) Draw(screen *ebitenv2.Image) {
 
 	p.scene._map.DrawCollision(screen, p.camera)
 	p.scene._map.DrawGround(screen, p.camera)
-	p.scene._map.DrawBuilding(screen, p.camera)
-	p.scene._map.DrawObjects(screen, p.camera)
+
+	{ // todo menglc 排序 绘制地图元素
+
+		// todo menglc 绘制剩余地图元素
+
+		p.scene._map.DrawBuilding(screen, p.camera)
+		p.scene._map.DrawObjects(screen, p.camera)
+
+		// 绘制角色
+		// 角色屏幕位置 = 角色 World 坐标 - 摄像机视口 World 坐标 - 角色图片偏移
+		screenX := p.sprite.cameraAnchorPointWX - float32(p.camera.ViewportWX) - float32(p.sprite.roleImageSprite.Frame.Width/2)
+		screenY := p.sprite.cameraAnchorPointWY - float32(p.camera.ViewportWY) - float32(p.sprite.roleImageSprite.Frame.Height/2)
+
+		op := &ebitenv2.DrawImageOptions{}
+		op.GeoM.Translate(float64(screenX), float64(screenY))
+		screen.DrawImage(p.sprite.image, op)
+		if false {
+			p.scene.buildingMgr.Draw(screen)
+			p.scene.plantMgr.Draw(screen)
+			p.scene.decorationMgr.Draw(screen)
+			p.scene.itemMgr.Draw(screen)
+		}
+	}
+
 	p.scene._map.DrawOverhead(screen, p.camera)
-
-	p.scene.buildingMgr.Draw(screen)
-	p.scene.plantMgr.Draw(screen)
-	p.scene.decorationMgr.Draw(screen)
-	p.scene.itemMgr.Draw(screen)
-
-	// 绘制角色
-	// 角色屏幕位置 = 角色 World 坐标 - 摄像机视口 World 坐标 - 角色图片偏移
-	screenX := p.sprite.cameraAnchorPointWX - float32(p.camera.ViewportWX) - float32(p.sprite.roleImageSprite.Frame.Width/2)
-	screenY := p.sprite.cameraAnchorPointWY - float32(p.camera.ViewportWY) - float32(p.sprite.roleImageSprite.Frame.Height/2)
-
-	op := &ebitenv2.DrawImageOptions{}
-	op.GeoM.Translate(float64(screenX), float64(screenY))
-	screen.DrawImage(p.sprite.image, op)
 
 	// 绘制过渡效果 (最上层)
 	p.scene.transition.Draw(screen)
 
 	// 绘制调试信息
 	p.drawDebugInfo(screen)
+}
+
+// collectRenderables 收集所有需要Y-Sorting的对象
+func (p *Role) collectRenderables() []commonrenderable.IRenderable {
+	var list []commonrenderable.IRenderable
+	//list = append(list, p.scene.buildingMgr.GetRenderables()...)
+	//list = append(list, p.scene.plantMgr.GetRenderables()...)
+	//list = append(list, p.scene.decorationMgr.GetRenderables()...)
+	//list = append(list, p.scene.itemMgr.GetRenderables()...)
+	//list = append(list, p) // 角色自己
+	return list
 }
 
 // drawDebugInfo 绘制调试信息

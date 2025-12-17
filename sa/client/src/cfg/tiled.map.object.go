@@ -1,9 +1,8 @@
 package cfg
 
 import (
-	ct "saClient/src/coordinatetransform"
-
 	"saClient/src/common"
+	commonct "saClient/src/common/coordinatetransform"
 )
 
 // TiledObject 属性标签
@@ -36,7 +35,7 @@ type TiledObject struct {
 
 // containsPointInRect 检查点是否在矩形内部
 // Tiled 等距地图中，矩形对象的坐标需要转换
-func (p *TiledObject) containsPointInRect(worldX, worldY float32, coordTransform *ct.Isometric) bool {
+func (p *TiledObject) containsPointInRect(worldX, worldY float32, coordTransform *commonct.Isometric) bool {
 	// 将 Tiled 像素坐标转换为 Tile 坐标 (与 drawCollision 相同的转换逻辑)
 	th := float32(coordTransform.TileHeight)
 	tileX := p.X/th - 0.5

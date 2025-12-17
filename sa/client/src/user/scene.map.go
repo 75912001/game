@@ -1,14 +1,13 @@
 package user
 
 import (
+	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/vector"
 	"image"
 	"image/color"
 	"saClient/src/cfg"
 	"saClient/src/common"
-	"saClient/src/user/camera"
-
-	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/vector"
+	commoncamera "saClient/src/common/camera"
 )
 
 // Map Tiled 地图场景
@@ -33,7 +32,7 @@ func (p *Map) Update() {
 }
 
 // DrawCollision 碰撞层
-func (p *Map) DrawCollision(screen *ebitenv2.Image, cam *camera.Camera) {
+func (p *Map) DrawCollision(screen *ebitenv2.Image, cam *commoncamera.Camera) {
 	if true { // 绘制调试边界
 		p.drawBorder(screen, cam)
 		p.drawPortal(screen, cam)
@@ -42,7 +41,7 @@ func (p *Map) DrawCollision(screen *ebitenv2.Image, cam *camera.Camera) {
 }
 
 // DrawGround 地面
-func (p *Map) DrawGround(screen *ebitenv2.Image, cam *camera.Camera) {
+func (p *Map) DrawGround(screen *ebitenv2.Image, cam *commoncamera.Camera) {
 	// 遍历所有图层
 	for _, layer := range p.tiledMapCfg.Layers {
 		if !layer.Visible {
@@ -56,7 +55,7 @@ func (p *Map) DrawGround(screen *ebitenv2.Image, cam *camera.Camera) {
 }
 
 // DrawBuilding 建筑
-func (p *Map) DrawBuilding(screen *ebitenv2.Image, cam *camera.Camera) {
+func (p *Map) DrawBuilding(screen *ebitenv2.Image, cam *commoncamera.Camera) {
 	// 遍历所有图层
 	for _, layer := range p.tiledMapCfg.Layers {
 		if !layer.Visible {
@@ -70,7 +69,7 @@ func (p *Map) DrawBuilding(screen *ebitenv2.Image, cam *camera.Camera) {
 }
 
 // DrawObjects 物体
-func (p *Map) DrawObjects(screen *ebitenv2.Image, cam *camera.Camera) {
+func (p *Map) DrawObjects(screen *ebitenv2.Image, cam *commoncamera.Camera) {
 	// 遍历所有图层
 	for _, layer := range p.tiledMapCfg.Layers {
 		if !layer.Visible {
@@ -84,7 +83,7 @@ func (p *Map) DrawObjects(screen *ebitenv2.Image, cam *camera.Camera) {
 }
 
 // DrawOverhead 头顶
-func (p *Map) DrawOverhead(screen *ebitenv2.Image, cam *camera.Camera) {
+func (p *Map) DrawOverhead(screen *ebitenv2.Image, cam *commoncamera.Camera) {
 	// 遍历所有图层
 	for _, layer := range p.tiledMapCfg.Layers {
 		if !layer.Visible {
@@ -98,7 +97,7 @@ func (p *Map) DrawOverhead(screen *ebitenv2.Image, cam *camera.Camera) {
 }
 
 // drawBorder 绘制地图边界(调试用)
-func (p *Map) drawBorder(screen *ebitenv2.Image, cam *camera.Camera) {
+func (p *Map) drawBorder(screen *ebitenv2.Image, cam *commoncamera.Camera) {
 	// World -> Screen
 	camX := float32(cam.ViewportWX)
 	camY := float32(cam.ViewportWY)
@@ -113,7 +112,7 @@ func (p *Map) drawBorder(screen *ebitenv2.Image, cam *camera.Camera) {
 }
 
 // drawPortal 绘制传送区域(调试用)
-func (p *Map) drawPortal(screen *ebitenv2.Image, cam *camera.Camera) {
+func (p *Map) drawPortal(screen *ebitenv2.Image, cam *commoncamera.Camera) {
 	camX := float32(cam.ViewportWX)
 	camY := float32(cam.ViewportWY)
 
@@ -131,7 +130,7 @@ func (p *Map) drawPortal(screen *ebitenv2.Image, cam *camera.Camera) {
 }
 
 // drawBlocked 绘制阻挡(调试用)
-func (p *Map) drawBlocked(screen *ebitenv2.Image, cam *camera.Camera) {
+func (p *Map) drawBlocked(screen *ebitenv2.Image, cam *commoncamera.Camera) {
 	camX := float32(cam.ViewportWX)
 	camY := float32(cam.ViewportWY)
 
@@ -175,7 +174,7 @@ func drawDiamond(screen *ebitenv2.Image, x1, y1, x2, y2, x3, y3, x4, y4 float32,
 }
 
 // drawLayer 绘制单个图层
-func (p *Map) drawLayer(screen *ebitenv2.Image, cam *camera.Camera, layer *cfg.TiledLayer) {
+func (p *Map) drawLayer(screen *ebitenv2.Image, cam *commoncamera.Camera, layer *cfg.TiledLayer) {
 	if 0 < len(layer.Data) {
 		p.drawData(screen, cam, layer.Data, layer.Width, layer.Height)
 	}
@@ -183,7 +182,7 @@ func (p *Map) drawLayer(screen *ebitenv2.Image, cam *camera.Camera, layer *cfg.T
 
 // drawData 绘制 tile 数据
 // todo menglc 研究逻辑, 优化计算, 让相关的瓦片挂载在地图上, 不用每次绘制的时候都放在内存中. 每次加载地图.都将该地图资源全量加载, 离开地图时,卸载地图所占资源
-func (p *Map) drawData(screen *ebitenv2.Image, cam *camera.Camera, data []int, width, height int) {
+func (p *Map) drawData(screen *ebitenv2.Image, cam *commoncamera.Camera, data []int, width, height int) {
 	for i, gid := range data {
 		if gid == 0 {
 			continue

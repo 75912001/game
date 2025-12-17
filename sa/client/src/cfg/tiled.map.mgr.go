@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	ct "saClient/src/coordinatetransform"
+	commonct "saClient/src/common/coordinatetransform"
 	"strconv"
 	"strings"
 
@@ -319,7 +319,7 @@ func (p *TiledMapMgr) Assemble() error {
 			// +TileHeight 是为了包含第一行 tile 上方和最后一行 tile 下方的菱形边缘
 			tiledMap.PixelW = (tiledMap.Width + tiledMap.Height) * (tiledMap.TileWidth / 2)
 			tiledMap.PixelH = (tiledMap.Width + tiledMap.Height) * (tiledMap.TileHeight / 2)
-			tiledMap.IsometricCT = ct.NewIsometric(tiledMap.Width, tiledMap.Height, tiledMap.TileWidth, tiledMap.TileHeight)
+			tiledMap.IsometricCT = commonct.NewIsometric(tiledMap.Width, tiledMap.Height, tiledMap.TileWidth, tiledMap.TileHeight)
 			tiledMap.TopWX, tiledMap.TopWY, tiledMap.RightWX, tiledMap.RightWY, tiledMap.BottomWX, tiledMap.BottomWY, tiledMap.LeftWX, tiledMap.LeftWY = tiledMap.IsometricCT.GetDiamondCorners()
 			// 初始化碰撞网格
 			gridSize := tiledMap.Width * tiledMap.Height

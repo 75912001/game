@@ -1,13 +1,12 @@
 package user
 
 import (
+	"github.com/hajimehoshi/ebiten/v2"
 	"log"
 	"saClient/src/cfg"
 	"saClient/src/common"
+	commoncamera "saClient/src/common/camera"
 	"saClient/src/proto"
-	"saClient/src/user/camera"
-
-	"github.com/hajimehoshi/ebiten/v2"
 )
 
 // HandleInput 处理键盘输入
@@ -129,7 +128,7 @@ func (p *Role) SwitchScene(mapID common.AssetID, tx, ty float32) {
 // doSwitchScene 执行实际的场景切换 (无过渡动画)
 func (p *Role) doSwitchScene(mapID common.AssetID, tx, ty float32) {
 	p.scene = NewScene(mapID)
-	p.camera = camera.NewCamera()
+	p.camera = commoncamera.NewCamera()
 	// 初始化角色的 World 坐标
 	p.sprite.actionAnchorPointWX, p.sprite.actionAnchorPointWY = p.scene._map.tiledMapCfg.IsometricCT.T2W(tx, ty)
 }

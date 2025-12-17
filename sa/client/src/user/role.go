@@ -3,8 +3,8 @@ package user
 import (
 	"saClient/src/cfg"
 	"saClient/src/common"
+	commoncamera "saClient/src/common/camera"
 	"saClient/src/proto"
-	"saClient/src/user/camera"
 )
 
 type Role struct {
@@ -15,8 +15,8 @@ type Role struct {
 	frameTick uint32     // 帧计数器（用于控制动画速度）
 	sprite    RoleSprite // 角色-精灵
 
-	scene  *Scene         // 角色所在场景
-	camera *camera.Camera // 角色摄像机
+	scene  *Scene               // 角色所在场景
+	camera *commoncamera.Camera // 角色摄像机
 
 	// 场景切换相关
 	pendingScene *Scene  // 待切换的新场景
