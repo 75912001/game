@@ -1,6 +1,7 @@
 package user
 
 import (
+	xmap "github.com/75912001/xlib/map"
 	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
 	"image"
@@ -10,21 +11,64 @@ import (
 	commoncamera "saClient/src/common/camera"
 )
 
+// TileInfo 缓存的瓦片信息
+type TileInfo struct {
+	Image  *ebitenv2.Image // 裁剪后的图像
+	Width  int             // tileset 的 tile 宽度
+	Height int             // tileset 的 tile 高度
+	//TiledLayer *cfg.TiledLayer // 瓦片所属图层 todo menglc 根据所属图层, 可以做 y-sorting
+}
+
 // Map Tiled 地图场景
 type Map struct {
-	id          common.AssetID // 地图ID
-	tiledMapCfg *cfg.TiledMap  // Tiled 地图资源
-	mapCfg      *cfg.Map       // 地图配置
+	id          common.AssetID               // 地图ID
+	tiledMapCfg *cfg.TiledMap                // Tiled 地图资源
+	mapCfg      *cfg.Map                     // 地图配置
+	tileCache   *xmap.MapMgr[int, *TileInfo] // key:GID val:TileInfo 缓存 (位于 多个图层中 相同 GID 只存一份)
 }
 
 // NewMap 创建 Tiled 地图场景
 func NewMap(mapID common.AssetID) *Map {
 	m := &Map{
-		id: mapID,
+		id:        mapID,
+		tileCache: xmap.NewMapMgr[int, *TileInfo](),
 	}
 	m.tiledMapCfg = cfg.GTiledMapMgr.Maps.Get(mapID)
 	m.mapCfg = cfg.GMapMgr.Maps.Get(mapID)
+	m.buildTileCache()
 	return m
+}
+
+// buildTileCache 预构建瓦片缓存
+func (p *Map) buildTileCache() {
+	// 收集所有使用的 GID
+	usedGIDs := make(map[int]struct{})
+	for _, layer := range p.tiledMapCfg.Layers {
+		for _, gid := range layer.Data {
+			if gid != 0 {
+				usedGIDs[gid] = struct{}{}
+			}
+		}
+	}
+
+	// 为每个 GID 创建缓存
+	for gid := range usedGIDs {
+		img, tileset := p.getTileImage(gid)
+		if img != nil {
+			p.tileCache.Add(gid,
+				&TileInfo{
+					Image:  img,
+					Width:  tileset.TileWidth,
+					Height: tileset.TileHeight,
+				},
+			)
+		}
+	}
+}
+
+// getTileImageCached 从缓存获取瓦片信息
+func (p *Map) getTileImageCached(gid int) *TileInfo {
+	return p.tileCache.Get(gid)
 }
 
 // Update 更新
@@ -181,7 +225,6 @@ func (p *Map) drawLayer(screen *ebitenv2.Image, cam *commoncamera.Camera, layer 
 }
 
 // drawData 绘制 tile 数据
-// todo menglc 研究逻辑, 优化计算, 让相关的瓦片挂载在地图上, 不用每次绘制的时候都放在内存中. 每次加载地图.都将该地图资源全量加载, 离开地图时,卸载地图所占资源
 func (p *Map) drawData(screen *ebitenv2.Image, cam *commoncamera.Camera, data []int, width, height int) {
 	for i, gid := range data {
 		if gid == 0 {
@@ -194,26 +237,25 @@ func (p *Map) drawData(screen *ebitenv2.Image, cam *commoncamera.Camera, data []
 		// 使用 IsometricCT 获取 tile 图像的屏幕位置
 		screenX, screenY := p.tiledMapCfg.IsometricCT.TileImageScreenPos(tileX, tileY, cam.ViewportWX, cam.ViewportWY)
 
-		// 获取 tile 图像
-		// todo menglc 优化：可以缓存 tile 图像，避免重复获取
-		tileImg, tileset := p.getTileImage(gid)
-		if tileImg == nil {
+		// 从缓存获取 tile 信息
+		tileInfo := p.getTileImageCached(gid)
+		if tileInfo == nil {
 			continue
 		}
 
 		// 修正 Y 坐标：tileset 高度大于 map tile 高度时，图像底部需对齐到 tile 基准位置
-		screenY -= tileset.TileHeight - p.tiledMapCfg.TileHeight
+		screenY -= tileInfo.Height - p.tiledMapCfg.TileHeight
 
 		// 裁剪：跳过屏幕外的 tile
-		if screenX < -tileset.TileWidth || cfg.GCommon.ScreenMaxWidth < screenX ||
-			screenY < -tileset.TileHeight || cfg.GCommon.ScreenMaxHeight < screenY {
+		if screenX < -tileInfo.Width || cfg.GCommon.ScreenMaxWidth < screenX ||
+			screenY < -tileInfo.Height || cfg.GCommon.ScreenMaxHeight < screenY {
 			continue
 		}
 
 		// 绘制
 		op := &ebitenv2.DrawImageOptions{}
 		op.GeoM.Translate(float64(screenX), float64(screenY))
-		screen.DrawImage(tileImg, op)
+		screen.DrawImage(tileInfo.Image, op)
 	}
 }
 
