@@ -339,7 +339,7 @@ func (p *Map) collectLayerTiles(cam *commoncamera.Camera, layer *cfg.TiledLayer,
 		}
 
 		// 计算 World Y(瓦片底部中心点，用于排序)
-		_, wy := p.tiledMapCfg.IsometricCT.T2W(float32(tileX)+0.5, float32(tileY)+1.0)
+		_, wy := p.tiledMapCfg.IsometricCT.T2W(float32(tileX)+0.5, float32(tileY)+0.5)
 
 		// 从对象池获取并填充数据
 		sortInfo := p.tileSortPool.Get()
