@@ -1,13 +1,14 @@
 package user
 
 import (
-	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/vector"
 	"image/color"
 	"saClient/src/cfg"
 	commoncamera "saClient/src/common/camera"
 	commonrenderable "saClient/src/common/renderable"
 	"saClient/src/ui"
+
+	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/vector"
 )
 
 func (p *Role) DrawAll(screen *ebitenv2.Image) {
@@ -19,16 +20,14 @@ func (p *Role) DrawAll(screen *ebitenv2.Image) {
 		A: 255,
 	})
 
-	p.scene._map.DrawCollision(screen, p.camera)
 	p.scene._map.DrawGround(screen, p.camera)
 
 	renderables := p.collectRenderables()
 	commonrenderable.SortYAndDraw(screen, p.camera, renderables)
-
-	// 回收对象池
-	p.scene._map.RecycleTileSortInfoSlice(renderables)
+	p.scene._map.RecycleTileSortInfoSlice(renderables) // 回收对象池
 
 	p.scene._map.DrawOverhead(screen, p.camera)
+	p.scene._map.DrawCollision(screen, p.camera)
 
 	// 绘制过渡效果 (最上层)
 	p.scene.transition.Draw(screen)

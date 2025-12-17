@@ -6,8 +6,8 @@
     "activeFile": "map/map.2000001.tmx",
     "expandedProjectPaths": [
         ".",
-        "tsx",
-        "map"
+        "map",
+        "tsx"
     ],
     "fileStates": {
         "": {
@@ -133,6 +133,84 @@
         "C:/Users/75912/Desktop/examples - 副本/sewer_automap/sewers.tmx#sewer_tileset": {
             "scaleInDock": 1
         },
+        "map/1.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "map/111.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "map/4675_pixian_ai.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "map/4675_pixian_ai_01-cutout.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "map/4675_pixian_ai_01.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "map/4675_pixian_ai_02-cutout.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "map/4675_pixian_ai_02.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "map/4675_pixian_ai_03-cutout.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "map/4675_pixian_ai_03.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "map/4675_pixian_ai_04-cutout.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "map/4675_pixian_ai_04.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "map/4675_pixian_ai_05-cutout.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "map/4675_pixian_ai_05.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "map/4675_pixian_ai_06-cutout.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "map/4675_pixian_ai_06.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "map/4675_pixian_ai_07-cutout.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "map/4675_pixian_ai_07.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "map/4937_pixian_ai.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
         "map/64x64.empty.tsx": {
             "scaleInDock": 1,
             "scaleInEditor": 1
@@ -169,10 +247,10 @@
                 7
             ],
             "scale": 1.5,
-            "selectedLayer": 0,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 1822.6666666666665,
-                "y": 801.3333333333333
+                "x": 1252,
+                "y": 848.6666666666666
             }
         },
         "map/map.2000001.tmx#backgroundTower": {
@@ -183,11 +261,11 @@
             "expandedObjectLayers": [
                 6
             ],
-            "scale": 0.75,
-            "selectedLayer": 0,
+            "scale": 0.33,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 3206.6666666666665,
-                "y": 1498.6666666666665
+                "x": 4460.606060606061,
+                "y": 2727.272727272727
             }
         },
         "map/ss.tsx": {
@@ -201,7 +279,7 @@
         }
     },
     "last.exportedFilePath": "C:/game/sa/client/res/tiled/map",
-    "last.imagePath": "C:/game/sa/client/res/tiled/map",
+    "last.imagePath": "C:/Users/75912/Desktop",
     "map.fixedSize": true,
     "map.height": 3,
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
@@ -211,31 +289,28 @@
     "map.width": 6,
     "openFiles": [
         "map/map.2000001.tmx",
-        "map/map.2000002.tmx",
-        "map/iso-64x64-building.tsx",
-        "map/backgroundTower.tsx",
-        "map/64x64.empty.tsx"
+        "map/map.2000002.tmx"
     ],
     "project": "sa.tiled-project",
     "property.type": "bool",
     "recentFiles": [
-        "map/64x64.empty.tsx",
-        "map/backgroundTower.tsx",
-        "map/iso-64x64-building.tsx",
         "map/map.2000002.tmx",
         "map/map.2000001.tmx",
-        "map/ss.tsx",
-        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_001.tmx",
-        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_002.tmx",
-        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_003.tmx",
-        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_005.tmx",
-        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_006.tmx",
-        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_007.tmx"
+        "map/4675_pixian_ai_01-cutout.tsx",
+        "map/4675_pixian_ai_02-cutout.tsx",
+        "map/4675_pixian_ai_03-cutout.tsx",
+        "map/4675_pixian_ai_04-cutout.tsx",
+        "map/4675_pixian_ai_05-cutout.tsx",
+        "map/4675_pixian_ai_06-cutout.tsx",
+        "map/4675_pixian_ai_07-cutout.tsx",
+        "map/1.tsx",
+        "map/4675_pixian_ai_01.tsx",
+        "map/4675_pixian_ai_02.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {
-        "height": 64,
-        "width": 64
+        "height": 156,
+        "width": 32
     },
     "tileset.type": 0
 }
