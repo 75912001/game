@@ -17,10 +17,6 @@
     <property name="targetPortal" type="int" value="200000101"/>
    </properties>
   </object>
-  <object id="11" x="1215.25" y="1053.75">
-   <ellipse/>
-  </object>
-  <object id="13" x="1198" y="1144"/>
  </objectgroup>
  <layer id="7" name="Ground" class="Ground" width="100" height="100">
   <data encoding="csv">
