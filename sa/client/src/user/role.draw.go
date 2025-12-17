@@ -4,6 +4,7 @@ import (
 	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
 	"image/color"
+	"saClient/src/cfg"
 	commoncamera "saClient/src/common/camera"
 	commonrenderable "saClient/src/common/renderable"
 	"saClient/src/ui"
@@ -21,14 +22,11 @@ func (p *Role) DrawAll(screen *ebitenv2.Image) {
 	p.scene._map.DrawCollision(screen, p.camera)
 	p.scene._map.DrawGround(screen, p.camera)
 
-	p.scene._map.DrawBuilding(screen, p.camera)
 	renderables := p.collectRenderables()
 	commonrenderable.SortYAndDraw(screen, p.camera, renderables)
 
-	{
-		// todo menglc 绘制剩余地图元素
-		p.scene._map.DrawObjects(screen, p.camera)
-	}
+	// 回收对象池
+	p.scene._map.RecycleTileSortInfoSlice(renderables)
 
 	p.scene._map.DrawOverhead(screen, p.camera)
 
@@ -56,15 +54,13 @@ func (p *Role) Draw(screen *ebitenv2.Image, cam *commoncamera.Camera) {
 
 // collectRenderables 收集所有需要Y-Sorting的对象
 func (p *Role) collectRenderables() []commonrenderable.IRenderable {
-	var list []commonrenderable.IRenderable
-	list = append(list, p) // 角色自己
+	// Y-Sorting 层
+	renderables := make([]commonrenderable.IRenderable, 0, 1024)
+	renderables = append(renderables, p) // 角色自己
+	renderables = p.scene._map.GetTileSortInfoSlice(p.camera, cfg.TiledLayerType_Building, renderables)
+	renderables = p.scene._map.GetTileSortInfoSlice(p.camera, cfg.TiledLayerType_Objects, renderables)
 
-	//list = append(list, p.scene.buildingMgr.GetRenderables()...)
-	//list = append(list, p.scene.plantMgr.GetRenderables()...)
-	//list = append(list, p.scene.decorationMgr.GetRenderables()...)
-	//list = append(list, p.scene.itemMgr.GetRenderables()...)
-
-	return list
+	return renderables
 }
 
 // drawDebugInfo 绘制调试信息
