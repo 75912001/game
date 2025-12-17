@@ -5,9 +5,9 @@
     },
     "activeFile": "map/map.2000001.tmx",
     "expandedProjectPaths": [
+        ".",
         "tsx",
-        "map",
-        "."
+        "map"
     ],
     "fileStates": {
         "": {
@@ -168,11 +168,11 @@
             "expandedObjectLayers": [
                 7
             ],
-            "scale": 0.75,
-            "selectedLayer": 7,
+            "scale": 0.33,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 1890.6666666666665,
-                "y": 969.3333333333333
+                "x": 1530.3030303030305,
+                "y": 1524.2424242424242
             }
         },
         "map/map.2000001.tmx#backgroundTower": {
@@ -184,9 +184,9 @@
                 6
             ],
             "scale": 1,
-            "selectedLayer": 0,
+            "selectedLayer": -1,
             "viewCenter": {
-                "x": 2947,
+                "x": 2838,
                 "y": 1368
             }
         },
