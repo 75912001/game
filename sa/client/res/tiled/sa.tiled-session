@@ -5,9 +5,9 @@
     },
     "activeFile": "map/map.2000001.tmx",
     "expandedProjectPaths": [
-        "tsx",
         "map",
-        "."
+        ".",
+        "tsx"
     ],
     "fileStates": {
         "": {
@@ -172,8 +172,8 @@
             "scale": 3,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 1584,
-                "y": 844.6666666666665
+                "x": 1797.3333333333333,
+                "y": 938
             }
         },
         "map/map.2000001.tmx#backgroundTower": {
@@ -214,17 +214,16 @@
         "map/map.2000001.tmx",
         "map/map.2000002.tmx",
         "map/iso-64x64-building.tsx",
-        "map/backgroundTower.tsx",
-        "map/64x64.empty.tsx"
+        "map/backgroundTower.tsx"
     ],
     "project": "sa.tiled-project",
     "property.type": "bool",
     "recentFiles": [
-        "map/64x64.empty.tsx",
         "map/backgroundTower.tsx",
         "map/iso-64x64-building.tsx",
         "map/map.2000002.tmx",
         "map/map.2000001.tmx",
+        "map/64x64.empty.tsx",
         "map/ss.tsx",
         "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_001.tmx",
         "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_002.tmx",
