@@ -55,7 +55,7 @@ func (p *TiledObject) containsPointInRect(worldX, worldY float32, coordTransform
 // FindBlockedByObject 查找 World 坐标点所在的阻挡对象
 func (p *TiledMap) FindBlockedByObject(worldX, worldY float32) (*TiledObject, bool) {
 	for _, layer := range p.Layers {
-		if layer.Type != TiledLayerType_ObjectLayer { // 只检查对象图层
+		if layer.LayerType != TiledLayerType_Collision { // 非碰撞图层
 			continue
 		}
 		for _, obj := range layer.Objects { // 遍历对象
@@ -73,7 +73,7 @@ func (p *TiledMap) FindBlockedByObject(worldX, worldY float32) (*TiledObject, bo
 // FindPortalByObject 查找 World 坐标点所在的传送点对象
 func (p *TiledMap) FindPortalByObject(worldX, worldY float32) (*TiledObject, bool) {
 	for _, layer := range p.Layers {
-		if layer.Type != TiledLayerType_ObjectLayer { // 只检查对象图层
+		if layer.LayerType != TiledLayerType_Collision { // 非碰撞图层
 			continue
 		}
 		for _, obj := range layer.Objects { // 遍历对象

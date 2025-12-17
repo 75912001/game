@@ -32,19 +32,8 @@ func NewMap(mapID common.AssetID) *Map {
 func (p *Map) Update() {
 }
 
-// Draw 绘制 Tiled 地图
-func (p *Map) Draw(screen *ebitenv2.Image, cam *camera.Camera) {
-	// 遍历所有图层
-	for _, layer := range p.tiledMapCfg.Layers {
-		if !layer.Visible {
-			continue
-		}
-		if layer.Type != cfg.TiledLayerType_TileLayer {
-			continue
-		}
-		p.drawLayer(screen, cam, layer)
-	}
-
+// DrawCollision 碰撞层
+func (p *Map) DrawCollision(screen *ebitenv2.Image, cam *camera.Camera) {
 	if true { // 绘制调试边界
 		p.drawBorder(screen, cam)
 		p.drawPortal(screen, cam)
@@ -52,11 +41,67 @@ func (p *Map) Draw(screen *ebitenv2.Image, cam *camera.Camera) {
 	}
 }
 
+// DrawGround 地面
+func (p *Map) DrawGround(screen *ebitenv2.Image, cam *camera.Camera) {
+	// 遍历所有图层
+	for _, layer := range p.tiledMapCfg.Layers {
+		if !layer.Visible {
+			continue
+		}
+		if layer.LayerType != cfg.TiledLayerType_Ground {
+			continue
+		}
+		p.drawLayer(screen, cam, layer)
+	}
+}
+
+// DrawBuilding 建筑
+func (p *Map) DrawBuilding(screen *ebitenv2.Image, cam *camera.Camera) {
+	// 遍历所有图层
+	for _, layer := range p.tiledMapCfg.Layers {
+		if !layer.Visible {
+			continue
+		}
+		if layer.LayerType != cfg.TiledLayerType_Building {
+			continue
+		}
+		p.drawLayer(screen, cam, layer)
+	}
+}
+
+// DrawObjects 物体
+func (p *Map) DrawObjects(screen *ebitenv2.Image, cam *camera.Camera) {
+	// 遍历所有图层
+	for _, layer := range p.tiledMapCfg.Layers {
+		if !layer.Visible {
+			continue
+		}
+		if layer.LayerType != cfg.TiledLayerType_Objects {
+			continue
+		}
+		p.drawLayer(screen, cam, layer)
+	}
+}
+
+// DrawOverhead 头顶
+func (p *Map) DrawOverhead(screen *ebitenv2.Image, cam *camera.Camera) {
+	// 遍历所有图层
+	for _, layer := range p.tiledMapCfg.Layers {
+		if !layer.Visible {
+			continue
+		}
+		if layer.LayerType != cfg.TiledLayerType_Overhead {
+			continue
+		}
+		p.drawLayer(screen, cam, layer)
+	}
+}
+
 // drawBorder 绘制地图边界(调试用)
 func (p *Map) drawBorder(screen *ebitenv2.Image, cam *camera.Camera) {
 	// World -> Screen
-	camX := float32(cam.ViewportX)
-	camY := float32(cam.ViewportY)
+	camX := float32(cam.ViewportWX)
+	camY := float32(cam.ViewportWY)
 
 	sTopX, sTopY := p.tiledMapCfg.IsometricCT.W2S(p.tiledMapCfg.TopWX, p.tiledMapCfg.TopWY, camX, camY)
 	sRightX, sRightY := p.tiledMapCfg.IsometricCT.W2S(p.tiledMapCfg.RightWX, p.tiledMapCfg.RightWY, camX, camY)
@@ -69,11 +114,11 @@ func (p *Map) drawBorder(screen *ebitenv2.Image, cam *camera.Camera) {
 
 // drawPortal 绘制传送区域(调试用)
 func (p *Map) drawPortal(screen *ebitenv2.Image, cam *camera.Camera) {
-	camX := float32(cam.ViewportX)
-	camY := float32(cam.ViewportY)
+	camX := float32(cam.ViewportWX)
+	camY := float32(cam.ViewportWY)
 
 	for _, layer := range p.tiledMapCfg.Layers {
-		if layer.Type != cfg.TiledLayerType_ObjectLayer {
+		if layer.LayerType != cfg.TiledLayerType_Collision {
 			continue
 		}
 		for _, obj := range layer.Objects {
@@ -87,11 +132,11 @@ func (p *Map) drawPortal(screen *ebitenv2.Image, cam *camera.Camera) {
 
 // drawBlocked 绘制阻挡(调试用)
 func (p *Map) drawBlocked(screen *ebitenv2.Image, cam *camera.Camera) {
-	camX := float32(cam.ViewportX)
-	camY := float32(cam.ViewportY)
+	camX := float32(cam.ViewportWX)
+	camY := float32(cam.ViewportWY)
 
 	for _, layer := range p.tiledMapCfg.Layers {
-		if layer.Type != cfg.TiledLayerType_ObjectLayer {
+		if layer.LayerType != cfg.TiledLayerType_Collision {
 			continue
 		}
 		for _, obj := range layer.Objects {
@@ -148,7 +193,7 @@ func (p *Map) drawData(screen *ebitenv2.Image, cam *camera.Camera, data []int, w
 		tileY := i / width
 
 		// 使用 IsometricCT 获取 tile 图像的屏幕位置
-		screenX, screenY := p.tiledMapCfg.IsometricCT.TileImageScreenPos(tileX, tileY, cam.ViewportX, cam.ViewportY)
+		screenX, screenY := p.tiledMapCfg.IsometricCT.TileImageScreenPos(tileX, tileY, cam.ViewportWX, cam.ViewportWY)
 
 		// 获取 tile 图像
 		// todo menglc 优化：可以缓存 tile 图像，避免重复获取

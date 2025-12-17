@@ -6,14 +6,6 @@ import (
 	"saClient/src/common"
 )
 
-type TiledLayerType uint32 // Tiled图层类型
-
-const (
-	TiledLayerType_Unknown     TiledLayerType = 0 // 未知图层
-	TiledLayerType_TileLayer   TiledLayerType = 1 // tile layer
-	TiledLayerType_ObjectLayer TiledLayerType = 2 // object layer
-)
-
 // TiledMap 属性标签
 const TiledMapTag_BgmFilePath = "backgroundMusicFilePath" // 背景音乐文件路径-标签
 
@@ -104,21 +96,6 @@ func (p *TiledMap) ClampMapBoundaryWithW(wx, wy float32) (float32, float32) {
 		return p.IsometricCT.T2W(tx, ty)
 	}
 	return wx, wy
-}
-
-// TiledLayer Tiled 图层
-type TiledLayer struct {
-	ID           int            // 图层ID
-	Type         TiledLayerType // 图层类型
-	Visible      bool           // 是否可见
-	Opacity      float32        // 透明度
-	X            int            // 图层X偏移
-	Y            int            // 图层Y偏移
-	Width        int            // 图层宽度
-	Height       int            // 图层高度
-	Data         []int          // tile-数据-用于有限地图
-	Objects      []*TiledObject // 对象列表
-	BlockedLayer bool           // 是否为阻挡图层 (该图层所有非空 tile 都 阻挡)
 }
 
 // IsBlockedByTileWithT 检查是否被阻挡-图块-指定 Tile 坐标

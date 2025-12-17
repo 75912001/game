@@ -134,7 +134,6 @@
             "scaleInDock": 1
         },
         "map/64x64.empty.tsx": {
-            "dynamicWrapping": true,
             "scaleInDock": 1,
             "scaleInEditor": 1
         },
@@ -169,11 +168,11 @@
             "expandedObjectLayers": [
                 7
             ],
-            "scale": 3,
-            "selectedLayer": 2,
+            "scale": 0.75,
+            "selectedLayer": 7,
             "viewCenter": {
-                "x": 1584,
-                "y": 844.6666666666665
+                "x": 1890.6666666666665,
+                "y": 969.3333333333333
             }
         },
         "map/map.2000001.tmx#backgroundTower": {
@@ -187,8 +186,8 @@
             "scale": 1,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 2675,
-                "y": 1088
+                "x": 2947,
+                "y": 1368
             }
         },
         "map/ss.tsx": {

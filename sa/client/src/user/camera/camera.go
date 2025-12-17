@@ -3,13 +3,11 @@ package camera
 // Camera 摄像机
 // 所有坐标均为 World 坐标系(像素)
 type Camera struct {
-	// 摄像机跟随点 (World 坐标)
-	FollowX int
-	FollowY int
+	FollowWX int // 摄像机跟随点 (World 坐标) x
+	FollowWY int // 摄像机跟随点 (World 坐标) y
 
-	// 视口左上角 (World 坐标)
-	ViewportX int
-	ViewportY int
+	ViewportWX int // 视口左上角 (World 坐标) x
+	ViewportWY int // 视口左上角 (World 坐标) y
 }
 
 func NewCamera() *Camera {

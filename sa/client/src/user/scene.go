@@ -1,11 +1,7 @@
 package user
 
 import (
-	"image/color"
 	"saClient/src/common"
-	"saClient/src/user/camera"
-
-	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
 )
 
 type Scene struct {
@@ -40,21 +36,4 @@ func (p *Scene) Update() {
 // GetMapTileSize 获取地图 tile 尺寸
 func (p *Scene) GetMapTileSize() (width, height int) {
 	return p._map.tiledMapCfg.Width, p._map.tiledMapCfg.Height
-}
-
-func (p *Scene) Draw(screen *ebitenv2.Image, camera *camera.Camera) {
-	// 填充草地一样的绿色背景
-	screen.Fill(color.RGBA{
-		R: 34,
-		G: 139,
-		B: 34,
-		A: 255,
-	})
-
-	p._map.Draw(screen, camera)
-	p.buildingMgr.Draw(screen)
-	p.plantMgr.Draw(screen)
-	p.decorationMgr.Draw(screen)
-	p.itemMgr.Draw(screen)
-
 }

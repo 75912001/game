@@ -9,13 +9,29 @@ import (
 )
 
 func (p *Role) Draw(screen *ebitenv2.Image) {
-	// 绘制场景 (包含过渡效果)
-	p.scene.Draw(screen, p.camera)
+	// 填充草地一样的绿色背景
+	screen.Fill(color.RGBA{
+		R: 34,
+		G: 139,
+		B: 34,
+		A: 255,
+	})
+
+	p.scene._map.DrawCollision(screen, p.camera)
+	p.scene._map.DrawGround(screen, p.camera)
+	p.scene._map.DrawBuilding(screen, p.camera)
+	p.scene._map.DrawObjects(screen, p.camera)
+	p.scene._map.DrawOverhead(screen, p.camera)
+
+	p.scene.buildingMgr.Draw(screen)
+	p.scene.plantMgr.Draw(screen)
+	p.scene.decorationMgr.Draw(screen)
+	p.scene.itemMgr.Draw(screen)
 
 	// 绘制角色
 	// 角色屏幕位置 = 角色 World 坐标 - 摄像机视口 World 坐标 - 角色图片偏移
-	screenX := p.sprite.cameraAnchorPointWX - float32(p.camera.ViewportX) - float32(p.sprite.roleImageSprite.Frame.Width/2)
-	screenY := p.sprite.cameraAnchorPointWY - float32(p.camera.ViewportY) - float32(p.sprite.roleImageSprite.Frame.Height/2)
+	screenX := p.sprite.cameraAnchorPointWX - float32(p.camera.ViewportWX) - float32(p.sprite.roleImageSprite.Frame.Width/2)
+	screenY := p.sprite.cameraAnchorPointWY - float32(p.camera.ViewportWY) - float32(p.sprite.roleImageSprite.Frame.Height/2)
 
 	op := &ebitenv2.DrawImageOptions{}
 	op.GeoM.Translate(float64(screenX), float64(screenY))
@@ -39,12 +55,12 @@ func (p *Role) drawDebugInfo(screen *ebitenv2.Image) {
 	worldY := p.sprite.actionAnchorPointWY
 
 	// 获取角色 Screen 坐标
-	roleScreenX := p.sprite.cameraAnchorPointWX - float32(p.camera.ViewportX)
-	roleScreenY := p.sprite.cameraAnchorPointWY - float32(p.camera.ViewportY)
+	roleScreenX := p.sprite.cameraAnchorPointWX - float32(p.camera.ViewportWX)
+	roleScreenY := p.sprite.cameraAnchorPointWY - float32(p.camera.ViewportWY)
 
 	if true { // 绘制脚底中心点 (红色圆形)
-		bottomCenterScreenX := p.sprite.actionAnchorPointWX - float32(p.camera.ViewportX)
-		bottomCenterScreenY := p.sprite.actionAnchorPointWY - float32(p.camera.ViewportY)
+		bottomCenterScreenX := p.sprite.actionAnchorPointWX - float32(p.camera.ViewportWX)
+		bottomCenterScreenY := p.sprite.actionAnchorPointWY - float32(p.camera.ViewportWY)
 		red := color.RGBA{R: 255, G: 0, B: 0, A: 255}
 		vector.FillCircle(screen, bottomCenterScreenX, bottomCenterScreenY, 5, red, false)
 	}
@@ -73,5 +89,5 @@ func (p *Role) drawDebugInfo(screen *ebitenv2.Image) {
 	y += 30
 	ui.Printf(screen, 10, y, "=== Camera ===")
 	y += 20
-	ui.Printf(screen, 10, y, "Viewport: (%d, %d)", p.camera.ViewportX, p.camera.ViewportY)
+	ui.Printf(screen, 10, y, "Viewport: (%d, %d)", p.camera.ViewportWX, p.camera.ViewportWY)
 }

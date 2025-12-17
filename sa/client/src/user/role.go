@@ -62,12 +62,12 @@ func (p *Role) UpdateWithAction() {
 	p.sprite.cameraAnchorPointWY = p.sprite.actionAnchorPointWY - float32(p.sprite.roleImageSprite.Frame.Height/2)
 
 	// 更新摄像机跟随点 (World 坐标)
-	p.camera.FollowX = int(p.sprite.cameraAnchorPointWX)
-	p.camera.FollowY = int(p.sprite.cameraAnchorPointWY)
+	p.camera.FollowWX = int(p.sprite.cameraAnchorPointWX)
+	p.camera.FollowWY = int(p.sprite.cameraAnchorPointWY)
 
 	// 计算摄像机视口左上角 (World 坐标)
-	viewportX := p.camera.FollowX - cfg.GCommon.ScreenMaxWidth/2
-	viewportY := p.camera.FollowY - cfg.GCommon.ScreenMaxHeight/2
+	viewportX := p.camera.FollowWX - cfg.GCommon.ScreenMaxWidth/2
+	viewportY := p.camera.FollowWY - cfg.GCommon.ScreenMaxHeight/2
 
 	// 获取地图尺寸
 	mapWidth, mapHeight := p.scene._map.tiledMapCfg.PixelW, p.scene._map.tiledMapCfg.PixelH
@@ -95,8 +95,8 @@ func (p *Role) UpdateWithAction() {
 		}
 	}
 
-	p.camera.ViewportX = viewportX
-	p.camera.ViewportY = viewportY
+	p.camera.ViewportWX = viewportX
+	p.camera.ViewportWY = viewportY
 }
 
 // GetUUID 获取-角色UUID

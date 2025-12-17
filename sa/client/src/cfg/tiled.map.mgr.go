@@ -136,7 +136,6 @@ func (p *TiledMapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*Tiled
 	for _, layerXML := range mapXML.Layers { // 加载 tile layers
 		layer := &TiledLayer{
 			ID:      layerXML.ID,
-			Type:    TiledLayerType_TileLayer,
 			Visible: layerXML.Visible == nil || *layerXML.Visible != 0,
 			Opacity: layerXML.Opacity,
 			Width:   layerXML.Width,
@@ -145,6 +144,12 @@ func (p *TiledMapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*Tiled
 		if layer.Opacity == 0 {
 			layer.Opacity = 1.0
 		}
+		if layerType, ok := TiledLayerClassNameMap.Find(layerXML.Class); !ok {
+			return nil, fmt.Errorf("不支持的图层类型, 当前地图 %v 图层 %d 类型: %s %v", mapID, layer.ID, layerXML.Class, xruntime.Location())
+		} else {
+			layer.LayerType = layerType
+		}
+
 		if layerXML.Data.Encoding == "csv" || layerXML.Data.Encoding == "" { // 解析有限地图的 data
 			layer.Data, err = parseCSVData(layerXML.Data.Content)
 			if err != nil {
@@ -165,9 +170,13 @@ func (p *TiledMapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*Tiled
 	for _, ogXML := range mapXML.ObjectGroups { // 加载 object groups
 		layer := &TiledLayer{
 			ID:      ogXML.ID,
-			Type:    TiledLayerType_ObjectLayer,
 			Visible: ogXML.Visible == nil || *ogXML.Visible != 0,
 			Opacity: 1.0,
+		}
+		if layerType, ok := TiledLayerClassNameMap.Find(ogXML.Class); !ok {
+			return nil, fmt.Errorf("不支持的图层类型, 当前地图 %v 图层 %d 类型: %s %v", mapID, layer.ID, ogXML.Class, xruntime.Location())
+		} else {
+			layer.LayerType = layerType
 		}
 
 		for _, objXML := range ogXML.Objects {
@@ -283,8 +292,8 @@ func (p *TiledMapMgr) Check() error {
 				return false
 			}
 			for _, layer := range tiledMap.Layers {
-				switch layer.Type {
-				case TiledLayerType_ObjectLayer: // 对象图层
+				switch layer.LayerType {
+				case TiledLayerType_Collision: // 碰撞图层
 					for _, obj := range layer.Objects {
 						if obj.TargetPortal != 0 {
 							exist = GPortalMgr.Points.IsExist(obj.TargetPortal)
@@ -321,8 +330,14 @@ func (p *TiledMapMgr) Assemble() error {
 			}
 
 			for _, layer := range tiledMap.Layers {
-				switch layer.Type {
-				case TiledLayerType_TileLayer: // tile 图层
+				switch layer.LayerType {
+				case TiledLayerType_Collision: // 碰撞图层
+					for _, obj := range layer.Objects {
+						if obj.TargetPortal != 0 { // 传送点对象
+							obj.PortalCfg = GPortalMgr.Points.Get(obj.TargetPortal)
+						}
+					}
+				default: // 其他图层
 					// 如果图层有阻挡属性，该图层所有非空 tile 都阻挡
 					if layer.BlockedLayer && len(layer.Data) > 0 {
 						for i, gid := range layer.Data {
@@ -331,12 +346,6 @@ func (p *TiledMapMgr) Assemble() error {
 								y := i / tiledMap.Width
 								tiledMap.TileBlocked[x][y] = true
 							}
-						}
-					}
-				case TiledLayerType_ObjectLayer: // object 图层
-					for _, obj := range layer.Objects {
-						if obj.TargetPortal != 0 { // 传送点对象
-							obj.PortalCfg = GPortalMgr.Points.Get(obj.TargetPortal)
 						}
 					}
 				}
