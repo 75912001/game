@@ -1,6 +1,8 @@
 package user
 
-import "saClient/src/user/camera"
+import (
+	commoncamera "saClient/src/common/camera"
+)
 
 func (p *Role) Update() {
 	// 更新当前场景的过渡动画
@@ -9,8 +11,8 @@ func (p *Role) Update() {
 	// 转场退出完成，切换到新场景
 	if isCloseComplete && p.pendingScene != nil {
 		p.scene = p.pendingScene
-		p.camera = camera.NewCamera()
-		p.sprite.bottomCenterWX, p.sprite.bottomCenterWY = p.scene._map.tiledMapCfg.IsometricCT.T2W(p.pendingTX, p.pendingTY)
+		p.camera = commoncamera.NewCamera()
+		p.sprite.actionAnchorPointWX, p.sprite.actionAnchorPointWY = p.scene._map.tiledMapCfg.IsometricCT.T2W(p.pendingTX, p.pendingTY)
 		p.pendingScene = nil
 		// 新场景转场进入
 		p.scene.transition.In(p.scene._map.mapCfg.SceneTransition)

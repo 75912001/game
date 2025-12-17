@@ -3,7 +3,7 @@ module saClient
 go 1.24.1
 
 require (
-	github.com/75912001/xlib v0.0.0-20251212133549-5462533e1239
+	github.com/75912001/xlib v0.0.0-20251217063118-80248e1147e0
 	github.com/ebitenui/ebitenui v0.7.2
 	github.com/hajimehoshi/ebiten/v2 v2.9.4
 	github.com/pkg/errors v0.9.1

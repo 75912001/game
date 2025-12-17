@@ -3,8 +3,8 @@ package user
 import (
 	"saClient/src/cfg"
 	"saClient/src/common"
+	commoncamera "saClient/src/common/camera"
 	"saClient/src/proto"
-	"saClient/src/user/camera"
 )
 
 type Role struct {
@@ -15,8 +15,8 @@ type Role struct {
 	frameTick uint32     // 帧计数器（用于控制动画速度）
 	sprite    RoleSprite // 角色-精灵
 
-	scene  *Scene         // 角色所在场景
-	camera *camera.Camera // 角色摄像机
+	scene  *Scene               // 角色所在场景
+	camera *commoncamera.Camera // 角色摄像机
 
 	// 场景切换相关
 	pendingScene *Scene  // 待切换的新场景
@@ -58,16 +58,16 @@ func (p *Role) UpdateWithAction() {
 	p.sprite.roleImageSprite = frames[p.frameIdx%uint32(len(frames))]
 
 	// 更新角色中心 World 坐标 (脚底中心向上偏移半个角色高度)
-	p.sprite.centerWX = p.sprite.bottomCenterWX
-	p.sprite.centerWY = p.sprite.bottomCenterWY - float32(p.sprite.roleImageSprite.Frame.Height/2)
+	p.sprite.cameraAnchorPointWX = p.sprite.actionAnchorPointWX
+	p.sprite.cameraAnchorPointWY = p.sprite.actionAnchorPointWY - float32(p.sprite.roleImageSprite.Frame.Height/2)
 
 	// 更新摄像机跟随点 (World 坐标)
-	p.camera.FollowX = int(p.sprite.centerWX)
-	p.camera.FollowY = int(p.sprite.centerWY)
+	p.camera.FollowWX = int(p.sprite.cameraAnchorPointWX)
+	p.camera.FollowWY = int(p.sprite.cameraAnchorPointWY)
 
 	// 计算摄像机视口左上角 (World 坐标)
-	viewportX := p.camera.FollowX - cfg.GCommon.ScreenMaxWidth/2
-	viewportY := p.camera.FollowY - cfg.GCommon.ScreenMaxHeight/2
+	viewportX := p.camera.FollowWX - cfg.GCommon.ScreenMaxWidth/2
+	viewportY := p.camera.FollowWY - cfg.GCommon.ScreenMaxHeight/2
 
 	// 获取地图尺寸
 	mapWidth, mapHeight := p.scene._map.tiledMapCfg.PixelW, p.scene._map.tiledMapCfg.PixelH
@@ -95,8 +95,8 @@ func (p *Role) UpdateWithAction() {
 		}
 	}
 
-	p.camera.ViewportX = viewportX
-	p.camera.ViewportY = viewportY
+	p.camera.ViewportWX = viewportX
+	p.camera.ViewportWY = viewportY
 }
 
 // GetUUID 获取-角色UUID

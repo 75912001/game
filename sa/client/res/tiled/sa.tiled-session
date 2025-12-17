@@ -5,9 +5,9 @@
     },
     "activeFile": "map/map.2000001.tmx",
     "expandedProjectPaths": [
-        "map",
         ".",
-        "tsx"
+        "tsx",
+        "map"
     ],
     "fileStates": {
         "": {
@@ -134,7 +134,6 @@
             "scaleInDock": 1
         },
         "map/64x64.empty.tsx": {
-            "dynamicWrapping": true,
             "scaleInDock": 1,
             "scaleInEditor": 1
         },
@@ -169,11 +168,11 @@
             "expandedObjectLayers": [
                 7
             ],
-            "scale": 3,
-            "selectedLayer": 2,
+            "scale": 1.5,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 1797.3333333333333,
-                "y": 938
+                "x": 1822.6666666666665,
+                "y": 801.3333333333333
             }
         },
         "map/map.2000001.tmx#backgroundTower": {
@@ -184,11 +183,11 @@
             "expandedObjectLayers": [
                 6
             ],
-            "scale": 1,
+            "scale": 0.75,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 2675,
-                "y": 1088
+                "x": 3206.6666666666665,
+                "y": 1498.6666666666665
             }
         },
         "map/ss.tsx": {
@@ -207,23 +206,24 @@
     "map.height": 3,
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
     "map.lastUsedFormat": "tmx",
-    "map.orientation": "2",
+    "map.orientation": "1",
     "map.tileWidth": 64,
     "map.width": 6,
     "openFiles": [
         "map/map.2000001.tmx",
         "map/map.2000002.tmx",
         "map/iso-64x64-building.tsx",
-        "map/backgroundTower.tsx"
+        "map/backgroundTower.tsx",
+        "map/64x64.empty.tsx"
     ],
     "project": "sa.tiled-project",
     "property.type": "bool",
     "recentFiles": [
+        "map/64x64.empty.tsx",
         "map/backgroundTower.tsx",
         "map/iso-64x64-building.tsx",
         "map/map.2000002.tmx",
         "map/map.2000001.tmx",
-        "map/64x64.empty.tsx",
         "map/ss.tsx",
         "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_001.tmx",
         "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_002.tmx",

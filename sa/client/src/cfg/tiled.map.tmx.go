@@ -38,6 +38,7 @@ type tmxTilesetRef struct {
 
 type tmxLayer struct {
 	ID         int            `xml:"id,attr"`
+	Class      string         `xml:"class,attr"`
 	Width      int            `xml:"width,attr"`
 	Height     int            `xml:"height,attr"`
 	Visible    *int           `xml:"visible,attr"`
@@ -62,6 +63,7 @@ type tmxChunk struct {
 
 type tmxObjectGroup struct {
 	ID      int         `xml:"id,attr"`
+	Class   string      `xml:"class,attr"`
 	Visible *int        `xml:"visible,attr"`
 	Objects []tmxObject `xml:"object"`
 }

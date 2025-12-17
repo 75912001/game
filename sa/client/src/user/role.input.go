@@ -1,13 +1,12 @@
 package user
 
 import (
+	"github.com/hajimehoshi/ebiten/v2"
 	"log"
 	"saClient/src/cfg"
 	"saClient/src/common"
+	commoncamera "saClient/src/common/camera"
 	"saClient/src/proto"
-	"saClient/src/user/camera"
-
-	"github.com/hajimehoshi/ebiten/v2"
 )
 
 // HandleInput 处理键盘输入
@@ -71,16 +70,16 @@ func (p *Role) handleKeyMove(up, down, left, right bool) {
 	// 移动速度 (像素/帧)
 	moveSpeed := cfg.GCommon.RoleDefaultMoveSpeed
 	// 计算新的 World 坐标
-	newWorldX := newRoleSprite.bottomCenterWX + dx*moveSpeed
-	newWorldY := newRoleSprite.bottomCenterWY + dy*moveSpeed
+	newWorldX := newRoleSprite.actionAnchorPointWX + dx*moveSpeed
+	newWorldY := newRoleSprite.actionAnchorPointWY + dy*moveSpeed
 	mapCfg := p.scene._map.tiledMapCfg
 	// 限制在菱形地图边界内 (World 坐标)
 	newWorldX, newWorldY = mapCfg.ClampMapBoundaryWithW(newWorldX, newWorldY)
 
-	newRoleSprite.bottomCenterTX, newRoleSprite.bottomCenterTY = mapCfg.IsometricCT.W2T(newWorldX, newWorldY)
+	newRoleSprite.actionAnchorPointTX, newRoleSprite.actionAnchorPointTY = mapCfg.IsometricCT.W2T(newWorldX, newWorldY)
 	// 更新 World 坐标
-	newRoleSprite.bottomCenterWX = newWorldX
-	newRoleSprite.bottomCenterWY = newWorldY
+	newRoleSprite.actionAnchorPointWX = newWorldX
+	newRoleSprite.actionAnchorPointWY = newWorldY
 	// 更新动画帧
 	p.frameTick++
 	if p.frameTick >= 6 {
@@ -90,22 +89,22 @@ func (p *Role) handleKeyMove(up, down, left, right bool) {
 
 	// 是否使用预设的角色状态(用于回退)
 	var rollBack = false
-	if portalObject, ok := mapCfg.FindPortalByObject(newRoleSprite.bottomCenterWX, newRoleSprite.bottomCenterWY); ok { // 判断角色 wx, wy 是否触发了-传送
-		log.Printf("Role HandleInput portal at world (%.3f, %.3f) portalObject:%+v", newRoleSprite.bottomCenterWX, newRoleSprite.bottomCenterWY, portalObject)
+	if portalObject, ok := mapCfg.FindPortalByObject(newRoleSprite.actionAnchorPointWX, newRoleSprite.actionAnchorPointWY); ok { // 判断角色 wx, wy 是否触发了-传送
+		log.Printf("Role HandleInput portal at world (%.3f, %.3f) portalObject:%+v", newRoleSprite.actionAnchorPointWX, newRoleSprite.actionAnchorPointWY, portalObject)
 		p.SwitchScene(portalObject.PortalCfg.MapID, portalObject.PortalCfg.TX, portalObject.PortalCfg.TY)
-	} else if mapCfg.IsBlockedByTileWithTF(newRoleSprite.bottomCenterTX, newRoleSprite.bottomCenterTY) { // 使用 tile 图层 图块 阻挡检测
-		log.Printf("Role HandleInput tile blocked at world (%.2f, %.2f)", newRoleSprite.bottomCenterWX, newRoleSprite.bottomCenterWY)
+	} else if mapCfg.IsBlockedByTileWithTF(newRoleSprite.actionAnchorPointTX, newRoleSprite.actionAnchorPointTY) { // 使用 tile 图层 图块 阻挡检测
+		log.Printf("Role HandleInput tile blocked at world (%.2f, %.2f)", newRoleSprite.actionAnchorPointWX, newRoleSprite.actionAnchorPointWY)
 		rollBack = true
-	} else if blockedObject, ok := mapCfg.FindBlockedByObject(newRoleSprite.bottomCenterWX, newRoleSprite.bottomCenterWY); ok { // 判断角色 wx, wy 是否触发了-阻挡
-		log.Printf("Role HandleInput blocked at world (%.2f, %.2f) blockedObject:%+v", newRoleSprite.bottomCenterWX, newRoleSprite.bottomCenterWY, blockedObject)
+	} else if blockedObject, ok := mapCfg.FindBlockedByObject(newRoleSprite.actionAnchorPointWX, newRoleSprite.actionAnchorPointWY); ok { // 判断角色 wx, wy 是否触发了-阻挡
+		log.Printf("Role HandleInput blocked at world (%.2f, %.2f) blockedObject:%+v", newRoleSprite.actionAnchorPointWX, newRoleSprite.actionAnchorPointWY, blockedObject)
 		// 回退到之前的位置
 		rollBack = true
 	}
 	if !rollBack { // 正常移动，更新动画帧索引
 		p.sprite = newRoleSprite
 		p.SetValueU64(proto.AssetIDRecord_AssetIDRecord_Orientation, uint64(newRoleSprite.orientation))
-		p.SetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TX, newRoleSprite.bottomCenterTX)
-		p.SetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TY, newRoleSprite.bottomCenterTY)
+		p.SetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TX, newRoleSprite.actionAnchorPointTX)
+		p.SetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TY, newRoleSprite.actionAnchorPointTY)
 	}
 	p.UpdateWithAction()
 }
@@ -129,7 +128,7 @@ func (p *Role) SwitchScene(mapID common.AssetID, tx, ty float32) {
 // doSwitchScene 执行实际的场景切换 (无过渡动画)
 func (p *Role) doSwitchScene(mapID common.AssetID, tx, ty float32) {
 	p.scene = NewScene(mapID)
-	p.camera = camera.NewCamera()
+	p.camera = commoncamera.NewCamera()
 	// 初始化角色的 World 坐标
-	p.sprite.bottomCenterWX, p.sprite.bottomCenterWY = p.scene._map.tiledMapCfg.IsometricCT.T2W(tx, ty)
+	p.sprite.actionAnchorPointWX, p.sprite.actionAnchorPointWY = p.scene._map.tiledMapCfg.IsometricCT.T2W(tx, ty)
 }

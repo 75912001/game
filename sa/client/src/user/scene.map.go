@@ -1,50 +1,117 @@
 package user
 
 import (
+	xmap "github.com/75912001/xlib/map"
+	xpool "github.com/75912001/xlib/pool"
+	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/vector"
 	"image"
 	"image/color"
 	"saClient/src/cfg"
 	"saClient/src/common"
-	"saClient/src/user/camera"
-
-	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/vector"
+	commoncamera "saClient/src/common/camera"
+	commonrenderable "saClient/src/common/renderable"
 )
+
+// TileCacheInfo 缓存的瓦片信息
+type TileCacheInfo struct {
+	Image  *ebitenv2.Image // 裁剪后的图像
+	Width  int             // tileset 的 tile 宽度
+	Height int             // tileset 的 tile 高度
+}
+
+// TileSortInfo 待排序的瓦片绘制信息（用于 Y-Sorting）
+type TileSortInfo struct {
+	Image   *ebitenv2.Image // 瓦片图像
+	ScreenX int             // 屏幕 X 坐标
+	ScreenY int             // 屏幕 Y 坐标
+	WY      float32         // World Y 坐标（用于排序）
+}
+
+func (p *TileSortInfo) reset() {
+	p.Image = nil
+	p.ScreenX = 0
+	p.ScreenY = 0
+	p.WY = 0
+}
+
+// GetWY 实现 IRenderable 接口
+func (p *TileSortInfo) GetWY() float32 {
+	return p.WY
+}
+
+// Draw 实现 IRenderable 接口
+func (p *TileSortInfo) Draw(screen *ebitenv2.Image, camera *commoncamera.Camera) {
+	op := &ebitenv2.DrawImageOptions{}
+	op.GeoM.Translate(float64(p.ScreenX), float64(p.ScreenY))
+	screen.DrawImage(p.Image, op)
+}
 
 // Map Tiled 地图场景
 type Map struct {
-	id          common.AssetID // 地图ID
-	tiledMapCfg *cfg.TiledMap  // Tiled 地图资源
-	mapCfg      *cfg.Map       // 地图配置
+	id           common.AssetID                    // 地图ID
+	tiledMapCfg  *cfg.TiledMap                     // Tiled 地图资源
+	mapCfg       *cfg.Map                          // 地图配置
+	tileCache    *xmap.MapMgr[int, *TileCacheInfo] // key:GID val:TileCacheInfo 缓存 (位于 多个图层中 相同 GID 只存一份)
+	tileSortPool *xpool.Pool[*TileSortInfo]        // TileSortInfo 对象池
 }
 
 // NewMap 创建 Tiled 地图场景
 func NewMap(mapID common.AssetID) *Map {
 	m := &Map{
-		id: mapID,
+		id:        mapID,
+		tileCache: xmap.NewMapMgr[int, *TileCacheInfo](),
+		tileSortPool: xpool.NewPool(
+			func() *TileSortInfo { return &TileSortInfo{} },
+			func(t *TileSortInfo) {
+				t.reset()
+			},
+		),
 	}
 	m.tiledMapCfg = cfg.GTiledMapMgr.Maps.Get(mapID)
 	m.mapCfg = cfg.GMapMgr.Maps.Get(mapID)
+	m.buildTileCache()
 	return m
+}
+
+// buildTileCache 预构建瓦片缓存
+func (p *Map) buildTileCache() {
+	// 收集所有使用的 GID
+	usedGIDs := make(map[int]struct{})
+	for _, layer := range p.tiledMapCfg.Layers {
+		for _, gid := range layer.Data {
+			if gid != 0 {
+				usedGIDs[gid] = struct{}{}
+			}
+		}
+	}
+
+	// 为每个 GID 创建缓存
+	for gid := range usedGIDs {
+		img, tileset := p.getTileImage(gid)
+		if img != nil {
+			p.tileCache.Add(gid,
+				&TileCacheInfo{
+					Image:  img,
+					Width:  tileset.TileWidth,
+					Height: tileset.TileHeight,
+				},
+			)
+		}
+	}
+}
+
+// getTileImageCached 从缓存获取瓦片信息
+func (p *Map) getTileImageCached(gid int) *TileCacheInfo {
+	return p.tileCache.Get(gid)
 }
 
 // Update 更新
 func (p *Map) Update() {
 }
 
-// Draw 绘制 Tiled 地图
-func (p *Map) Draw(screen *ebitenv2.Image, cam *camera.Camera) {
-	// 遍历所有图层
-	for _, layer := range p.tiledMapCfg.Layers {
-		if !layer.Visible {
-			continue
-		}
-		if layer.Type != cfg.TiledLayerType_TileLayer {
-			continue
-		}
-		p.drawLayer(screen, cam, layer)
-	}
-
+// DrawCollision 碰撞层
+func (p *Map) DrawCollision(screen *ebitenv2.Image, cam *commoncamera.Camera) {
 	if true { // 绘制调试边界
 		p.drawBorder(screen, cam)
 		p.drawPortal(screen, cam)
@@ -52,11 +119,39 @@ func (p *Map) Draw(screen *ebitenv2.Image, cam *camera.Camera) {
 	}
 }
 
+// DrawGround 地面
+func (p *Map) DrawGround(screen *ebitenv2.Image, cam *commoncamera.Camera) {
+	// 遍历所有图层
+	for _, layer := range p.tiledMapCfg.Layers {
+		if !layer.Visible {
+			continue
+		}
+		if layer.LayerType != cfg.TiledLayerType_Ground {
+			continue
+		}
+		p.drawLayer(screen, cam, layer)
+	}
+}
+
+// DrawOverhead 头顶
+func (p *Map) DrawOverhead(screen *ebitenv2.Image, cam *commoncamera.Camera) {
+	// 遍历所有图层
+	for _, layer := range p.tiledMapCfg.Layers {
+		if !layer.Visible {
+			continue
+		}
+		if layer.LayerType != cfg.TiledLayerType_Overhead {
+			continue
+		}
+		p.drawLayer(screen, cam, layer)
+	}
+}
+
 // drawBorder 绘制地图边界(调试用)
-func (p *Map) drawBorder(screen *ebitenv2.Image, cam *camera.Camera) {
+func (p *Map) drawBorder(screen *ebitenv2.Image, cam *commoncamera.Camera) {
 	// World -> Screen
-	camX := float32(cam.ViewportX)
-	camY := float32(cam.ViewportY)
+	camX := float32(cam.ViewportWX)
+	camY := float32(cam.ViewportWY)
 
 	sTopX, sTopY := p.tiledMapCfg.IsometricCT.W2S(p.tiledMapCfg.TopWX, p.tiledMapCfg.TopWY, camX, camY)
 	sRightX, sRightY := p.tiledMapCfg.IsometricCT.W2S(p.tiledMapCfg.RightWX, p.tiledMapCfg.RightWY, camX, camY)
@@ -68,12 +163,12 @@ func (p *Map) drawBorder(screen *ebitenv2.Image, cam *camera.Camera) {
 }
 
 // drawPortal 绘制传送区域(调试用)
-func (p *Map) drawPortal(screen *ebitenv2.Image, cam *camera.Camera) {
-	camX := float32(cam.ViewportX)
-	camY := float32(cam.ViewportY)
+func (p *Map) drawPortal(screen *ebitenv2.Image, cam *commoncamera.Camera) {
+	camX := float32(cam.ViewportWX)
+	camY := float32(cam.ViewportWY)
 
 	for _, layer := range p.tiledMapCfg.Layers {
-		if layer.Type != cfg.TiledLayerType_ObjectLayer {
+		if layer.LayerType != cfg.TiledLayerType_Collision {
 			continue
 		}
 		for _, obj := range layer.Objects {
@@ -86,12 +181,12 @@ func (p *Map) drawPortal(screen *ebitenv2.Image, cam *camera.Camera) {
 }
 
 // drawBlocked 绘制阻挡(调试用)
-func (p *Map) drawBlocked(screen *ebitenv2.Image, cam *camera.Camera) {
-	camX := float32(cam.ViewportX)
-	camY := float32(cam.ViewportY)
+func (p *Map) drawBlocked(screen *ebitenv2.Image, cam *commoncamera.Camera) {
+	camX := float32(cam.ViewportWX)
+	camY := float32(cam.ViewportWY)
 
 	for _, layer := range p.tiledMapCfg.Layers {
-		if layer.Type != cfg.TiledLayerType_ObjectLayer {
+		if layer.LayerType != cfg.TiledLayerType_Collision {
 			continue
 		}
 		for _, obj := range layer.Objects {
@@ -130,15 +225,14 @@ func drawDiamond(screen *ebitenv2.Image, x1, y1, x2, y2, x3, y3, x4, y4 float32,
 }
 
 // drawLayer 绘制单个图层
-func (p *Map) drawLayer(screen *ebitenv2.Image, cam *camera.Camera, layer *cfg.TiledLayer) {
+func (p *Map) drawLayer(screen *ebitenv2.Image, cam *commoncamera.Camera, layer *cfg.TiledLayer) {
 	if 0 < len(layer.Data) {
 		p.drawData(screen, cam, layer.Data, layer.Width, layer.Height)
 	}
 }
 
 // drawData 绘制 tile 数据
-// todo menglc 研究逻辑, 优化计算, 让相关的瓦片挂载在地图上, 不用每次绘制的时候都放在内存中. 每次加载地图.都将该地图资源全量加载, 离开地图时,卸载地图所占资源
-func (p *Map) drawData(screen *ebitenv2.Image, cam *camera.Camera, data []int, width, height int) {
+func (p *Map) drawData(screen *ebitenv2.Image, cam *commoncamera.Camera, data []int, width, height int) {
 	for i, gid := range data {
 		if gid == 0 {
 			continue
@@ -148,28 +242,27 @@ func (p *Map) drawData(screen *ebitenv2.Image, cam *camera.Camera, data []int, w
 		tileY := i / width
 
 		// 使用 IsometricCT 获取 tile 图像的屏幕位置
-		screenX, screenY := p.tiledMapCfg.IsometricCT.TileImageScreenPos(tileX, tileY, cam.ViewportX, cam.ViewportY)
+		screenX, screenY := p.tiledMapCfg.IsometricCT.TileImageScreenPos(tileX, tileY, cam.ViewportWX, cam.ViewportWY)
 
-		// 获取 tile 图像
-		// todo menglc 优化：可以缓存 tile 图像，避免重复获取
-		tileImg, tileset := p.getTileImage(gid)
-		if tileImg == nil {
+		// 从缓存获取 tile 信息
+		tileInfo := p.getTileImageCached(gid)
+		if tileInfo == nil {
 			continue
 		}
 
 		// 修正 Y 坐标：tileset 高度大于 map tile 高度时，图像底部需对齐到 tile 基准位置
-		screenY -= tileset.TileHeight - p.tiledMapCfg.TileHeight
+		screenY -= tileInfo.Height - p.tiledMapCfg.TileHeight
 
 		// 裁剪：跳过屏幕外的 tile
-		if screenX < -tileset.TileWidth || cfg.GCommon.ScreenMaxWidth < screenX ||
-			screenY < -tileset.TileHeight || cfg.GCommon.ScreenMaxHeight < screenY {
+		if screenX < -tileInfo.Width || cfg.GCommon.ScreenMaxWidth < screenX ||
+			screenY < -tileInfo.Height || cfg.GCommon.ScreenMaxHeight < screenY {
 			continue
 		}
 
 		// 绘制
 		op := &ebitenv2.DrawImageOptions{}
 		op.GeoM.Translate(float64(screenX), float64(screenY))
-		screen.DrawImage(tileImg, op)
+		screen.DrawImage(tileInfo.Image, op)
 	}
 }
 
@@ -199,4 +292,72 @@ func (p *Map) getTileImage(gid int) (*ebitenv2.Image, *cfg.TiledTileset) {
 
 	img := tileset.Image.SubImage(image.Rect(x, y, x+tileset.TileWidth, y+tileset.TileHeight)).(*ebitenv2.Image)
 	return img, tileset
+}
+
+// GetTileSortInfoSlice 收集指定图层类型的可见瓦片信息（用于 Y-Sorting）
+// 参数 result: 调用方传入的 slice，避免每帧分配
+// 返回: 追加后的 slice
+func (p *Map) GetTileSortInfoSlice(cam *commoncamera.Camera, layerType cfg.TiledLayerType, result []commonrenderable.IRenderable) []commonrenderable.IRenderable {
+	for _, layer := range p.tiledMapCfg.Layers {
+		if !layer.Visible || layer.LayerType != layerType {
+			continue
+		}
+		result = p.collectLayerTiles(cam, layer, result)
+	}
+	return result
+}
+
+// collectLayerTiles 收集单个图层的可见瓦片
+func (p *Map) collectLayerTiles(cam *commoncamera.Camera, layer *cfg.TiledLayer, result []commonrenderable.IRenderable) []commonrenderable.IRenderable {
+	data := layer.Data
+	width := layer.Width
+
+	for i, gid := range data {
+		if gid == 0 {
+			continue
+		}
+
+		tileX := i % width
+		tileY := i / width
+
+		// 获取屏幕位置
+		screenX, screenY := p.tiledMapCfg.IsometricCT.TileImageScreenPos(tileX, tileY, cam.ViewportWX, cam.ViewportWY)
+
+		// 获取缓存的 tile 信息
+		tileInfo := p.getTileImageCached(gid)
+		if tileInfo == nil {
+			continue
+		}
+
+		// 修正 Y 坐标
+		screenY -= tileInfo.Height - p.tiledMapCfg.TileHeight
+
+		// 裁剪：跳过屏幕外的 tile
+		if screenX < -tileInfo.Width || cfg.GCommon.ScreenMaxWidth < screenX ||
+			screenY < -tileInfo.Height || cfg.GCommon.ScreenMaxHeight < screenY {
+			continue
+		}
+
+		// 计算 World Y(瓦片底部中心点，用于排序)
+		_, wy := p.tiledMapCfg.IsometricCT.T2W(float32(tileX)+0.5, float32(tileY)+0.5)
+
+		// 从对象池获取并填充数据
+		sortInfo := p.tileSortPool.Get()
+		sortInfo.Image = tileInfo.Image
+		sortInfo.ScreenX = screenX
+		sortInfo.ScreenY = screenY
+		sortInfo.WY = wy
+
+		result = append(result, sortInfo)
+	}
+	return result
+}
+
+// RecycleTileSortInfoSlice 回收 TileSortInfo 对象到池中（绘制完成后调用）
+func (p *Map) RecycleTileSortInfoSlice(slice []commonrenderable.IRenderable) {
+	for _, item := range slice {
+		if sortInfo, ok := item.(*TileSortInfo); ok {
+			p.tileSortPool.Put(sortInfo)
+		}
+	}
 }

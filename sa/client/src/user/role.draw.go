@@ -1,47 +1,85 @@
 package user
 
 import (
-	"image/color"
-	"saClient/src/ui"
-
 	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"image/color"
+	"saClient/src/cfg"
+	commoncamera "saClient/src/common/camera"
+	commonrenderable "saClient/src/common/renderable"
+	"saClient/src/ui"
 )
 
-func (p *Role) Draw(screen *ebitenv2.Image) {
-	// 绘制场景 (包含过渡效果)
-	p.scene.Draw(screen, p.camera)
+func (p *Role) DrawAll(screen *ebitenv2.Image) {
+	// 填充草地一样的绿色背景
+	screen.Fill(color.RGBA{
+		R: 34,
+		G: 139,
+		B: 34,
+		A: 255,
+	})
 
-	// 绘制角色
-	// 角色屏幕位置 = 角色 World 坐标 - 摄像机视口 World 坐标 - 角色图片偏移
-	screenX := p.sprite.centerWX - float32(p.camera.ViewportX) - float32(p.sprite.roleImageSprite.Frame.Width/2)
-	screenY := p.sprite.centerWY - float32(p.camera.ViewportY) - float32(p.sprite.roleImageSprite.Frame.Height/2)
+	p.scene._map.DrawCollision(screen, p.camera)
+	p.scene._map.DrawGround(screen, p.camera)
+
+	renderables := p.collectRenderables()
+	commonrenderable.SortYAndDraw(screen, p.camera, renderables)
+
+	// 回收对象池
+	p.scene._map.RecycleTileSortInfoSlice(renderables)
+
+	p.scene._map.DrawOverhead(screen, p.camera)
+
+	// 绘制过渡效果 (最上层)
+	p.scene.transition.Draw(screen)
+
+	// 绘制调试信息
+	p.drawDebugInfo(screen)
+}
+
+// GetWY 返回角色动作锚点的 World Y 坐标（用于Y-Sorting）
+func (p *Role) GetWY() float32 {
+	return p.sprite.actionAnchorPointWY
+}
+
+// Draw 仅绘制角色本身(实现 Renderable 接口)
+func (p *Role) Draw(screen *ebitenv2.Image, cam *commoncamera.Camera) {
+	screenX := p.sprite.cameraAnchorPointWX - float32(cam.ViewportWX) - float32(p.sprite.roleImageSprite.Frame.Width/2)
+	screenY := p.sprite.cameraAnchorPointWY - float32(cam.ViewportWY) - float32(p.sprite.roleImageSprite.Frame.Height/2)
 
 	op := &ebitenv2.DrawImageOptions{}
 	op.GeoM.Translate(float64(screenX), float64(screenY))
 	screen.DrawImage(p.sprite.image, op)
+}
 
-	// 绘制调试信息
-	p.drawDebugInfo(screen)
+// collectRenderables 收集所有需要Y-Sorting的对象
+func (p *Role) collectRenderables() []commonrenderable.IRenderable {
+	// Y-Sorting 层
+	renderables := make([]commonrenderable.IRenderable, 0, 1024)
+	renderables = append(renderables, p) // 角色自己
+	renderables = p.scene._map.GetTileSortInfoSlice(p.camera, cfg.TiledLayerType_Building, renderables)
+	renderables = p.scene._map.GetTileSortInfoSlice(p.camera, cfg.TiledLayerType_Objects, renderables)
+
+	return renderables
 }
 
 // drawDebugInfo 绘制调试信息
 func (p *Role) drawDebugInfo(screen *ebitenv2.Image) {
 	mapCfg := p.scene._map.tiledMapCfg
 	// 获取角色 Tile 坐标
-	tileX, tileY := mapCfg.IsometricCT.W2T(p.sprite.bottomCenterWX, p.sprite.bottomCenterWY)
+	tileX, tileY := mapCfg.IsometricCT.W2T(p.sprite.actionAnchorPointWX, p.sprite.actionAnchorPointWY)
 
 	// 获取角色 World 坐标
-	worldX := p.sprite.bottomCenterWX
-	worldY := p.sprite.bottomCenterWY
+	worldX := p.sprite.actionAnchorPointWX
+	worldY := p.sprite.actionAnchorPointWY
 
 	// 获取角色 Screen 坐标
-	roleScreenX := p.sprite.centerWX - float32(p.camera.ViewportX)
-	roleScreenY := p.sprite.centerWY - float32(p.camera.ViewportY)
+	roleScreenX := p.sprite.cameraAnchorPointWX - float32(p.camera.ViewportWX)
+	roleScreenY := p.sprite.cameraAnchorPointWY - float32(p.camera.ViewportWY)
 
 	if true { // 绘制脚底中心点 (红色圆形)
-		bottomCenterScreenX := p.sprite.bottomCenterWX - float32(p.camera.ViewportX)
-		bottomCenterScreenY := p.sprite.bottomCenterWY - float32(p.camera.ViewportY)
+		bottomCenterScreenX := p.sprite.actionAnchorPointWX - float32(p.camera.ViewportWX)
+		bottomCenterScreenY := p.sprite.actionAnchorPointWY - float32(p.camera.ViewportWY)
 		red := color.RGBA{R: 255, G: 0, B: 0, A: 255}
 		vector.FillCircle(screen, bottomCenterScreenX, bottomCenterScreenY, 5, red, false)
 	}
@@ -70,5 +108,5 @@ func (p *Role) drawDebugInfo(screen *ebitenv2.Image) {
 	y += 30
 	ui.Printf(screen, 10, y, "=== Camera ===")
 	y += 20
-	ui.Printf(screen, 10, y, "Viewport: (%d, %d)", p.camera.ViewportX, p.camera.ViewportY)
+	ui.Printf(screen, 10, y, "Viewport: (%d, %d)", p.camera.ViewportWX, p.camera.ViewportWY)
 }
