@@ -168,11 +168,11 @@
             "expandedObjectLayers": [
                 7
             ],
-            "scale": 0.33,
-            "selectedLayer": 2,
+            "scale": 4,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 1530.3030303030305,
-                "y": 1524.2424242424242
+                "x": 2481,
+                "y": 686.25
             }
         },
         "map/map.2000001.tmx#backgroundTower": {
@@ -183,11 +183,11 @@
             "expandedObjectLayers": [
                 6
             ],
-            "scale": 1,
-            "selectedLayer": -1,
+            "scale": 0.75,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 2838,
-                "y": 1368
+                "x": 3206.6666666666665,
+                "y": 1498.6666666666665
             }
         },
         "map/ss.tsx": {
@@ -206,7 +206,7 @@
     "map.height": 3,
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
     "map.lastUsedFormat": "tmx",
-    "map.orientation": "2",
+    "map.orientation": "1",
     "map.tileWidth": 64,
     "map.width": 6,
     "openFiles": [
