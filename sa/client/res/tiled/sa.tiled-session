@@ -144,6 +144,10 @@
             "scaleInDock": 1,
             "scaleInEditor": 1
         },
+        "map/7000002.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
         "map/8000001.tsx": {
             "scaleInDock": 1,
             "scaleInEditor": 1
@@ -179,11 +183,11 @@
             "expandedObjectLayers": [
                 7
             ],
-            "scale": 0.5,
+            "scale": 3,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 1780,
-                "y": 738
+                "x": 868.6666666666666,
+                "y": 774.6666666666666
             }
         },
         "map/map.2000001.tmx#backgroundTower": {
@@ -197,7 +201,7 @@
             "scale": 0.75,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 3200.6666666666665,
+                "x": 3201.333333333333,
                 "y": 1600
             }
         },
@@ -212,7 +216,7 @@
         }
     },
     "last.exportedFilePath": "C:/game/sa/client/res/tiled/map",
-    "last.imagePath": "C:/game/sa/client/res/plant",
+    "last.imagePath": "C:/game/sa/client/res/building",
     "map.fixedSize": true,
     "map.height": 3,
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
@@ -226,25 +230,25 @@
         "map/8000001.tsx"
     ],
     "project": "sa.tiled-project",
-    "property.type": "float",
+    "property.type": "int",
     "recentFiles": [
+        "map/7000002.tsx",
+        "map/8000001.tsx",
+        "map/iso-64x64-building.tsx",
         "map/map.2000001.tmx",
         "map/map.2000002.tmx",
-        "map/8000001.tsx",
         "map/backgroundTower.tsx",
         "map/64x64.empty.tsx",
-        "map/iso-64x64-building.tsx",
         "map/4937_pixian_ai.tsx",
         "map/ss.tsx",
         "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_001.tmx",
         "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_002.tmx",
-        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_003.tmx",
-        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_005.tmx"
+        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_003.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {
-        "height": 313,
-        "width": 332
+        "height": 328,
+        "width": 355
     },
     "tileset.type": 0
 }
