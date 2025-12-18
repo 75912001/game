@@ -265,6 +265,21 @@ func (p *TiledMapMgr) loadTileset(tmxDir string, tsRef tmxTilesetRef) (*TiledTil
 					}
 				}
 				tileset.OverheadRatio = float32(ratio)
+			case TiledLayerProperty_VerticalSlicePixel: // verticalSlicePixel
+				if prop.Type != "int" {
+					return nil, fmt.Errorf("解析 tileset 属性失败, 必须是 int 类型:%v %v", prop.Name, xruntime.Location())
+				}
+				slicePixel, err := strconv.Atoi(prop.Value)
+				if err != nil {
+					return nil, errors.WithMessagef(err, "解析 tileset 属性失败:%v %v", prop.Name, xruntime.Location())
+				}
+				if slicePixel <= 0 {
+					return nil, fmt.Errorf("解析 tileset 属性失败, verticalSlicePixel 必须大于 0:%v %v", prop.Name, xruntime.Location())
+				}
+				if tileset.TileWidth <= slicePixel {
+					return nil, fmt.Errorf("解析 tileset 属性失败, verticalSlicePixel 必须小于 TileWidth:%v %v", prop.Name, xruntime.Location())
+				}
+				tileset.VerticalSlicePixel = slicePixel
 			}
 		}
 	}
