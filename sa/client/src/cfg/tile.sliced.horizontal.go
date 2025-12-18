@@ -7,10 +7,10 @@ import (
 
 // TileSlicedHorizontal 瓦片-水平切片 (用于标记需要拆分的瓦片类型)
 type TileSlicedHorizontal struct {
-	CanopyImage  *ebitenv2.Image // 冠部图像 (上部分，绘制在 Overhead 层)
-	CanopyHeight int             // 冠部高度
-	TrunkImage   *ebitenv2.Image // 干部图像 (下部分，参与 Y-Sorting)
-	TrunkHeight  int             // 干部高度
+	CanopyImage  *ebitenv2.Image // 上部，绘制在 Overhead 层
+	CanopyHeight int             // 上部高度
+	TrunkImage   *ebitenv2.Image // 下部，参与 Y-Sorting
+	TrunkHeight  int             // 下部高度
 }
 
 func NewTileSliceHorizontal() *TileSlicedHorizontal {
