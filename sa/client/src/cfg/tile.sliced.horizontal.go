@@ -19,7 +19,7 @@ func NewTileSliceHorizontal() *TileSlicedHorizontal {
 
 // Split 拆分
 func (p *TileSlicedHorizontal) Split(fullImage *ebitenv2.Image, tileset *TiledTileset) {
-	p.CanopyHeight, p.TrunkHeight = CalculateSliceHorizontalSplitHeight(tileset.TileHeight, tileset.HorizontalSlicePixel) // = canopyHeight
+	p.CanopyHeight = tileset.HorizontalSlicePixel
 	p.TrunkHeight = tileset.TileHeight - p.CanopyHeight
 
 	canopyRect := image.Rect(0, 0, tileset.TileWidth, p.CanopyHeight)
@@ -27,15 +27,4 @@ func (p *TileSlicedHorizontal) Split(fullImage *ebitenv2.Image, tileset *TiledTi
 
 	trunkRect := image.Rect(0, p.CanopyHeight, tileset.TileWidth, tileset.TileHeight)
 	p.TrunkImage = fullImage.SubImage(trunkRect).(*ebitenv2.Image)
-}
-
-// 计算拆分高度, 返回冠部和干部高度
-func CalculateSliceHorizontalSplitHeight(totalHeight int, overheadRatio float32) (canopyHeight int, trunkHeight int) {
-	canopyHeight = int(float32(totalHeight) * overheadRatio)
-	trunkHeight = totalHeight - canopyHeight
-	// 确保最小高度
-	if canopyHeight < 1 || trunkHeight < 1 {
-		return 0, 0 // 不拆分
-	}
-	return canopyHeight, trunkHeight
 }

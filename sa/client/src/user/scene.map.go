@@ -413,7 +413,7 @@ func (p *Map) collectLayerTiles(cam *commoncamera.Camera, layer *cfg.TiledLayer,
 				sortInfo.ScreenX = sliceScreenX
 				sortInfo.ScreenY = sliceScreenY
 
-				var offsetWY float32 = -float32(tileInfo.SlicedVertical.SlicePixel) // todo menglc [微调] 为了使遮挡不穿模. 根据垂直切割宽度来设置偏移量. 避免角色在下方时,遮挡角色
+				var offsetWY float32 = -float32(tileInfo.SlicedVertical.SlicePixel / 2) // todo menglc [微调] 为了使遮挡不穿模. 根据垂直切割宽度来设置偏移量. 避免角色在下方时,遮挡角色
 				sortInfo.WY = sliceWY + offsetWY
 				result = append(result, sortInfo)
 			}
