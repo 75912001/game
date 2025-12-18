@@ -244,6 +244,26 @@ func (p *TiledMapMgr) loadTileset(tmxDir string, tsRef tmxTilesetRef) (*TiledTil
 		ImageHeight: tsxXML.Image.Height,
 	}
 
+	// 解析 tileset 属性
+	if tsxXML.Properties != nil {
+		for _, prop := range tsxXML.Properties.Properties {
+			switch prop.Name {
+			case TiledLayerProperty_OverheadRatio: // overheadRatio
+				if prop.Type != "float" {
+					return nil, fmt.Errorf("解析 tileset 属性失败, 必须是 float 类型:%v %v", prop.Name, xruntime.Location())
+				}
+				ratio, err := strconv.ParseFloat(prop.Value, 32)
+				if err != nil {
+					return nil, errors.WithMessagef(err, "解析 tileset 属性失败:%v %v", prop.Name, xruntime.Location())
+				}
+				if ratio <= 0 || 1 <= ratio {
+					return nil, fmt.Errorf("解析 tileset 属性失败, ratio 必须在 (0, 1) 范围内:%v %v", prop.Name, xruntime.Location())
+				}
+				tileset.OverheadRatio = float32(ratio)
+			}
+		}
+	}
+
 	// 加载图片
 	tsxDir := filepath.Dir(tsxPath)
 	imgPath := filepath.Join(tsxDir, tsxXML.Image.Source)

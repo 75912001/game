@@ -14,4 +14,6 @@ type TiledTileset struct {
 	Image       *ebitenv2.Image // tileset 图片
 	ImageWidth  int             // 图片宽度
 	ImageHeight int             // 图片高度
+
+	OverheadRatio float32 // 头顶比例 (0=不拆分, 0.7=70%为参与 Overhead 层绘制)
 }

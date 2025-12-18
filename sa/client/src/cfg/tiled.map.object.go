@@ -11,6 +11,8 @@ const TiledObjectProperty_Blocked = "blocked"             // 对象-变量-阻�
 const TiledObjectProperty_ArrivalPortal = "arrivalPortal" // 对象-变量-到达传送点
 const TiledObjectProperty_TargetPortal = "targetPortal"   // 对象-变量-传送目标 传送ID
 
+const TiledLayerProperty_OverheadRatio = "overheadRatio" // 图块层-变量-头顶比率 (会将上部放到 overhead 层,渲染, 用于遮挡)
+
 const TileLayerProperty_Blocked = "blocked" // 图块层-变量-阻挡
 
 type TiledObjectType string

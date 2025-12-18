@@ -87,12 +87,13 @@ type tmxPolygon struct {
 
 // TSX XML 结构定义
 type tsxTileset struct {
-	XMLName    xml.Name `xml:"tileset"`
-	TileWidth  int      `xml:"tilewidth,attr"`
-	TileHeight int      `xml:"tileheight,attr"`
-	TileCount  int      `xml:"tilecount,attr"`
-	Columns    int      `xml:"columns,attr"`
-	Image      tsxImage `xml:"image"`
+	XMLName    xml.Name       `xml:"tileset"`
+	TileWidth  int            `xml:"tilewidth,attr"`
+	TileHeight int            `xml:"tileheight,attr"`
+	TileCount  int            `xml:"tilecount,attr"`
+	Columns    int            `xml:"columns,attr"`
+	Image      tsxImage       `xml:"image"`
+	Properties *tmxProperties `xml:"properties"` // tileset 属性 (如 overheadRatio)
 }
 
 type tsxImage struct {

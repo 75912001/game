@@ -18,6 +18,21 @@ type TileCacheInfo struct {
 	Image  *ebitenv2.Image // 裁剪后的图像
 	Width  int             // tileset 的 tile 宽度
 	Height int             // tileset 的 tile 高度
+
+	UmbrellaShaped *cfg.TileUmbrellaShaped // 是否为伞形瓦片 (如树木, 雕像建筑)
+}
+
+// UmbrellaShapedCanopyDrawInfo 冠部-绘制信息(用于收集待绘制的冠部)
+type UmbrellaShapedCanopyDrawInfo struct {
+	Image   *ebitenv2.Image // 冠部-图像
+	ScreenX int             // 屏幕 X 坐标
+	ScreenY int             // 屏幕 Y 坐标
+}
+
+func (p *UmbrellaShapedCanopyDrawInfo) reset() {
+	p.Image = nil
+	p.ScreenX = 0
+	p.ScreenY = 0
 }
 
 // TileSortInfo 待排序的瓦片绘制信息（用于 Y-Sorting）
@@ -49,11 +64,15 @@ func (p *TileSortInfo) Draw(screen *ebitenv2.Image, camera *commoncamera.Camera)
 
 // Map Tiled 地图场景
 type Map struct {
-	id           common.AssetID                    // 地图ID
-	tiledMapCfg  *cfg.TiledMap                     // Tiled 地图资源
-	mapCfg       *cfg.Map                          // 地图配置
+	id          common.AssetID // 地图ID
+	tiledMapCfg *cfg.TiledMap  // Tiled 地图资源
+	mapCfg      *cfg.Map       // 地图配置
+
 	tileCache    *xmap.MapMgr[int, *TileCacheInfo] // key:GID val:TileCacheInfo 缓存 (位于 多个图层中 相同 GID 只存一份)
 	tileSortPool *xpool.Pool[*TileSortInfo]        // TileSortInfo 对象池
+
+	umbrellaShapedCanopyDrawPool *xpool.Pool[*UmbrellaShapedCanopyDrawInfo] // UmbrellaShapedCanopyDrawInfo 对象池
+	umbrellaShapedCanopyDrawList []*UmbrellaShapedCanopyDrawInfo            // 当前帧待绘制-冠部列表
 }
 
 // NewMap 创建 Tiled 地图场景
@@ -67,6 +86,13 @@ func NewMap(mapID common.AssetID) *Map {
 				t.reset()
 			},
 		),
+		umbrellaShapedCanopyDrawPool: xpool.NewPool(
+			func() *UmbrellaShapedCanopyDrawInfo { return &UmbrellaShapedCanopyDrawInfo{} },
+			func(t *UmbrellaShapedCanopyDrawInfo) {
+				t.reset()
+			},
+		),
+		umbrellaShapedCanopyDrawList: make([]*UmbrellaShapedCanopyDrawInfo, 0, 256),
 	}
 	m.tiledMapCfg = cfg.GTiledMapMgr.Maps.Get(mapID)
 	m.mapCfg = cfg.GMapMgr.Maps.Get(mapID)
@@ -90,13 +116,17 @@ func (p *Map) buildTileCache() {
 	for gid := range usedGIDs {
 		img, tileset := p.getTileImage(gid)
 		if img != nil {
-			p.tileCache.Add(gid,
-				&TileCacheInfo{
-					Image:  img,
-					Width:  tileset.TileWidth,
-					Height: tileset.TileHeight,
-				},
-			)
+			cacheInfo := &TileCacheInfo{
+				Image:  img,
+				Width:  tileset.TileWidth,
+				Height: tileset.TileHeight,
+			}
+			// 处理需要拆分的 tile (伞型瓦片)
+			if 0 < tileset.OverheadRatio {
+				umbrellaShaped := cfg.NewTileUmbrellaShaped()
+				umbrellaShaped.Split(img, tileset)
+			}
+			p.tileCache.Add(gid, cacheInfo)
 		}
 	}
 }
@@ -135,6 +165,8 @@ func (p *Map) DrawGround(screen *ebitenv2.Image, cam *commoncamera.Camera) {
 
 // DrawOverhead 头顶
 func (p *Map) DrawOverhead(screen *ebitenv2.Image, cam *commoncamera.Camera) {
+	// 绘制拆分 tile 的冠部
+	p.drawSplitUmbrellaShapedCanopy(screen)
 	// 遍历所有图层
 	for _, layer := range p.tiledMapCfg.Layers {
 		if !layer.Visible {
@@ -145,6 +177,21 @@ func (p *Map) DrawOverhead(screen *ebitenv2.Image, cam *commoncamera.Camera) {
 		}
 		p.drawLayer(screen, cam, layer)
 	}
+}
+
+// drawSplitUmbrellaShapedCanopy 绘制拆分 tile 的冠部
+func (p *Map) drawSplitUmbrellaShapedCanopy(screen *ebitenv2.Image) {
+	for _, canopy := range p.umbrellaShapedCanopyDrawList {
+		op := &ebitenv2.DrawImageOptions{}
+		op.GeoM.Translate(float64(canopy.ScreenX), float64(canopy.ScreenY))
+		screen.DrawImage(canopy.Image, op)
+	}
+
+	// 回收所有冠部信息
+	for _, canopy := range p.umbrellaShapedCanopyDrawList {
+		p.umbrellaShapedCanopyDrawPool.Put(canopy)
+	}
+	p.umbrellaShapedCanopyDrawList = p.umbrellaShapedCanopyDrawList[:0]
 }
 
 // drawBorder 绘制地图边界(调试用)
@@ -341,14 +388,32 @@ func (p *Map) collectLayerTiles(cam *commoncamera.Camera, layer *cfg.TiledLayer,
 		// 计算 World Y(瓦片底部中心点，用于排序)
 		_, wy := p.tiledMapCfg.IsometricCT.T2W(float32(tileX)+0.5, float32(tileY)+0.5)
 
-		// 从对象池获取并填充数据
-		sortInfo := p.tileSortPool.Get()
-		sortInfo.Image = tileInfo.Image
-		sortInfo.ScreenX = screenX
-		sortInfo.ScreenY = screenY
-		sortInfo.WY = wy
+		// 处理拆分的 tile
+		if tileInfo.UmbrellaShaped != nil {
+			// 树干部分参与 Y-Sorting
+			trunkScreenY := screenY + tileInfo.UmbrellaShaped.CanopyHeight // 树干起始Y = 整体Y + 树冠高度
+			sortInfo := p.tileSortPool.Get()
+			sortInfo.Image = tileInfo.UmbrellaShaped.TrunkImage
+			sortInfo.ScreenX = screenX
+			sortInfo.ScreenY = trunkScreenY
+			sortInfo.WY = wy
+			result = append(result, sortInfo)
 
-		result = append(result, sortInfo)
+			// 树冠部分收集到列表，稍后在 DrawOverhead 阶段绘制
+			canopyInfo := p.umbrellaShapedCanopyDrawPool.Get()
+			canopyInfo.Image = tileInfo.UmbrellaShaped.CanopyImage
+			canopyInfo.ScreenX = screenX
+			canopyInfo.ScreenY = screenY // 树冠起始Y = 整体Y
+			p.umbrellaShapedCanopyDrawList = append(p.umbrellaShapedCanopyDrawList, canopyInfo)
+		} else {
+			// 普通 tile，整体参与 Y-Sorting
+			sortInfo := p.tileSortPool.Get()
+			sortInfo.Image = tileInfo.Image
+			sortInfo.ScreenX = screenX
+			sortInfo.ScreenY = screenY
+			sortInfo.WY = wy
+			result = append(result, sortInfo)
+		}
 	}
 	return result
 }
