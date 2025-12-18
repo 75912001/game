@@ -73,7 +73,7 @@ type Map struct {
 	tileSortPool *xpool.Pool[*TileSortInfo]        // TileSortInfo 对象池
 
 	umbrellaShapedCanopyDrawPool *xpool.Pool[*UmbrellaShapedCanopyDrawInfo] // UmbrellaShapedCanopyDrawInfo 对象池
-	umbrellaShapedCanopyDrawList []*UmbrellaShapedCanopyDrawInfo            // 当前帧待绘制-冠部列表
+	umbrellaShapedCanopyDrawList []*UmbrellaShapedCanopyDrawInfo            // 当前帧待绘制-上部列表
 }
 
 // NewMap 创建 Tiled 地图场景
@@ -122,13 +122,13 @@ func (p *Map) buildTileCache() {
 				Width:  tileset.TileWidth,
 				Height: tileset.TileHeight,
 			}
-			// 处理需要拆分的 tile (伞型瓦片)
+			// 处理水平切分的 tile
 			if 0 < tileset.HorizontalSlicePixel {
-				umbrellaShaped := cfg.NewTileSliceHorizontal()
-				umbrellaShaped.Split(img, tileset)
-				cacheInfo.SlicedHorizontal = umbrellaShaped // 存入缓存
+				tileSliceHorizontal := cfg.NewTileSliceHorizontal()
+				tileSliceHorizontal.Split(img, tileset)
+				cacheInfo.SlicedHorizontal = tileSliceHorizontal // 存入缓存
 			}
-			// 处理垂直切片的 tile (大型建筑)
+			// 处理垂直切分的 tile
 			if 0 < tileset.VerticalSlicePixel {
 				verticalSliced := cfg.NewTileVerticalSliced()
 				verticalSliced.Split(img, tileset)
