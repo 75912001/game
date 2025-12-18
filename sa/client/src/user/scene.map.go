@@ -125,6 +125,7 @@ func (p *Map) buildTileCache() {
 			if 0 < tileset.OverheadRatio {
 				umbrellaShaped := cfg.NewTileUmbrellaShaped()
 				umbrellaShaped.Split(img, tileset)
+				cacheInfo.UmbrellaShaped = umbrellaShaped // 存入缓存
 			}
 			p.tileCache.Add(gid, cacheInfo)
 		}

@@ -25,7 +25,7 @@ func (p *TileUmbrellaShaped) Split(fullImage *ebitenv2.Image, tileset *TiledTile
 	canopyRect := image.Rect(0, 0, tileset.TileWidth, p.CanopyHeight)
 	p.CanopyImage = fullImage.SubImage(canopyRect).(*ebitenv2.Image)
 
-	trunkRect := image.Rect(0, p.CanopyHeight, tileset.TileWidth, p.TrunkHeight)
+	trunkRect := image.Rect(0, p.CanopyHeight, tileset.TileWidth, tileset.TileHeight)
 	p.TrunkImage = fullImage.SubImage(trunkRect).(*ebitenv2.Image)
 }
 
