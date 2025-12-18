@@ -21,7 +21,7 @@ enum AssetType {
   AssetType_NPC = 5; // NPC [5000001,5999999]
   AssetType_Decoration = 6; // 装饰物 [6000001,6999999]
   AssetType_Building = 7; // 建筑物 [7000001,7999999]
-  AssetType_Plant = 8; // 植物 [800
+  AssetType_Plant = 8; // 植物 [8000001,8999999]
 }
 
 // 资产ID-数值范围
