@@ -186,8 +186,8 @@
             "scale": 1.5,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 1600,
-                "y": 800
+                "x": 795.3333333333333,
+                "y": 804.6666666666666
             }
         },
         "map/map.2000001.tmx#backgroundTower": {
@@ -198,11 +198,11 @@
             "expandedObjectLayers": [
                 6
             ],
-            "scale": 4,
+            "scale": 0.75,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 3501.25,
-                "y": 1704
+                "x": 3386.6666666666665,
+                "y": 1863.9999999999998
             }
         },
         "map/ss.tsx": {
@@ -235,8 +235,8 @@
     "recentFiles": [
         "map/map.2000001.tmx",
         "map/map.2000002.tmx",
-        "map/8000001.tsx",
         "map/7000002.tsx",
+        "map/8000001.tsx",
         "map/iso-64x64-building.tsx",
         "map/backgroundTower.tsx",
         "map/64x64.empty.tsx",

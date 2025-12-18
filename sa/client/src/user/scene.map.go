@@ -418,8 +418,7 @@ func (p *Map) collectLayerTiles(cam *commoncamera.Camera, layer *cfg.TiledLayer,
 				result = append(result, sortInfo)
 			}
 		} else if tileInfo.SlicedHorizontal != nil {
-			// 处理拆分的 tile (伞型瓦片)
-			// 树干部分参与 Y-Sorting
+			// 下部分参与 Y-Sorting
 			trunkScreenY := screenY + tileInfo.SlicedHorizontal.CanopyHeight // 树干起始Y = 整体Y + 树冠高度
 			sortInfo := p.tileSortPool.Get()
 			sortInfo.Image = tileInfo.SlicedHorizontal.TrunkImage
