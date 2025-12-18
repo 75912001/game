@@ -248,23 +248,18 @@ func (p *TiledMapMgr) loadTileset(tmxDir string, tsRef tmxTilesetRef) (*TiledTil
 	if tsxXML.Properties != nil {
 		for _, prop := range tsxXML.Properties.Properties {
 			switch prop.Name {
-			case TiledLayerProperty_OverheadRatio: // overheadRatio
-				if prop.Type != "float" {
-					return nil, fmt.Errorf("解析 tileset 属性失败, 必须是 float 类型:%v %v", prop.Name, xruntime.Location())
+			case TiledLayerProperty_HorizontalSlicePixel: // overheadRatio
+				if prop.Type != "int" {
+					return nil, fmt.Errorf("解析 tileset 属性失败, 必须是 int 类型:%v %v", prop.Name, xruntime.Location())
 				}
-				ratio, err := strconv.ParseFloat(prop.Value, 32)
+				slicePixel, err := strconv.Atoi(prop.Value)
 				if err != nil {
 					return nil, errors.WithMessagef(err, "解析 tileset 属性失败:%v %v", prop.Name, xruntime.Location())
 				}
-				if ratio <= 0 || 1 <= ratio {
+				if slicePixel <= 0 || tileset.TileHeight <= slicePixel {
 					return nil, fmt.Errorf("解析 tileset 属性失败, ratio 必须在 (0, 1) 范围内:%v %v", prop.Name, xruntime.Location())
 				}
-				{ // 判断拆分高度是否合法
-					if tileset.TileHeight < 10 { // 太小的 tileHeight 不支持伞形拆分
-						return nil, fmt.Errorf("tileset 属性 overheadRatio 拆分高度过小, 不支持伞形拆分: %v %v", prop.Name, xruntime.Location())
-					}
-				}
-				tileset.OverheadRatio = float32(ratio)
+				tileset.HorizontalSlicePixel = slicePixel
 			case TiledLayerProperty_VerticalSlicePixel: // verticalSlicePixel
 				if prop.Type != "int" {
 					return nil, fmt.Errorf("解析 tileset 属性失败, 必须是 int 类型:%v %v", prop.Name, xruntime.Location())

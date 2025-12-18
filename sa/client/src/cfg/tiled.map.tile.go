@@ -15,6 +15,6 @@ type TiledTileset struct {
 	ImageWidth  int             // 图片宽度
 	ImageHeight int             // 图片高度
 
-	OverheadRatio      float32 // 头顶比例 (0=不拆分, 0.7=70%为参与 Overhead 层绘制)
-	VerticalSlicePixel int     // 垂直切分像素值 (0=不切分, 64=每64像素垂直切分一次)
+	HorizontalSlicePixel int // 水平切分像素值 (只切一次,上下切分)
+	VerticalSlicePixel   int // 垂直切分像素值 (切多次, 64=每64像素垂直切分一次)
 }

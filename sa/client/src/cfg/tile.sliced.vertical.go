@@ -5,8 +5,8 @@ import (
 	"image"
 )
 
-// TileVerticalSliced 垂直切片瓦片信息 (用于大型建筑的Y-Sorting)
-type TileVerticalSliced struct {
+// TileSlicedVertical 瓦片-垂直切片 (用于大型建筑的Y-Sorting)
+type TileSlicedVertical struct {
 	SlicePixel int              // 切片宽度 (像素)
 	Slices     []*VerticalSlice // 切片列表
 }
@@ -20,14 +20,14 @@ type VerticalSlice struct {
 }
 
 // NewTileVerticalSliced 创建垂直切片瓦片
-func NewTileVerticalSliced() *TileVerticalSliced {
-	return &TileVerticalSliced{
+func NewTileVerticalSliced() *TileSlicedVertical {
+	return &TileSlicedVertical{
 		Slices: make([]*VerticalSlice, 0),
 	}
 }
 
 // Split 按像素宽度垂直切分瓦片
-func (p *TileVerticalSliced) Split(fullImage *ebitenv2.Image, tileset *TiledTileset) {
+func (p *TileSlicedVertical) Split(fullImage *ebitenv2.Image, tileset *TiledTileset) {
 	p.SlicePixel = tileset.VerticalSlicePixel
 	totalWidth := tileset.TileWidth
 	totalHeight := tileset.TileHeight
@@ -62,7 +62,7 @@ func (p *TileVerticalSliced) Split(fullImage *ebitenv2.Image, tileset *TiledTile
 
 // scanBottomPixel 扫描指定区域，找到最底部有像素(非透明)的行
 // 返回该行的Y坐标，如果没有有效像素则返回-1
-func (p *TileVerticalSliced) scanBottomPixel(img *ebitenv2.Image, startX, width, height int) int {
+func (p *TileSlicedVertical) scanBottomPixel(img *ebitenv2.Image, startX, width, height int) int {
 	// 从底部向上扫描
 	for y := height - 1; y >= 0; y-- {
 		for x := startX; x < startX+width; x++ {

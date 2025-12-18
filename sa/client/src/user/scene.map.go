@@ -19,8 +19,8 @@ type TileCacheInfo struct {
 	Width  int             // tileset 的 tile 宽度
 	Height int             // tileset 的 tile 高度
 
-	UmbrellaShaped *cfg.TileUmbrellaShaped // 是否为伞形瓦片 (如树木, 雕像建筑)
-	VerticalSliced *cfg.TileVerticalSliced // 垂直切片瓦片 (如大型建筑)
+	SlicedHorizontal *cfg.TileSlicedHorizontal // 水平切片-瓦片 (如树木, 雕像建筑)
+	SlicedVertical   *cfg.TileSlicedVertical   // 垂直切片-瓦片 (如大型建筑)
 }
 
 // UmbrellaShapedCanopyDrawInfo 冠部-绘制信息(用于收集待绘制的冠部)
@@ -123,16 +123,16 @@ func (p *Map) buildTileCache() {
 				Height: tileset.TileHeight,
 			}
 			// 处理需要拆分的 tile (伞型瓦片)
-			if 0 < tileset.OverheadRatio {
-				umbrellaShaped := cfg.NewTileUmbrellaShaped()
+			if 0 < tileset.HorizontalSlicePixel {
+				umbrellaShaped := cfg.NewTileSliceHorizontal()
 				umbrellaShaped.Split(img, tileset)
-				cacheInfo.UmbrellaShaped = umbrellaShaped // 存入缓存
+				cacheInfo.SlicedHorizontal = umbrellaShaped // 存入缓存
 			}
 			// 处理垂直切片的 tile (大型建筑)
 			if 0 < tileset.VerticalSlicePixel {
 				verticalSliced := cfg.NewTileVerticalSliced()
 				verticalSliced.Split(img, tileset)
-				cacheInfo.VerticalSliced = verticalSliced // 存入缓存
+				cacheInfo.SlicedVertical = verticalSliced // 存入缓存
 			}
 			p.tileCache.Add(gid, cacheInfo)
 		}
@@ -397,8 +397,8 @@ func (p *Map) collectLayerTiles(cam *commoncamera.Camera, layer *cfg.TiledLayer,
 		_, wy := p.tiledMapCfg.IsometricCT.T2W(float32(tileX)+0.5, float32(tileY)+0.5)
 
 		// 处理垂直切片的 tile (大型建筑)
-		if tileInfo.VerticalSliced != nil {
-			for _, slice := range tileInfo.VerticalSliced.Slices {
+		if tileInfo.SlicedVertical != nil {
+			for _, slice := range tileInfo.SlicedVertical.Slices {
 				// 每个切片的屏幕位置
 				sliceScreenX := screenX + slice.OffsetX
 				sliceScreenY := screenY
@@ -413,16 +413,16 @@ func (p *Map) collectLayerTiles(cam *commoncamera.Camera, layer *cfg.TiledLayer,
 				sortInfo.ScreenX = sliceScreenX
 				sortInfo.ScreenY = sliceScreenY
 
-				var offsetWY float32 = -float32(tileInfo.VerticalSliced.SlicePixel) // todo menglc [微调] 为了使遮挡不穿模. 根据垂直切割宽度来设置偏移量. 避免角色在下方时,遮挡角色
+				var offsetWY float32 = -float32(tileInfo.SlicedVertical.SlicePixel) // todo menglc [微调] 为了使遮挡不穿模. 根据垂直切割宽度来设置偏移量. 避免角色在下方时,遮挡角色
 				sortInfo.WY = sliceWY + offsetWY
 				result = append(result, sortInfo)
 			}
-		} else if tileInfo.UmbrellaShaped != nil {
+		} else if tileInfo.SlicedHorizontal != nil {
 			// 处理拆分的 tile (伞型瓦片)
 			// 树干部分参与 Y-Sorting
-			trunkScreenY := screenY + tileInfo.UmbrellaShaped.CanopyHeight // 树干起始Y = 整体Y + 树冠高度
+			trunkScreenY := screenY + tileInfo.SlicedHorizontal.CanopyHeight // 树干起始Y = 整体Y + 树冠高度
 			sortInfo := p.tileSortPool.Get()
-			sortInfo.Image = tileInfo.UmbrellaShaped.TrunkImage
+			sortInfo.Image = tileInfo.SlicedHorizontal.TrunkImage
 			sortInfo.ScreenX = screenX
 			sortInfo.ScreenY = trunkScreenY
 			sortInfo.WY = wy
@@ -430,7 +430,7 @@ func (p *Map) collectLayerTiles(cam *commoncamera.Camera, layer *cfg.TiledLayer,
 
 			// 树冠部分收集到列表，稍后在 DrawOverhead 阶段绘制
 			canopyInfo := p.umbrellaShapedCanopyDrawPool.Get()
-			canopyInfo.Image = tileInfo.UmbrellaShaped.CanopyImage
+			canopyInfo.Image = tileInfo.SlicedHorizontal.CanopyImage
 			canopyInfo.ScreenX = screenX
 			canopyInfo.ScreenY = screenY // 树冠起始Y = 整体Y
 			p.umbrellaShapedCanopyDrawList = append(p.umbrellaShapedCanopyDrawList, canopyInfo)
