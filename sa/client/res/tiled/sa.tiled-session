@@ -3,11 +3,11 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "map/map.2000002.tmx",
+    "activeFile": "map/map.2000001.tmx",
     "expandedProjectPaths": [
-        "tsx",
+        "map",
         ".",
-        "map"
+        "tsx"
     ],
     "fileStates": {
         "": {
@@ -197,7 +197,7 @@
             "scale": 0.75,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 3103.333333333333,
+                "x": 3104,
                 "y": 1600
             }
         },
@@ -222,14 +222,15 @@
     "map.width": 6,
     "openFiles": [
         "map/map.2000001.tmx",
-        "map/map.2000002.tmx"
+        "map/map.2000002.tmx",
+        "map/8000001.tsx"
     ],
     "project": "sa.tiled-project",
     "property.type": "float",
     "recentFiles": [
-        "map/map.2000001.tmx",
-        "map/map.2000002.tmx",
         "map/8000001.tsx",
+        "map/map.2000002.tmx",
+        "map/map.2000001.tmx",
         "map/backgroundTower.tsx",
         "map/64x64.empty.tsx",
         "map/iso-64x64-building.tsx",

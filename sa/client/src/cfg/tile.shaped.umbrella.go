@@ -19,20 +19,23 @@ func NewTileUmbrellaShaped() *TileUmbrellaShaped {
 
 // Split 拆分伞形瓦片
 func (p *TileUmbrellaShaped) Split(fullImage *ebitenv2.Image, tileset *TiledTileset) {
-	// 计算拆分高度
-	totalHeight := tileset.TileHeight
-	canopyHeight := int(float32(totalHeight) * tileset.OverheadRatio)
-	trunkHeight := totalHeight - canopyHeight
-	// 确保最小高度
-	if canopyHeight < 1 || trunkHeight < 1 {
-		return // 不拆分
-	}
-	p.CanopyHeight = canopyHeight
-	p.TrunkHeight = trunkHeight
+	p.CanopyHeight, p.TrunkHeight = CalculateUmbrellaShapedSplitHeight(tileset.TileHeight, tileset.OverheadRatio) // = canopyHeight
+	p.TrunkHeight = tileset.TileHeight - p.CanopyHeight
 
-	canopyRect := image.Rect(0, 0, tileset.TileWidth, canopyHeight)
+	canopyRect := image.Rect(0, 0, tileset.TileWidth, p.CanopyHeight)
 	p.CanopyImage = fullImage.SubImage(canopyRect).(*ebitenv2.Image)
 
-	trunkRect := image.Rect(0, canopyHeight, tileset.TileWidth, totalHeight)
+	trunkRect := image.Rect(0, p.CanopyHeight, tileset.TileWidth, p.TrunkHeight)
 	p.TrunkImage = fullImage.SubImage(trunkRect).(*ebitenv2.Image)
+}
+
+// 计算拆分高度, 返回冠部和干部高度
+func CalculateUmbrellaShapedSplitHeight(totalHeight int, overheadRatio float32) (canopyHeight int, trunkHeight int) {
+	canopyHeight = int(float32(totalHeight) * overheadRatio)
+	trunkHeight = totalHeight - canopyHeight
+	// 确保最小高度
+	if canopyHeight < 1 || trunkHeight < 1 {
+		return 0, 0 // 不拆分
+	}
+	return canopyHeight, trunkHeight
 }

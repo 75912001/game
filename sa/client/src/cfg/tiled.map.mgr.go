@@ -259,6 +259,11 @@ func (p *TiledMapMgr) loadTileset(tmxDir string, tsRef tmxTilesetRef) (*TiledTil
 				if ratio <= 0 || 1 <= ratio {
 					return nil, fmt.Errorf("解析 tileset 属性失败, ratio 必须在 (0, 1) 范围内:%v %v", prop.Name, xruntime.Location())
 				}
+				{ // 判断拆分高度是否合法
+					if tileset.TileHeight < 10 { // 太小的 tileHeight 不支持伞形拆分
+						return nil, fmt.Errorf("tileset 属性 overheadRatio 拆分高度过小, 不支持伞形拆分: %v %v", prop.Name, xruntime.Location())
+					}
+				}
 				tileset.OverheadRatio = float32(ratio)
 			}
 		}
