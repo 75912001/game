@@ -420,7 +420,7 @@ func (p *TiledMapMgr) Assemble() error {
 						continue
 					}
 					// 计算 tile 本地 ID
-					localID := gid - tileset.FirstGID // todo menglc 这里具体是什么意思? GID 和 FirstGID 的关系, 生成的 localID 具有什么含义?
+					localID := gid - tileset.FirstGID
 					blockedSlice, ok := tileset.TileBlocked[localID]
 					if !ok || len(blockedSlice) == 0 {
 						continue
