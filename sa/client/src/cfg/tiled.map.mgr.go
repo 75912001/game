@@ -399,9 +399,13 @@ func (p *TiledMapMgr) Assemble() error {
 				tiledMap.Layers = append(tiledMap.Layers, collisionLayer)
 			}
 
+			objIDCounter := 1000000
+			for _, obj := range collisionLayer.Objects { // 找出现有碰撞体的最大 ID
+				if objIDCounter <= obj.ID {
+					objIDCounter = obj.ID + 1
+				}
+			}
 			// 生成 tile 碰撞体 (缓存到 Collision 图层)
-			th := float32(tiledMap.TileHeight)
-			objIDCounter := 10000 // 自动生成的碰撞体 ID 从 10000 开始 todo menglc 避免和手动创建的碰撞体 ID 冲突
 			for _, layer := range tiledMap.Layers {
 				if layer.LayerType == TiledLayerType_Collision || len(layer.Data) == 0 {
 					continue
