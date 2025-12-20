@@ -242,6 +242,7 @@ func (p *TiledMapMgr) loadTileset(tmxDir string, tsRef tmxTilesetRef) (*TiledTil
 		Columns:     tsxXML.Columns,
 		ImageWidth:  tsxXML.Image.Width,
 		ImageHeight: tsxXML.Image.Height,
+		TileBlocked: make(map[int][]*TiledTileBlocked),
 	}
 
 	// 解析 tileset 属性
@@ -277,6 +278,23 @@ func (p *TiledMapMgr) loadTileset(tmxDir string, tsRef tmxTilesetRef) (*TiledTil
 				tileset.VerticalSlicePixel = slicePixel
 			}
 		}
+	}
+
+	// 解析 tile 阻挡体 (缓存到 TileBlocked)
+	for _, tile := range tsxXML.Tiles {
+		if tile.ObjectGroup == nil || len(tile.ObjectGroup.Objects) == 0 {
+			continue
+		}
+		var blockedSlice []*TiledTileBlocked
+		for _, obj := range tile.ObjectGroup.Objects {
+			blockedSlice = append(blockedSlice, &TiledTileBlocked{
+				X:      obj.X,
+				Y:      obj.Y,
+				Width:  obj.Width,
+				Height: obj.Height,
+			})
+		}
+		tileset.TileBlocked[tile.ID] = blockedSlice
 	}
 
 	// 加载图片
@@ -364,6 +382,73 @@ func (p *TiledMapMgr) Assemble() error {
 				tiledMap.TileBlocked[x] = make([]bool, tiledMap.Height)
 			}
 
+			// 查找或创建 Collision 图层 (用于存储 tile 碰撞体)
+			var collisionLayer *TiledLayer
+			for _, layer := range tiledMap.Layers {
+				if layer.LayerType == TiledLayerType_Collision {
+					collisionLayer = layer
+					break // 找到任一个碰撞层, 将其作为 tile 碰撞体的缓存层
+				}
+			}
+			if collisionLayer == nil { // 不存在则创建
+				collisionLayer = &TiledLayer{
+					LayerType: TiledLayerType_Collision,
+					Visible:   true,
+					Opacity:   1.0,
+				}
+				tiledMap.Layers = append(tiledMap.Layers, collisionLayer)
+			}
+
+			// 生成 tile 碰撞体 (缓存到 Collision 图层)
+			th := float32(tiledMap.TileHeight)
+			objIDCounter := 10000 // 自动生成的碰撞体 ID 从 10000 开始 todo menglc 避免和手动创建的碰撞体 ID 冲突
+			for _, layer := range tiledMap.Layers {
+				if layer.LayerType == TiledLayerType_Collision || len(layer.Data) == 0 {
+					continue
+				}
+				for i, gid := range layer.Data {
+					if gid == 0 {
+						continue
+					}
+					// 查找 tileset
+					tileset := tiledMap.findTilesetByGID(gid)
+					if tileset == nil || len(tileset.TileBlocked) == 0 { // 该 tile 没有阻挡体
+						continue
+					}
+					// 计算 tile 本地 ID
+					localID := gid - tileset.FirstGID // todo menglc 这里具体是什么意思? GID 和 FirstGID 的关系, 生成的 localID 具有什么含义?
+					blockedSlice, ok := tileset.TileBlocked[localID]
+					if !ok || len(blockedSlice) == 0 {
+						continue
+					}
+					// 计算 tile 在地图中的位置
+					tileX := i % tiledMap.Width
+					tileY := i / tiledMap.Width
+					// 生成碰撞对象 (转换为 Tiled 像素坐标)
+					// 公式: collision Tiled pixel = tile anchor pixel + (collision offset - image anchor offset)
+					// tile anchor pixel = (tileX + 0.5) * th, (tileY + 0.5) * th
+					// image anchor (bottom-center) = (imageWidth/2, imageHeight)
+					anchorPixelX := (float32(tileX) + 0.5) * th
+					anchorPixelY := (float32(tileY) + 0.5) * th
+					imageAnchorX := float32(tileset.ImageWidth) / 2
+					imageAnchorY := float32(tileset.ImageHeight)
+
+					for _, coll := range blockedSlice {
+						obj := &TiledObject{
+							ID:      objIDCounter,
+							X:       anchorPixelX - imageAnchorX + coll.X,
+							Y:       anchorPixelY - imageAnchorY + coll.Y,
+							Width:   coll.Width,
+							Height:  coll.Height,
+							Visible: true,
+							Blocked: true, // tile 碰撞体默认阻挡
+						}
+						collisionLayer.Objects = append(collisionLayer.Objects, obj)
+						objIDCounter++
+					}
+				}
+			}
+
 			for _, layer := range tiledMap.Layers {
 				switch layer.LayerType {
 				case TiledLayerType_Collision: // 碰撞图层
@@ -389,4 +474,17 @@ func (p *TiledMapMgr) Assemble() error {
 		},
 	)
 	return nil
+}
+
+// findTilesetByGID 根据 GID 查找对应的 tileset
+func (p *TiledMap) findTilesetByGID(gid int) *TiledTileset {
+	var result *TiledTileset
+	for _, ts := range p.Tilesets {
+		if ts.FirstGID <= gid {
+			if result == nil || ts.FirstGID > result.FirstGID {
+				result = ts
+			}
+		}
+	}
+	return result
 }

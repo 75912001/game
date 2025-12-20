@@ -94,6 +94,13 @@ type tsxTileset struct {
 	Columns    int            `xml:"columns,attr"`
 	Image      tsxImage       `xml:"image"`
 	Properties *tmxProperties `xml:"properties"` // tileset 属性 (如 overheadRatio)
+	Tiles      []tsxTile      `xml:"tile"`       // tile 碰撞体定义
+}
+
+// tsxTile 单个 tile 定义(包含碰撞体)
+type tsxTile struct {
+	ID          int             `xml:"id,attr"`
+	ObjectGroup *tmxObjectGroup `xml:"objectgroup"` // tile 碰撞体
 }
 
 type tsxImage struct {

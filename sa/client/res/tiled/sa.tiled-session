@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "map/map.2000001.tmx",
+    "activeFile": "map/7000002.tsx",
     "expandedProjectPaths": [
         ".",
         "tsx",
@@ -186,8 +186,8 @@
             "scale": 1.5,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 2140.6666666666665,
-                "y": 974.6666666666666
+                "x": 1600,
+                "y": 800
             }
         },
         "map/map.2000001.tmx#backgroundTower": {
@@ -237,8 +237,8 @@
         "map/map.2000002.tmx",
         "map/8000001.tsx",
         "map/backgroundTower.tsx",
-        "map/7000002.tsx",
         "map/map.2000001.tmx",
+        "map/7000002.tsx",
         "map/iso-64x64-building.tsx",
         "map/64x64.empty.tsx",
         "map/4937_pixian_ai.tsx",
