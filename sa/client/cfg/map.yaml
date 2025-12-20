@@ -11,3 +11,7 @@ maps:
   - assetID: 2000002
     name: "玛丽娜丝"
     transitionID: 2 # 水平-标准
+
+  - assetID: 2000003
+    name: "测试战场"
+    transitionID: 3 # 淡入淡出

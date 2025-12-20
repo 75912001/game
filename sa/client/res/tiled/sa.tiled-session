@@ -184,9 +184,9 @@
                 7
             ],
             "scale": 0.75,
-            "selectedLayer": 0,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 1577.3333333333335,
+                "x": 1685.3333333333335,
                 "y": 873.3333333333333
             }
         },
@@ -205,6 +205,14 @@
                 "y": 1600
             }
         },
+        "map/map.2000003.tmx": {
+            "scale": 1.5,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 689.3333333333333,
+                "y": 305.33333333333337
+            }
+        },
         "map/ss.tsx": {
             "dynamicWrapping": true,
             "scaleInDock": 1,
@@ -218,12 +226,12 @@
     "last.exportedFilePath": "C:/game/sa/client/res/tiled/map",
     "last.imagePath": "C:/game/sa/client/res/building",
     "map.fixedSize": true,
-    "map.height": 3,
+    "map.height": 20,
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
     "map.lastUsedFormat": "tmx",
-    "map.orientation": "1",
+    "map.orientation": "2",
     "map.tileWidth": 64,
-    "map.width": 6,
+    "map.width": 20,
     "openFiles": [
         "map/map.2000002.tmx",
         "map/8000001.tsx",
