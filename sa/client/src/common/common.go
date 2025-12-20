@@ -73,6 +73,7 @@ func GetHpMax(strength, endurance, agility, stamina uint32) uint32 {
 	return strength*1 + endurance*1 + agility*1 + stamina*4
 }
 
+// GetMpMax 获取魔法上限
 func GetMpMax() uint32 {
 	return 100
 }
