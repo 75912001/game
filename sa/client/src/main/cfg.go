@@ -47,6 +47,11 @@ func LoadCfg() error {
 	if err != nil {
 		return errors.WithMessagef(err, "load res tiledMapMgr error %v", xruntime.Location())
 	}
+	// 加载 enemy.group 配置
+	err = cfg.GEnemyGroupMgr.Load()
+	if err != nil {
+		return errors.WithMessagef(err, "load enemy group error %v", xruntime.Location())
+	}
 	return nil
 }
 
@@ -89,6 +94,11 @@ func CheckCfg() error {
 	if err != nil {
 		return errors.WithMessagef(err, "check res tiledMapMgr error %v", xruntime.Location())
 	}
+	// 检查 enemy.group 配置
+	err = cfg.GEnemyGroupMgr.Check()
+	if err != nil {
+		return errors.WithMessagef(err, "check enemy group error %v", xruntime.Location())
+	}
 	return nil
 }
 
@@ -130,6 +140,11 @@ func AssembleCfg() error {
 	err = cfg.GTiledMapMgr.Assemble()
 	if err != nil {
 		return errors.WithMessagef(err, "Assemble res tiledMapMgr error %v", xruntime.Location())
+	}
+	// 装配 enemy.group 配置
+	err = cfg.GEnemyGroupMgr.Assemble()
+	if err != nil {
+		return errors.WithMessagef(err, "Assemble enemy group error %v", xruntime.Location())
 	}
 	return nil
 }

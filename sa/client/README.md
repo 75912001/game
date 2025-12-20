@@ -32,6 +32,8 @@
     线条清晰
     加粗轮廓(Bold outlines)
     高饱和度(High saturation)
+    矢量艺术(Vector art)
+    平涂色(Flat color)
     画面干净
     纹理简洁
     细节:极简纹理(Minimal texture)
@@ -43,9 +45,6 @@
     制作16种草地,4*4排列
     最终出图为*.png
 
-
-矢量艺术(Vector art)
-平涂色(Flat color)
 色彩鲜艳
 整体色调明亮,温暖
 营造出轻松,愉快的童话冒险氛围
