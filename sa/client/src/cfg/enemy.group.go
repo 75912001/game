@@ -2,12 +2,14 @@ package cfg
 
 import (
 	"fmt"
+	"math/rand"
 	"os"
 	"path/filepath"
 	"saClient/src/common"
 
 	xmap "github.com/75912001/xlib/map"
 	xruntime "github.com/75912001/xlib/runtime"
+	xutil "github.com/75912001/xlib/util"
 	"github.com/pkg/errors"
 	"gopkg.in/yaml.v3"
 )
@@ -40,7 +42,7 @@ type EnemyGroup struct {
 	LevelRange      []uint32           `yaml:"levelRange"`      // 敌人等级范围 [min, max] [1,140]之内
 	RoleLevelOffset []int              `yaml:"roleLevelOffset"` // 角色等级偏移 [min, max]
 	Captured        *bool              `yaml:"captured"`        // 是否允许捕获 [默认:true]
-	BabyRate        int                `yaml:"babyRate"`        // 宝宝概率(十万分率) [默认:0]
+	BabyRate        uint32             `yaml:"babyRate"`        // 宝宝概率(十万分率) [默认:0]
 	Enemies         []*EnemyGroupEnemy `yaml:"enemies"`         // 敌人列表
 
 	// 运行时字段
@@ -216,12 +218,136 @@ func (p *EnemyGroupMgr) Check() error {
 				return false
 			}
 		}
+		if !group.IsBoss { // 普通组
+			// 如果随机的最大数量,大于必选出现的数量,且非必选数量为0,则代表无法选够所需数量,报错
+			if len(group.MustAppearEnemies) < int(group.CountRange[1]) && len(group.WeightedEnemies) == 0 {
+				err = fmt.Errorf("敌人组ID %d 的必定出现敌人数量 %d 少于最大敌人数量 %d,且无加权池敌人无法补足 %v",
+					group.ID, len(group.MustAppearEnemies), group.CountRange[1], xruntime.Location())
+				return false
+			}
+		}
+
 		return true
 	})
 	return err
 }
 
 // Assemble 组装配置
-func (m *EnemyGroupMgr) Assemble() error {
+func (p *EnemyGroupMgr) Assemble() error {
 	return nil
+}
+
+// GeneratedEnemy 生成的敌人实例
+type GeneratedEnemy struct {
+	Config *EnemyGroupEnemy // 配置引用
+	Level  uint32           // 实际等级(1级即为宝宝)
+}
+
+// Generate 根据敌人组配置生成敌人数组
+// group: 敌人组配置
+// roleLevel: 角色等级
+// 返回: 生成的敌人数组
+func (group *EnemyGroup) Generate(roleLevel uint32) []*GeneratedEnemy {
+	if group.IsBoss {
+		return group.generateBoss()
+	}
+	return group.generateNormal(roleLevel)
+}
+
+// generateBoss 生成Boss组敌人
+func (group *EnemyGroup) generateBoss() []*GeneratedEnemy {
+	result := make([]*GeneratedEnemy, 0, len(group.Enemies))
+	for _, enemy := range group.Enemies {
+		result = append(result, &GeneratedEnemy{
+			Config: enemy,
+			Level:  enemy.Level,
+		})
+	}
+	return result
+}
+
+// generateNormal 生成普通组敌人
+func (group *EnemyGroup) generateNormal(roleLevel uint32) []*GeneratedEnemy {
+	// 计算敌人数量
+	count := xutil.RandomInt(int(group.CountRange[0]), int(group.CountRange[1]))
+	result := make([]*GeneratedEnemy, 0, count)
+
+	// 1. 先放置必定出现的敌人(weight=0)
+	mustAppearIdx := 0
+	for len(result) < count && mustAppearIdx < len(group.MustAppearEnemies) {
+		enemy := group.MustAppearEnemies[mustAppearIdx]
+		level := group.calculateLevel(enemy, roleLevel)
+		if group.rollBaby() {
+			level = 1
+		}
+		result = append(result, &GeneratedEnemy{
+			Config: enemy,
+			Level:  level,
+		})
+		mustAppearIdx++
+	}
+
+	// 2. 剩余位置从加权池随机选择
+	for len(result) < count {
+		enemy := group.randomWeightedEnemy()
+		level := group.calculateLevel(enemy, roleLevel)
+		if group.rollBaby() {
+			level = 1
+		}
+		result = append(result, &GeneratedEnemy{
+			Config: enemy,
+			Level:  level,
+		})
+	}
+
+	return result
+}
+
+// calculateLevel 计算敌人等级
+func (group *EnemyGroup) calculateLevel(enemy *EnemyGroupEnemy, roleLevel uint32) uint32 {
+	// 如果敌人配置了固定等级，使用固定等级
+	if enemy.Level != 0 {
+		return enemy.Level
+	}
+	if len(group.LevelRange) == 2 { // levelRange
+		return uint32(xutil.RandomInt(int(group.LevelRange[0]), int(group.LevelRange[1])))
+	} else { // roleLevelOffset
+		offset := xutil.RandomInt(group.RoleLevelOffset[0], group.RoleLevelOffset[1])
+		calcLevel := int(roleLevel) + offset
+		if calcLevel < EnemyGroupLevelMin {
+			calcLevel = EnemyGroupLevelMin
+		}
+		if EnemyGroupLevelMax < calcLevel {
+			calcLevel = EnemyGroupLevelMax
+		}
+		return uint32(calcLevel)
+	}
+}
+
+// randomWeightedEnemy 从加权池随机选择敌人
+func (group *EnemyGroup) randomWeightedEnemy() *EnemyGroupEnemy {
+	if group.TotalWeight == 0 || len(group.WeightedEnemies) == 0 {
+		return nil
+	}
+
+	roll := uint32(rand.Intn(int(group.TotalWeight)))
+	var cumulative uint32 = 0
+	for _, enemy := range group.WeightedEnemies {
+		cumulative += enemy.Weight
+		if roll < cumulative {
+			return enemy
+		}
+	}
+	return group.WeightedEnemies[len(group.WeightedEnemies)-1]
+}
+
+// rollBaby 判定是否成为宝宝
+func (group *EnemyGroup) rollBaby() bool {
+	if group.BabyRate <= 0 {
+		return false
+	}
+	if EnemyGroupBabyRateMax <= group.BabyRate {
+		return true
+	}
+	return rand.Intn(EnemyGroupBabyRateMax) < int(group.BabyRate)
 }

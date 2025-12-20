@@ -72,7 +72,13 @@ func (p *User) Login(account string, password string) error {
 		if roleObject == nil {
 			return fmt.Errorf("new role failed, roleUUID %d", roleUUID)
 		}
-		roleObject.roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_HP)] = uint64(roleObject.GetHpMax()) // 将生命值设为最大值
+
+		strength := uint32(roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Strength)])
+		endurance := uint32(roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Endurance)])
+		agility := uint32(roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Agility)])
+		stamina := uint32(roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Stamina)])
+		hpMax := common.GetHpMax(strength, endurance, agility, stamina)
+		roleObject.roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_HP)] = uint64(hpMax) // 将生命值设为最大值
 
 		ok := p.roleMgr.Roles.AddIfNotExist(roleUUID, roleObject)
 		if !ok {

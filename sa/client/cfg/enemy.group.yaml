@@ -17,7 +17,7 @@
 ## babyRate 无效(不可出现宝宝)
 ## weight 无效
 
-# countRange: [2, 5]           # 敌人数量范围(配置中敌人数量不足,则再循环一遍,直到达到计算出的敌人数量) [1, 10] 之内
+# countRange: [2, 5]           # 敌人数量范围(先放入必选,不足的循环从非必选中选择,直到达到敌人数量) [1, 10] 之内
 # levelRange: [最小等级, 最大等级] 敌人等级范围 [1, 140] 之内
 # roleLevelOffset: [最小偏移, 最大偏移] 角色等级偏移(角色等级+配置等级=生成等级) 最终限定在[1,140]之内
 ## levelRange/roleLevelOffset 二选一(必须配置一个,否则报错)(没有 levelRange,按照-roleLevelOffset / 没有 roleLevelOffset,按照-levelRange)
