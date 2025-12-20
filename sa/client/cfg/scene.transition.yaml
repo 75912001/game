@@ -14,8 +14,8 @@ transitions:
 
   - id: 2
     name: "水平-标准"
-    speed: 0.080
+    speed: 0.100
 
   - id: 3
-    name: "淡入淡出-慢"
-    speed: 0.050
+    name: "淡入淡出"
+    speed: 0.05

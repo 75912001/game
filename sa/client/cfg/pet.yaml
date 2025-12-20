@@ -37,7 +37,7 @@ pets:
       hp: 7
 
   - id: 4000003
-    name: 盖亚
+    name: 乌力斯坦
     rarity: 1
     description: 充满生机的大地精灵,热爱和平
     elemental:
