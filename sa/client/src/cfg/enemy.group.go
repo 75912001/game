@@ -63,7 +63,7 @@ func newEnemyGroupMgr() *EnemyGroupMgr {
 }
 
 // Load 加载配置文件
-func (m *EnemyGroupMgr) Load() error {
+func (p *EnemyGroupMgr) Load() error {
 	cfgPath := filepath.Join(common.AppCfgDir, "enemy.group.yaml")
 	data, err := os.ReadFile(cfgPath)
 	if err != nil {
@@ -79,13 +79,13 @@ func (m *EnemyGroupMgr) Load() error {
 	}
 
 	for _, group := range config.EnemyGroups {
-		if err := m.validateGroup(group); err != nil {
+		if err := p.validateGroup(group); err != nil {
 			return err
 		}
-		m.processDefaults(group)
-		m.classifyEnemies(group)
+		p.processDefaults(group)
+		p.classifyEnemies(group)
 
-		ok := m.EnemyGroups.AddIfNotExist(group.ID, group)
+		ok := p.EnemyGroups.AddIfNotExist(group.ID, group)
 		if !ok {
 			return fmt.Errorf("添加敌人组失败,敌人组已存在: %v %v", group.ID, xruntime.Location())
 		}
@@ -94,20 +94,20 @@ func (m *EnemyGroupMgr) Load() error {
 }
 
 // validateGroup 验证敌人组配置
-func (m *EnemyGroupMgr) validateGroup(group *EnemyGroup) error {
+func (p *EnemyGroupMgr) validateGroup(group *EnemyGroup) error {
 	// 验证敌人列表非空
 	if len(group.Enemies) == 0 {
 		return fmt.Errorf("敌人组ID %d 的敌人列表为空 %v", group.ID, xruntime.Location())
 	}
 
 	if group.IsBoss {
-		return m.validateBossGroup(group)
+		return p.validateBossGroup(group)
 	}
-	return m.validateNormalGroup(group)
+	return p.validateNormalGroup(group)
 }
 
 // validateBossGroup 验证Boss组配置
-func (m *EnemyGroupMgr) validateBossGroup(group *EnemyGroup) error {
+func (p *EnemyGroupMgr) validateBossGroup(group *EnemyGroup) error {
 	// Boss组: 每个敌人必须指定等级
 	for i, enemy := range group.Enemies {
 		if enemy.Level == 0 {
@@ -122,7 +122,7 @@ func (m *EnemyGroupMgr) validateBossGroup(group *EnemyGroup) error {
 }
 
 // validateNormalGroup 验证普通组配置
-func (m *EnemyGroupMgr) validateNormalGroup(group *EnemyGroup) error {
+func (p *EnemyGroupMgr) validateNormalGroup(group *EnemyGroup) error {
 	// 验证 countRange
 	if len(group.CountRange) != 2 {
 		return fmt.Errorf("敌人组ID %d 的countRange必须是[min,max]格式 %v", group.ID, xruntime.Location())
@@ -172,7 +172,7 @@ func (m *EnemyGroupMgr) validateNormalGroup(group *EnemyGroup) error {
 }
 
 // processDefaults 处理默认值
-func (m *EnemyGroupMgr) processDefaults(group *EnemyGroup) {
+func (p *EnemyGroupMgr) processDefaults(group *EnemyGroup) {
 	// captured 默认为 true
 	if group.Captured == nil {
 		var defaultCaptured = true
@@ -188,7 +188,7 @@ func (m *EnemyGroupMgr) processDefaults(group *EnemyGroup) {
 }
 
 // classifyEnemies 分类敌人(必定出现/加权池)
-func (m *EnemyGroupMgr) classifyEnemies(group *EnemyGroup) {
+func (p *EnemyGroupMgr) classifyEnemies(group *EnemyGroup) {
 	group.MustAppearEnemies = make([]*EnemyGroupEnemy, 0)
 	group.WeightedEnemies = make([]*EnemyGroupEnemy, 0)
 	group.TotalWeight = 0
@@ -204,9 +204,9 @@ func (m *EnemyGroupMgr) classifyEnemies(group *EnemyGroup) {
 }
 
 // Check 检查配置
-func (m *EnemyGroupMgr) Check() error {
+func (p *EnemyGroupMgr) Check() error {
 	var err error
-	m.EnemyGroups.Foreach(func(id uint32, group *EnemyGroup) bool {
+	p.EnemyGroups.Foreach(func(id uint32, group *EnemyGroup) bool {
 		// 检查敌人ID是否在pet配置中存在
 		for i, enemy := range group.Enemies {
 			enemy.Pet = GPetMgr.Pets.Get(enemy.ID)
