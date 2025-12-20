@@ -18,6 +18,10 @@ func LoadCfg() error {
 	if err != nil {
 		return errors.WithMessagef(err, "load res role error %v", xruntime.Location())
 	}
+	err = res.GPetMgr.Load()
+	if err != nil {
+		return errors.WithMessagef(err, "load res pet error %v", xruntime.Location())
+	}
 	err = cfg.GCommon.Load()
 	if err != nil {
 		return errors.WithMessagef(err, "load common error %v", xruntime.Location())
@@ -56,6 +60,10 @@ func CheckCfg() error {
 	if err != nil {
 		return errors.WithMessagef(err, "check res role error %v", xruntime.Location())
 	}
+	err = res.GPetMgr.Check()
+	if err != nil {
+		return errors.WithMessagef(err, "check res pet error %v", xruntime.Location())
+	}
 	err = cfg.GCommon.Check()
 	if err != nil {
 		return errors.WithMessagef(err, "check common error %v", xruntime.Location())
@@ -93,6 +101,10 @@ func AssembleCfg() error {
 	err = res.GRoleMgr.Assemble()
 	if err != nil {
 		return errors.WithMessagef(err, "Assemble res role error %v", xruntime.Location())
+	}
+	err = res.GPetMgr.Assemble()
+	if err != nil {
+		return errors.WithMessagef(err, "Assemble res pet error %v", xruntime.Location())
 	}
 	err = cfg.GCommon.Assemble()
 	if err != nil {

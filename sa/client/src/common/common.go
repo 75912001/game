@@ -25,6 +25,7 @@ var (
 	AppResFontDir     string // 资源目录-字体
 	AppResMapDir      string // 资源目录-地图
 	AppResRoleDir     string // 资源目录-角色
+	AppResPetDir      string // 资源目录-宠物
 	AppResTiledDir    string // 资源目录-Tiled
 	AppResTiledMapDir string // 资源目录-Tiled地图
 )
@@ -61,6 +62,7 @@ func init() {
 	AppResFontDir = filepath.Join(AppResDir, "font")
 	AppResMapDir = filepath.Join(AppResDir, "map")
 	AppResRoleDir = filepath.Join(AppResDir, "role")
+	AppResPetDir = filepath.Join(AppResDir, "pet")
 	// Tiled 资源
 	AppResTiledDir = filepath.Join(AppResDir, "tiled")
 	AppResTiledMapDir = filepath.Join(AppResTiledDir, "map")

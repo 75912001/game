@@ -6,6 +6,18 @@ option go_package = "saClient/proto";
 
 import "record.proto";
 
+// 宠物动作
+enum PetAction {
+  PetAction_Unknow = 0; // 未知动作
+  PetAction_Idle = 1; // 待机
+  PetAction_Stand = 2; // 站立
+  PetAction_Move = 3; // 移动
+  PetAction_Attack = 4; // 攻击
+  PetAction_Hurt = 5; // 受伤
+  PetAction_Die = 6; // 死亡
+  PetAction_Max = 7; // 动作最大值
+}
+
 // 宠物稀有度
 enum PetRarity {
   PetRarity_Unknow = 0; // 未知

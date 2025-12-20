@@ -79,6 +79,39 @@ func (p *RoleMgr) Load() error {
 }
 
 func (p *RoleMgr) Check() error {
+	// 验证每个角色的8个方向是否完整
+	var checkErr error
+	p.Roles.Foreach(func(key common.AssetID, role *Role) bool {
+		if err := checkRole8Directions(role); err != nil {
+			checkErr = err
+			return false // 停止遍历
+		}
+		return true // 继续遍历
+	})
+	return checkErr
+}
+
+// checkRole8Directions 验证角色8个方向是否完整
+func checkRole8Directions(role *Role) error {
+	// 需要验证的8个方向
+	directions := []proto.AssetOrientation{
+		proto.AssetOrientation_AssetOrientation_Up,
+		proto.AssetOrientation_AssetOrientation_UpRight,
+		proto.AssetOrientation_AssetOrientation_Right,
+		proto.AssetOrientation_AssetOrientation_DownRight,
+		proto.AssetOrientation_AssetOrientation_Down,
+		proto.AssetOrientation_AssetOrientation_DownLeft,
+		proto.AssetOrientation_AssetOrientation_Left,
+		proto.AssetOrientation_AssetOrientation_UpLeft,
+	}
+
+	// 验证 Move 动画的8个方向
+	for _, dir := range directions {
+		if len(role.Move.Frames[dir]) == 0 {
+			return fmt.Errorf("角色 %v 移动动画缺少方向 %v %v", role.ID, GetNameByAssetOrientation(dir), xruntime.Location())
+		}
+	}
+
 	return nil
 }
 

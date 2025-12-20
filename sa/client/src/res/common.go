@@ -77,3 +77,19 @@ func GetRoleActionByName(name string) proto.RoleAction {
 	}
 	return proto.RoleAction_RoleAction_Unknow
 }
+
+// GetPetActionByName 根据名称获取宠物动作枚举值
+func GetPetActionByName(name string) proto.PetAction {
+	for k, v := range proto.PetAction_name {
+		str := v
+		if i := strings.Index(str, "_"); i >= 0 && i+1 < len(str) {
+			str = strings.ToLower(str[i+1:])
+		} else {
+			str = strings.ToLower(str)
+		}
+		if str == name {
+			return proto.PetAction(k)
+		}
+	}
+	return proto.PetAction_PetAction_Unknow
+}

@@ -32,7 +32,7 @@ const (
 	AssetType_AssetType_NPC        AssetType = 5 // NPC [5000001,5999999]
 	AssetType_AssetType_Decoration AssetType = 6 // 装饰物 [6000001,6999999]
 	AssetType_AssetType_Building   AssetType = 7 // 建筑物 [7000001,7999999]
-	AssetType_AssetType_Plant      AssetType = 8 // 植物 [800
+	AssetType_AssetType_Plant      AssetType = 8 // 植物 [8000001,8999999]
 )
 
 // Enum value maps for AssetType.
@@ -198,8 +198,8 @@ const (
 	AssetIDRecord_AssetIDRecord_LastLoginTimestamp  AssetIDRecord = 5   // 上次登录时间戳
 	AssetIDRecord_AssetIDRecord_LastLogoutTimestamp AssetIDRecord = 6   // 上次登出时间戳
 	AssetIDRecord_AssetIDRecord_MapID               AssetIDRecord = 7   // 所在地图ID
-	AssetIDRecord_AssetIDRecord_BottomCenter_TX     AssetIDRecord = 8   // 当前位置x - 图像底-中心点坐标 tile-x
-	AssetIDRecord_AssetIDRecord_BottomCenter_TY     AssetIDRecord = 9   // 当前位置y - 图像底-中心点坐标 tile-y
+	AssetIDRecord_AssetIDRecord_BottomCenter_TX     AssetIDRecord = 8   // 当前位置x - 图像底-中心点坐标 tile-x * 1000
+	AssetIDRecord_AssetIDRecord_BottomCenter_TY     AssetIDRecord = 9   // 当前位置y - 图像底-中心点坐标 tile-y * 1000
 	AssetIDRecord_AssetIDRecord_Orientation         AssetIDRecord = 10  // 当前朝向
 	AssetIDRecord_AssetIDRecord_Pose                AssetIDRecord = 11  // 姿势 RoleAction
 	AssetIDRecord_AssetIDRecord_AvailablePoint      AssetIDRecord = 12  // 可用点数 - 出生/升级/转生 后获得的可用点数
