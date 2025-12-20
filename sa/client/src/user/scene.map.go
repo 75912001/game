@@ -253,9 +253,15 @@ func (p *Map) drawBlocked(screen *ebitenv2.Image, cam *commoncamera.Camera) {
 	}
 }
 
-// drawTiledObjectRect 绘制 TiledObject 的等距矩形边界
+// drawTiledObjectRect 绘制 TiledObject 的矩形边界
 func (p *Map) drawTiledObjectRect(screen *ebitenv2.Image, obj *cfg.TiledObject, camX, camY float32, clr color.RGBA, strokeWidth float32) {
-	// obj.X, obj.Y 是 Tiled 中的像素坐标，转换为 Tile 坐标
+	if obj.IsWorldCoordinateSystem { // World 坐标系：直接绘制屏幕
+		screenX, screenY := p.tiledMapCfg.IsometricCT.W2S(obj.X, obj.Y, camX, camY)
+		vector.StrokeRect(screen, screenX, screenY, obj.Width, obj.Height, strokeWidth, clr, false)
+		return
+	}
+
+	// Tiled 等距像素坐标：转换为 Tile 坐标绘制菱形
 	th := float32(p.tiledMapCfg.TileHeight)
 	tileX := obj.X/th - 0.5
 	tileY := obj.Y/th - 0.5

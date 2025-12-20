@@ -15,16 +15,17 @@ type TiledObjectType string
 
 // TiledObject Tiled 对象(用于碰撞等)
 type TiledObject struct {
-	ID           int             // 对象ID
-	Type         TiledObjectType // 对象类型
-	X            float32         // 对象X坐标
-	Y            float32         // 对象Y坐标
-	Width        float32         // 对象宽度
-	Height       float32         // 对象高度
-	Visible      bool            // 是否可见
-	TargetPortal common.PortalID // 目标传送点ID
-	PortalCfg    *PortalPoint    // 传送点配置
-	Blocked      bool            // 阻挡
+	ID                      int             // 对象ID
+	Type                    TiledObjectType // 对象类型
+	X                       float32         // 对象X坐标
+	Y                       float32         // 对象Y坐标
+	Width                   float32         // 对象宽度
+	Height                  float32         // 对象高度
+	Visible                 bool            // 是否可见
+	TargetPortal            common.PortalID // 目标传送点ID
+	PortalCfg               *PortalPoint    // 传送点配置
+	Blocked                 bool            // 阻挡
+	IsWorldCoordinateSystem bool            // true: X/Y/Width/Height 是 World 坐标系; false: Tiled 等距像素坐标
 }
 
 // ============================================================================
@@ -32,9 +33,14 @@ type TiledObject struct {
 // ============================================================================
 
 // containsPointInRect 检查点是否在矩形内部
-// Tiled 等距地图中，矩形对象的坐标需要转换
 func (p *TiledObject) containsPointInRect(worldX, worldY float32, coordTransform *commonct.Isometric) bool {
-	// 将 Tiled 像素坐标转换为 Tile 坐标 (与 drawCollision 相同的转换逻辑)
+	if p.IsWorldCoordinateSystem {
+		// World 坐标系：直接在 World 坐标中检测
+		return worldX >= p.X && worldX <= p.X+p.Width &&
+			worldY >= p.Y && worldY <= p.Y+p.Height
+	}
+
+	// Tiled 等距像素坐标：转换为 Tile 坐标检测
 	th := float32(coordTransform.TileHeight)
 	tileX := p.X/th - 0.5
 	tileY := p.Y/th - 0.5

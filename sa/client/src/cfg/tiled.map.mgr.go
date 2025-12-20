@@ -428,24 +428,27 @@ func (p *TiledMapMgr) Assemble() error {
 					// 计算 tile 在地图中的位置
 					tileX := i % tiledMap.Width
 					tileY := i / tiledMap.Width
-					// 生成碰撞对象 (转换为 Tiled 像素坐标)
-					// 公式: collision Tiled pixel = tile anchor pixel + (collision offset - image anchor offset)
-					// tile anchor pixel = (tileX + 0.5) * th, (tileY + 0.5) * th
-					// image anchor (bottom-center) = (imageWidth/2, imageHeight)
-					anchorPixelX := (float32(tileX) + 0.5) * th
-					anchorPixelY := (float32(tileY) + 0.5) * th
-					imageAnchorX := float32(tileset.ImageWidth) / 2
-					imageAnchorY := float32(tileset.ImageHeight)
+					// 计算 tile 的 World 中心坐标
+					tileWorldX, tileWorldY := tiledMap.IsometricCT.T2W(float32(tileX), float32(tileY))
+					// tile 图像左上角的 World 坐标
+					// 参考 TileImagePos: imageY = (tileX+tileY)*halfTH (比 T2W 少 halfTH)
+					// 加上渲染调整: screenY -= tileInfo.Height - 地图TileHeight
+					// 所以: imgTopLeftY = worldY - halfTH - (tileset.TileHeight - 地图TileHeight)
+					halfTW := float32(tiledMap.TileWidth) / 2
+					halfTH := float32(tiledMap.TileHeight) / 2
+					imgTopLeftWorldX := tileWorldX - halfTW
+					imgTopLeftWorldY := tileWorldY - halfTH - (float32(tileset.TileHeight) - float32(tiledMap.TileHeight))
 
 					for _, coll := range blockedSlice {
 						obj := &TiledObject{
-							ID:      objIDCounter,
-							X:       anchorPixelX - imageAnchorX + coll.X,
-							Y:       anchorPixelY - imageAnchorY + coll.Y,
-							Width:   coll.Width,
-							Height:  coll.Height,
-							Visible: true,
-							Blocked: true, // tile 碰撞体默认阻挡
+							ID:                      objIDCounter,
+							X:                       imgTopLeftWorldX + coll.X,
+							Y:                       imgTopLeftWorldY + coll.Y,
+							Width:                   coll.Width,
+							Height:                  coll.Height,
+							Visible:                 true,
+							Blocked:                 true, // tile 碰撞体默认阻挡
+							IsWorldCoordinateSystem: true, // 使用 World 坐标系
 						}
 						collisionLayer.Objects = append(collisionLayer.Objects, obj)
 						objIDCounter++
