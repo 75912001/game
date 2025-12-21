@@ -15,10 +15,9 @@ pets:
       water: 0
       fire: 10
       wind: 0
-    basic:
+    attributes:
       attack: 8
       defense: 4
-    attributes:
       agility: 6
       hp: 5
 
@@ -31,10 +30,9 @@ pets:
       water: 10
       fire: 0
       wind: 0
-    basic:
+    attributes:
       attack: 5
       defense: 6
-    attributes:
       agility: 5
       hp: 7
 
@@ -47,10 +45,9 @@ pets:
       water: 0
       fire: 0
       wind: 0
-    basic:
+    attributes:
       attack: 4
       defense: 8
-    attributes:
       agility: 4
       hp: 7
 
@@ -63,10 +60,9 @@ pets:
       water: 0
       fire: 0
       wind: 10
-    basic:
+    attributes:
       attack: 5
       defense: 4
-    attributes:
       agility: 9
       hp: 5
 
@@ -79,10 +75,9 @@ pets:
       water: 0
       fire: 7
       wind: 3
-    basic:
+    attributes:
       attack: 12
       defense: 6
-    attributes:
       agility: 5
       hp: 8
 
@@ -95,10 +90,9 @@ pets:
       water: 7
       fire: 3
       wind: 0
-    basic:
+    attributes:
       attack: 9
       defense: 7
-    attributes:
       agility: 6
       hp: 9
 
@@ -111,10 +105,9 @@ pets:
       water: 0
       fire: 6
       wind: 4
-    basic:
+    attributes:
       attack: 14
       defense: 8
-    attributes:
       agility: 10
       hp: 12
 
@@ -127,10 +120,9 @@ pets:
       water: 4
       fire: 0
       wind: 0
-    basic:
+    attributes:
       attack: 10
       defense: 15
-    attributes:
       agility: 5
       hp: 14
 
@@ -143,10 +135,9 @@ pets:
       water: 0
       fire: 0
       wind: 6
-    basic:
+    attributes:
       attack: 16
       defense: 10
-    attributes:
       agility: 18
       hp: 14
 
@@ -159,9 +150,8 @@ pets:
       water: 6
       fire: 0
       wind: 0
-    basic:
+    attributes:
       attack: 18
       defense: 12
-    attributes:
       agility: 8
       hp: 20

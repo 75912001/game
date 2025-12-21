@@ -22,14 +22,12 @@ type PetElemental struct {
 	Wind  common.AssetQuantity `yaml:"wind"`  // 风
 }
 
-// PetBasic 宠物基础属性
-type PetBasic struct {
+// PetAttributes 宠物基础属性
+type PetAttributes struct {
 	Attack  common.AssetQuantity `yaml:"attack"`  // 攻击
 	Defense common.AssetQuantity `yaml:"defense"` // 防御
 	Agility common.AssetQuantity `yaml:"agility"` // 敏捷
 	HP      common.AssetQuantity `yaml:"hp"`      // 生命
-// PetAttributes 宠物基础属性
-type PetAttributes struct {
 }
 
 // Pet 宠物信息
