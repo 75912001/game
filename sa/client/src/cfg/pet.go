@@ -28,6 +28,8 @@ type PetBasic struct {
 	Defense common.AssetQuantity `yaml:"defense"` // 防御
 	Agility common.AssetQuantity `yaml:"agility"` // 敏捷
 	HP      common.AssetQuantity `yaml:"hp"`      // 生命
+// PetAttributes 宠物基础属性
+type PetAttributes struct {
 }
 
 // Pet 宠物信息
@@ -37,7 +39,7 @@ type Pet struct {
 	Rarity      proto.PetRarity `yaml:"rarity"`      // 稀有度: 1-普通, 2-稀有, 3-史诗, 4-传说, 5-神话
 	Description string          `yaml:"description"` // 描述
 	Elemental   PetElemental    `yaml:"elemental"`   // 元素属性
-	Basic       PetBasic        `yaml:"basic"`       // 基础属性
+	Attributes  PetAttributes   `yaml:"attributes"`  // 基础属性
 
 	// todo menglc 装配出宠物的其他配置
 }

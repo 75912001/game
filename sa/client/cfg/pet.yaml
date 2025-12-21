@@ -3,7 +3,7 @@
 
 # rarity 稀有度: 1-普通, 2-稀有, 3-史诗, 4-传说, 5-神话
 # elemental 元素属性: earth-土, water-水, fire-火, wind-风
-# basic 基础属性: attack-攻击, defense-防御, agility-敏捷, hp-生命
+# attributes 属性: attack-攻击, defense-防御, agility-敏捷, hp-生命
 
 pets:
   - id: 4000001
@@ -18,6 +18,7 @@ pets:
     basic:
       attack: 8
       defense: 4
+    attributes:
       agility: 6
       hp: 5
 
@@ -33,6 +34,7 @@ pets:
     basic:
       attack: 5
       defense: 6
+    attributes:
       agility: 5
       hp: 7
 
@@ -48,6 +50,7 @@ pets:
     basic:
       attack: 4
       defense: 8
+    attributes:
       agility: 4
       hp: 7
 
@@ -63,6 +66,7 @@ pets:
     basic:
       attack: 5
       defense: 4
+    attributes:
       agility: 9
       hp: 5
 
@@ -78,6 +82,7 @@ pets:
     basic:
       attack: 12
       defense: 6
+    attributes:
       agility: 5
       hp: 8
 
@@ -93,6 +98,7 @@ pets:
     basic:
       attack: 9
       defense: 7
+    attributes:
       agility: 6
       hp: 9
 
@@ -108,6 +114,7 @@ pets:
     basic:
       attack: 14
       defense: 8
+    attributes:
       agility: 10
       hp: 12
 
@@ -123,6 +130,7 @@ pets:
     basic:
       attack: 10
       defense: 15
+    attributes:
       agility: 5
       hp: 14
 
@@ -138,6 +146,7 @@ pets:
     basic:
       attack: 16
       defense: 10
+    attributes:
       agility: 18
       hp: 14
 
@@ -153,5 +162,6 @@ pets:
     basic:
       attack: 18
       defense: 12
+    attributes:
       agility: 8
       hp: 20
