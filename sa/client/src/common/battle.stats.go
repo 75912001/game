@@ -1,5 +1,7 @@
 package common
 
+var GRoleBattleStats = &RoleBattleStats{}
+
 type RoleBattleStats struct {
 }
 

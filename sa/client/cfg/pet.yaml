@@ -4,6 +4,7 @@
 # rarity 稀有度: 1-普通, 2-稀有, 3-史诗, 4-传说, 5-神话
 # elemental 元素属性: earth-土, water-水, fire-火, wind-风
 # attributes 属性: attack-攻击, defense-防御, agility-敏捷, hp-生命
+# growth 成长范围: 每个属性包含 min(最小值) 和 max(最大值)
 
 pets:
   - id: 4000001
@@ -20,6 +21,19 @@ pets:
       defense: 4
       agility: 6
       hp: 5
+    growth:
+      attack:
+        min: 1.5
+        max: 1.7
+      defense:
+        min: 1.55
+        max: 2.0
+      agility:
+        min: 1.44
+        max: 2.1
+      hp:
+        min: 5
+        max: 10
 
   - id: 4000002
     name: 水滴
@@ -35,6 +49,19 @@ pets:
       defense: 6
       agility: 5
       hp: 7
+    growth:
+      attack:
+        min: 1.5
+        max: 1.7
+      defense:
+        min: 1.55
+        max: 2.0
+      agility:
+        min: 1.44
+        max: 2.1
+      hp:
+        min: 5
+        max: 10
 
   - id: 4000003
     name: 乌力斯坦
@@ -50,6 +77,19 @@ pets:
       defense: 8
       agility: 4
       hp: 7
+    growth:
+      attack:
+        min: 1.5
+        max: 1.7
+      defense:
+        min: 1.55
+        max: 2.0
+      agility:
+        min: 1.44
+        max: 2.1
+      hp:
+        min: 5
+        max: 10
 
   - id: 4000004
     name: 微风
@@ -65,6 +105,19 @@ pets:
       defense: 4
       agility: 9
       hp: 5
+    growth:
+      attack:
+        min: 1.5
+        max: 1.7
+      defense:
+        min: 1.55
+        max: 2.0
+      agility:
+        min: 1.44
+        max: 2.1
+      hp:
+        min: 5
+        max: 10
 
   - id: 4000005
     name: 岩浆
@@ -80,6 +133,19 @@ pets:
       defense: 6
       agility: 5
       hp: 8
+    growth:
+      attack:
+        min: 1.5
+        max: 1.7
+      defense:
+        min: 1.55
+        max: 2.0
+      agility:
+        min: 1.44
+        max: 2.1
+      hp:
+        min: 5
+        max: 10
 
   - id: 4000006
     name: 冰霜
@@ -95,6 +161,19 @@ pets:
       defense: 7
       agility: 6
       hp: 9
+    growth:
+      attack:
+        min: 1.5
+        max: 1.7
+      defense:
+        min: 1.55
+        max: 2.0
+      agility:
+        min: 1.44
+        max: 2.1
+      hp:
+        min: 5
+        max: 10
 
   - id: 4000007
     name: 凤凰
@@ -110,6 +189,19 @@ pets:
       defense: 8
       agility: 10
       hp: 12
+    growth:
+      attack:
+        min: 1.5
+        max: 1.7
+      defense:
+        min: 1.55
+        max: 2.0
+      agility:
+        min: 1.44
+        max: 2.1
+      hp:
+        min: 5
+        max: 10
 
   - id: 4000008
     name: 泰坦
@@ -125,6 +217,19 @@ pets:
       defense: 15
       agility: 5
       hp: 14
+    growth:
+      attack:
+        min: 1.5
+        max: 1.7
+      defense:
+        min: 1.55
+        max: 2.0
+      agility:
+        min: 1.44
+        max: 2.1
+      hp:
+        min: 5
+        max: 10
 
   - id: 4000009
     name: 暴风
@@ -140,6 +245,19 @@ pets:
       defense: 10
       agility: 18
       hp: 14
+    growth:
+      attack:
+        min: 1.5
+        max: 1.7
+      defense:
+        min: 1.55
+        max: 2.0
+      agility:
+        min: 1.44
+        max: 2.1
+      hp:
+        min: 5
+        max: 10
 
   - id: 4000010
     name: 利维坦
@@ -155,3 +273,16 @@ pets:
       defense: 12
       agility: 8
       hp: 20
+    growth:
+      attack:
+        min: 1.5
+        max: 1.7
+      defense:
+        min: 1.55
+        max: 2.0
+      agility:
+        min: 1.44
+        max: 2.1
+      hp:
+        min: 5
+        max: 10

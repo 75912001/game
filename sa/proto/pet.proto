@@ -29,6 +29,18 @@ enum PetRarity {
   PetRarity_Max = 6; // 稀有度最大值
 }
 
+// 宠物品质-可培养
+// 平凡-白, 普通-绿, 优秀-紫, 稀有-橙, 极品-红
+enum PetGrade {
+  PetGrade_Unknow = 0; // 未知
+  PetGrade_Common = 1; // 平凡-白色
+  PetGrade_Rare = 2; // 普通-绿色
+  PetGrade_Epic = 3; // 优秀-紫色
+  PetGrade_Legendary = 4; // 稀有-橙色
+  PetGrade_Mythic = 5; // 极品-红色
+  PetGrade_Max = 6; // 品质最大值
+}
+
 message PetRecord {
   uint64 UUID = 1; // 唯一ID 每个角色的宠物唯一ID
   string Nick = 3; // 昵称

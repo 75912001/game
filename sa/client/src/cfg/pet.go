@@ -30,6 +30,20 @@ type PetAttributes struct {
 	HP      common.AssetQuantity `yaml:"hp"`      // 生命
 }
 
+// GrowthRange 成长范围
+type GrowthRange struct {
+	Min float32 `yaml:"min"` // 最小值
+	Max float32 `yaml:"max"` // 最大值
+}
+
+// PetGrowth 宠物成长配置
+type PetGrowth struct {
+	Attack  GrowthRange `yaml:"attack"`  // 攻击成长
+	Defense GrowthRange `yaml:"defense"` // 防御成长
+	Agility GrowthRange `yaml:"agility"` // 敏捷成长
+	HP      GrowthRange `yaml:"hp"`      // 生命成长
+}
+
 // Pet 宠物信息
 type Pet struct {
 	ID          common.AssetID  `yaml:"id"`          // 宠物ID
@@ -38,6 +52,7 @@ type Pet struct {
 	Description string          `yaml:"description"` // 描述
 	Elemental   PetElemental    `yaml:"elemental"`   // 元素属性
 	Attributes  PetAttributes   `yaml:"attributes"`  // 基础属性
+	Growth      PetGrowth       `yaml:"growth"`      // 成长配置
 
 	// todo menglc 装配出宠物的其他配置
 }

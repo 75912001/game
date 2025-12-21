@@ -64,14 +64,11 @@ enum AssetIDRecord {
   AssetIDRecord_HP = 2; // 生命值
   AssetIDRecord_MP = 3; // 魔法值
   AssetIDRecord_CreateTimestamp = 4; // 创建时间戳
-  AssetIDRecord_LastLoginTimestamp = 5; // 上次登录时间戳
-  AssetIDRecord_LastLogoutTimestamp = 6; // 上次登出时间戳
   AssetIDRecord_MapID = 7; // 所在地图ID
   AssetIDRecord_BottomCenter_TX = 8; // 当前位置x - 图像底-中心点坐标 tile-x * 1000
   AssetIDRecord_BottomCenter_TY = 9; // 当前位置y - 图像底-中心点坐标 tile-y * 1000
   AssetIDRecord_Orientation = 10; // 当前朝向
   AssetIDRecord_Pose = 11; // 姿势 RoleAction
-  AssetIDRecord_AvailablePoint = 12; // 可用点数 - 出生/升级/转生 后获得的可用点数
   AssetIDRecord_RebirthCount = 13; // 转生次数 [0, 配置表最大值]
   AssetIDRecord_AssetID = 14; // 资产ID
 
@@ -80,10 +77,30 @@ enum AssetIDRecord {
   AssetIDRecord_ElementalFire = 103; // 元素属性-火
   AssetIDRecord_ElementalWind = 104; // 元素属性-风
 
-  AssetIDRecord_AttributesStrength = 201; // 腕力 (1HP, 1攻, 0.1防) [主要提升攻击力，HP 提升较少]
-  AssetIDRecord_AttributesEndurance = 202; // 耐力 (1HP, 0.1攻, 1防) [主要提升防御力，HP 提升较少]
-  AssetIDRecord_AttributesAgility = 203; // 速度 (1HP, 1敏捷, 0.05攻, 0.05防) [主要提升敏捷，HP 提升较少]
-  AssetIDRecord_AttributesStamina = 204; // 体力 (4HP, 0.1攻击, 0.1防御) [对 HP 提升最大，是 "血牛" 角色首选]
+  AssetIDRecord_Role_LastLoginTimestamp = 201; // 上次登录时间戳
+  AssetIDRecord_Role_LastLogoutTimestamp = 202; // 上次登出时间戳
+  AssetIDRecord_Role_AvailablePoint = 203; // 可用点数 - 出生/升级/转生 后获得的可用点数
+
+  AssetIDRecord_Role_AttributesStrength = 301; // 腕力 (1HP, 1攻, 0.1防) [主要提升攻击力，HP 提升较少]
+  AssetIDRecord_Role_AttributesEndurance = 302; // 耐力 (1HP, 0.1攻, 1防) [主要提升防御力，HP 提升较少]
+  AssetIDRecord_Role_AttributesAgility = 303; // 敏捷 (1HP, 1敏捷, 0.05攻, 0.05防) [主要提升敏捷，HP 提升较少]
+  AssetIDRecord_Role_AttributesStamina = 304; // 体力 (4HP, 0.1攻击, 0.1防御) [对 HP 提升最大，是 "血牛" 角色首选]
+
+  // 宠物属性-当前属性
+  AssetIDRecord_Pet_AttributesAttack = 10001; // 宠物属性-攻击
+  AssetIDRecord_Pet_AttributesDefense = 10002; // 宠物属性-防御
+  AssetIDRecord_Pet_AttributesAgility = 10003; // 宠物属性-敏捷
+  AssetIDRecord_Pet_AttributesHP = 10004; // 宠物属性-生命
+  AssetIDRecord_Pet_Loyalty = 10005; // 宠物忠诚度 [0,100]
+
+  // 宠物属性-初始属性, 用户计算成长率,预测宠物最终属性
+  AssetIDRecord_Pet_AttributesLevel_InitialStats = 10101; // 宠物属性-等级-初始属性
+  AssetIDRecord_Pet_AttributesAttack_InitialStats = 10102; // 宠物属性-攻击-初始属性
+  AssetIDRecord_Pet_AttributesDefense_InitialStats = 10103; // 宠物属性-防御-初始属性
+  AssetIDRecord_Pet_AttributesAgility_InitialStats = 10104; // 宠物属性-敏捷-初始属性
+  AssetIDRecord_Pet_AttributesHP_InitialStats = 10105; // 宠物属性-生命-初始属性
+
+
 }
 
 // 资产朝向

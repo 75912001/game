@@ -77,7 +77,7 @@ func (p *User) Login(account string, password string) error {
 		endurance := uint32(roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_AttributesEndurance)])
 		agility := uint32(roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_AttributesAgility)])
 		stamina := uint32(roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_AttributesStamina)])
-		hpMax := common.GetHpMax(strength, endurance, agility, stamina)
+		hpMax := common.GRoleBattleStats.GetHpMax(strength, endurance, agility, stamina)
 		roleObject.roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_HP)] = uint64(hpMax) // 将生命值设为最大值
 
 		ok := p.roleMgr.Roles.AddIfNotExist(roleUUID, roleObject)
