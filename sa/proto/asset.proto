@@ -80,10 +80,10 @@ enum AssetIDRecord {
   AssetIDRecord_ElementalFire = 103; // 元素属性-火
   AssetIDRecord_ElementalWind = 104; // 元素属性-风
 
-  AssetIDRecord_Strength = 201; // 腕力 (1HP, 1攻, 0.1防) [主要提升攻击力，HP 提升较少]
-  AssetIDRecord_Endurance = 202; // 耐力 (1HP, 0.1攻, 1防) [主要提升防御力，HP 提升较少]
-  AssetIDRecord_Agility = 203; // 速度 (1HP, 1敏捷, 0.05攻, 0.05防) [主要提升敏捷，HP 提升较少]
-  AssetIDRecord_Stamina = 204; // 体力 (4HP, 0.1攻击, 0.1防御) [对 HP 提升最大，是 "血牛" 角色首选]
+  AssetIDRecord_AttributesStrength = 201; // 腕力 (1HP, 1攻, 0.1防) [主要提升攻击力，HP 提升较少]
+  AssetIDRecord_AttributesEndurance = 202; // 耐力 (1HP, 0.1攻, 1防) [主要提升防御力，HP 提升较少]
+  AssetIDRecord_AttributesAgility = 203; // 速度 (1HP, 1敏捷, 0.05攻, 0.05防) [主要提升敏捷，HP 提升较少]
+  AssetIDRecord_AttributesStamina = 204; // 体力 (4HP, 0.1攻击, 0.1防御) [对 HP 提升最大，是 "血牛" 角色首选]
 }
 
 // 资产朝向

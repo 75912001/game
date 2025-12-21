@@ -63,20 +63,20 @@ func (p *User) Login(account string, password string) error {
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_ElementalWind)] = 0  // 元素属性-风
 
 		// 角色属性 (201-204)
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Strength)] = 10  // 腕力
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Endurance)] = 10 // 耐力
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Agility)] = 10   // 速度
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Stamina)] = 10   // 体力
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_AttributesStrength)] = 10  // 腕力
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_AttributesEndurance)] = 10 // 耐力
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_AttributesAgility)] = 10   // 速度
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_AttributesStamina)] = 10   // 体力
 
 		roleObject := NewRole(roleRecord)
 		if roleObject == nil {
 			return fmt.Errorf("new role failed, roleUUID %d", roleUUID)
 		}
 
-		strength := uint32(roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Strength)])
-		endurance := uint32(roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Endurance)])
-		agility := uint32(roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Agility)])
-		stamina := uint32(roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Stamina)])
+		strength := uint32(roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_AttributesStrength)])
+		endurance := uint32(roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_AttributesEndurance)])
+		agility := uint32(roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_AttributesAgility)])
+		stamina := uint32(roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_AttributesStamina)])
 		hpMax := common.GetHpMax(strength, endurance, agility, stamina)
 		roleObject.roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_HP)] = uint64(hpMax) // 将生命值设为最大值
 
