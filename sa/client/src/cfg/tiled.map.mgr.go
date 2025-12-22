@@ -213,6 +213,12 @@ func (p *TiledMapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*Tiled
 							return nil, errors.WithMessagef(err, "解析对象 %d 的敌人组ID失败: %v %v", obj.ID, tmxPath, xruntime.Location())
 						}
 						obj.EnemyGroupID = uint32(v)
+					case TiledObjectProperty_PatrolRadius:
+						v, err := strconv.ParseFloat(prop.Value, 32)
+						if err != nil {
+							return nil, errors.WithMessagef(err, "解析对象 %d 的巡逻半径失败: %v %v", obj.ID, tmxPath, xruntime.Location())
+						}
+						obj.PatrolRadius = float32(v)
 					default:
 						// 忽略未知属性
 					}

@@ -11,6 +11,7 @@ const TiledObjectProperty_Blocked = "blocked"             // 对象-变量-阻�
 const TiledObjectProperty_ArrivalPortal = "arrivalPortal" // 对象-变量-到达传送点
 const TiledObjectProperty_TargetPortal = "targetPortal"   // 对象-变量-传送目标 传送ID
 const TiledObjectProperty_EnemyGroupID = "enemyGroupID"   // 对象-变量-刷怪点敌人组ID
+const TiledObjectProperty_PatrolRadius = "patrolRadius"   // 对象-变量-刷怪点巡逻半径(world坐标单位)
 
 type TiledObjectType string
 
@@ -31,6 +32,7 @@ type TiledObject struct {
 	// property 刷怪
 	EnemyGroupID uint32      // 刷怪点-敌人组ID (0表示非刷怪点)
 	EnemyGroup   *EnemyGroup // 运行时-敌人组配置引用
+	PatrolRadius float32     // 刷怪点-巡逻半径 (世界坐标单位)
 }
 
 // ============================================================================
