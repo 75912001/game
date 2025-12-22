@@ -87,14 +87,14 @@ func (p *Enemy) Draw(screen *ebitenv2.Image, camera *commoncamera.Camera) {
 	}
 
 	// 获取当前方向的动画帧
-	frames := p.PetCfg.Res.Move.Frames[p.Orientation]
+	frames := p.GetCfg().Res.Move.Frames[p.Orientation]
 	if len(frames) == 0 {
 		return
 	}
 	image := frames[p.FrameIdx%uint32(len(frames))]
 
 	// 获取帧信息
-	frameInfos := p.PetCfg.Res.Move.FrameInfo[p.Orientation]
+	frameInfos := p.GetCfg().Res.Move.FrameInfo[p.Orientation]
 	if len(frameInfos) == 0 {
 		return
 	}
