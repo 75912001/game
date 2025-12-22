@@ -13,6 +13,7 @@ const TiledObjectProperty_TargetPortal = "targetPortal"   // 对象-变量-传�
 const TiledObjectProperty_EnemyGroupID = "enemyGroupID"   // 对象-变量-刷怪点敌人组ID
 const TiledObjectProperty_PatrolRadius = "patrolRadius"   // 对象-变量-刷怪点巡逻半径(world坐标单位)
 const TiledObjectProperty_RespawnSecond = "respawnSecond" // 对象-变量-刷怪点刷新间隔(秒)
+const TiledObjectProperty_SpawnRadius = "spawnRadius"     // 对象-变量-刷怪点刷新半径(world坐标单位)
 
 type TiledObjectType string
 
@@ -35,6 +36,7 @@ type TiledObject struct {
 	EnemyGroup    *EnemyGroup // 运行时-敌人组配置引用
 	PatrolRadius  float32     // 刷怪点-巡逻半径 (世界坐标单位) [0表示不巡逻]
 	RespawnSecond int         // 刷怪点-刷新间隔 (秒) [0表示不刷新]
+	SpawnRadius   float32     // 刷怪点-刷怪半径 (世界坐标单位) [0表示在点上刷怪]
 }
 
 // ============================================================================
