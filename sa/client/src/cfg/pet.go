@@ -2,6 +2,7 @@ package cfg
 
 import (
 	"fmt"
+	xutil "github.com/75912001/xlib/util"
 	"os"
 	"path/filepath"
 	"saClient/src/common"
@@ -16,18 +17,24 @@ import (
 
 // PetElemental 宠物元素属性
 type PetElemental struct {
-	Earth common.AssetQuantity `yaml:"earth"` // 土
-	Water common.AssetQuantity `yaml:"water"` // 水
-	Fire  common.AssetQuantity `yaml:"fire"`  // 火
-	Wind  common.AssetQuantity `yaml:"wind"`  // 风
+	Earth uint32 `yaml:"earth"` // 土
+	Water uint32 `yaml:"water"` // 水
+	Fire  uint32 `yaml:"fire"`  // 火
+	Wind  uint32 `yaml:"wind"`  // 风
 }
 
 // PetAttributes 宠物基础属性
 type PetAttributes struct {
-	Attack  common.AssetQuantity `yaml:"attack"`  // 攻击
-	Defense common.AssetQuantity `yaml:"defense"` // 防御
-	Agility common.AssetQuantity `yaml:"agility"` // 敏捷
-	HP      common.AssetQuantity `yaml:"hp"`      // 生命
+	Attack          uint32  `yaml:"attack"`            // 攻击
+	Defense         uint32  `yaml:"defense"`           // 防御
+	Agility         uint32  `yaml:"agility"`           // 敏捷
+	HP              uint32  `yaml:"hp"`                // 生命
+	CritRate        float32 `yaml:"crit_rate"`         // 暴击率
+	CounterRate     float32 `yaml:"counter_rate"`      // 反击率
+	DodgeRate       float32 `yaml:"dodge_rate"`        // 闪避率
+	HitRate         float32 `yaml:"hit_rate"`          // 命中率
+	CritDamageBonus float32 `yaml:"crit_damage_bonus"` // 暴击伤害加成倍数
+	StatusResist    float32 `yaml:"status_resist"`     // 异常状态抗性比率
 }
 
 // GrowthRange 成长范围
@@ -96,6 +103,45 @@ func (p *PetMgr) Load() error {
 		if pet.Rarity <= proto.PetRarity_PetRarity_Unknow || proto.PetRarity_PetRarity_Max <= pet.Rarity { // 稀有度错误
 			return fmt.Errorf("宠物稀有度配置错误: %v %v %v", pet.ID, pet.Rarity, xruntime.Location())
 		}
+		// 设置默认值
+
+		if xutil.Float32Equal(pet.Attributes.CritRate, 0) {
+			pet.Attributes.CritRate = 0.1
+		}
+		if xutil.Float32Equal(pet.Attributes.CounterRate, 0) {
+			pet.Attributes.CounterRate = 0.1
+		}
+		if xutil.Float32Equal(pet.Attributes.DodgeRate, 0) {
+			pet.Attributes.DodgeRate = 0.1
+		}
+		if xutil.Float32Equal(pet.Attributes.HitRate, 0) {
+			pet.Attributes.HitRate = 0.9
+		}
+		if xutil.Float32Equal(pet.Attributes.CritDamageBonus, 0) {
+			pet.Attributes.CritDamageBonus = 0.5
+		}
+		if xutil.Float32Equal(pet.Attributes.StatusResist, 0) {
+			pet.Attributes.StatusResist = 0.2
+		}
+		// 验证战斗属性范围 [0,1]
+		if xutil.Float32Less(pet.Attributes.CritRate, 0) || xutil.Float32Less(1, pet.Attributes.CritRate) {
+			return fmt.Errorf("宠物ID %d 暴击率超出范围[0,1]: %v %v", pet.ID, pet.Attributes.CritRate, xruntime.Location())
+		}
+		if xutil.Float32Less(pet.Attributes.CounterRate, 0) || xutil.Float32Less(1, pet.Attributes.CounterRate) {
+			return fmt.Errorf("宠物ID %d 反击率超出范围[0,1]: %v %v", pet.ID, pet.Attributes.CounterRate, xruntime.Location())
+		}
+		if xutil.Float32Less(pet.Attributes.DodgeRate, 0) || xutil.Float32Less(1, pet.Attributes.DodgeRate) {
+			return fmt.Errorf("宠物ID %d 闪避率超出范围[0,1]: %v %v", pet.ID, pet.Attributes.DodgeRate, xruntime.Location())
+		}
+		if xutil.Float32Less(pet.Attributes.HitRate, 0) || xutil.Float32Less(1, pet.Attributes.HitRate) {
+			return fmt.Errorf("宠物ID %d 命中率超出范围[0,1]: %v %v", pet.ID, pet.Attributes.HitRate, xruntime.Location())
+		}
+		if xutil.Float32Less(pet.Attributes.CritDamageBonus, 0) || xutil.Float32Less(1, pet.Attributes.CritDamageBonus) {
+			return fmt.Errorf("宠物ID %d 暴击伤害加成超出范围[0,1]: %v %v", pet.ID, pet.Attributes.CritDamageBonus, xruntime.Location())
+		}
+		if xutil.Float32Less(pet.Attributes.StatusResist, 0) || xutil.Float32Less(1, pet.Attributes.StatusResist) {
+			return fmt.Errorf("宠物ID %d 异常状态抗性超出范围[0,1]: %v %v", pet.ID, pet.Attributes.StatusResist, xruntime.Location())
+		}
 		ok := p.Pets.AddIfNotExist(pet.ID, pet)
 		if !ok { // 添加失败
 			return fmt.Errorf("添加宠物失败,宠物已存在: %v %v", pet.ID, xruntime.Location())
@@ -103,7 +149,7 @@ func (p *PetMgr) Load() error {
 	}
 	p.Pets.Foreach(
 		func(id common.AssetID, pet *Pet) bool { // 验证元素属性是否合法
-			err = commonelemental.Validate(pet.Elemental.Earth, pet.Elemental.Water, pet.Elemental.Fire, pet.Elemental.Wind)
+			err = commonelemental.Validate(common.AssetQuantity(pet.Elemental.Earth), common.AssetQuantity(pet.Elemental.Water), common.AssetQuantity(pet.Elemental.Fire), common.AssetQuantity(pet.Elemental.Wind))
 			if err != nil {
 				err = fmt.Errorf("宠物ID %d 元素属性验证失败: %v", pet.ID, err)
 				return false
