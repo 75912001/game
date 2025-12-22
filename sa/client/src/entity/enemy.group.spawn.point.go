@@ -7,8 +7,8 @@ import (
 	"saClient/src/cfg"
 )
 
-// SpawnEnemyGroupPoint 刷怪点
-type SpawnEnemyGroupPoint struct {
+// EnemyGroupSpawnPoint 刷怪点
+type EnemyGroupSpawnPoint struct {
 	Object      *cfg.TiledObject // 关联的 Tiled 对象 (包含 ID, EnemyGroupID, EnemyGroup, PatrolRadius, RespawnSecond 等)
 	TiledMapCfg *cfg.TiledMap    // 地图配置引用
 
@@ -21,15 +21,15 @@ type SpawnEnemyGroupPoint struct {
 	Enemies     []*Enemy // 当前存活的怪物
 }
 
-// NewSpawnEnemyGroupPoint 从 TiledObject 创建刷怪点
-func NewSpawnEnemyGroupPoint(tiledMapCfg *cfg.TiledMap, obj *cfg.TiledObject) *SpawnEnemyGroupPoint {
+// NewEnemyGroupSpawnPoint 从 TiledObject 创建刷怪点
+func NewEnemyGroupSpawnPoint(tiledMapCfg *cfg.TiledMap, obj *cfg.TiledObject) *EnemyGroupSpawnPoint {
 	// 将 Tiled 像素坐标转换为 World 坐标
 	th := float32(tiledMapCfg.TileHeight)
 	tx := obj.X/th - 0.5
 	ty := obj.Y/th - 0.5
 	wx, wy := tiledMapCfg.IsometricCT.T2W(tx, ty)
 
-	spawnEnemyGroupPoint := &SpawnEnemyGroupPoint{
+	enemyGroupSpawnPoint := &EnemyGroupSpawnPoint{
 		Object:      obj,
 		TiledMapCfg: tiledMapCfg,
 		WX:          wx,
@@ -40,11 +40,11 @@ func NewSpawnEnemyGroupPoint(tiledMapCfg *cfg.TiledMap, obj *cfg.TiledObject) *S
 		Enemies:     make([]*Enemy, 0),
 	}
 
-	return spawnEnemyGroupPoint
+	return enemyGroupSpawnPoint
 }
 
 // Update 每帧更新
-func (p *SpawnEnemyGroupPoint) Update() {
+func (p *EnemyGroupSpawnPoint) Update() {
 	// 1. 更新所有怪物 AI
 	for _, enemy := range p.Enemies {
 		enemy.Update()
@@ -70,7 +70,7 @@ func (p *SpawnEnemyGroupPoint) Update() {
 }
 
 // removeDeadEnemies 清理死亡怪物
-func (p *SpawnEnemyGroupPoint) removeDeadEnemies() {
+func (p *EnemyGroupSpawnPoint) removeDeadEnemies() {
 	alive := p.Enemies[:0]
 	for _, enemy := range p.Enemies {
 		if !enemy.IsDead {
@@ -81,7 +81,7 @@ func (p *SpawnEnemyGroupPoint) removeDeadEnemies() {
 }
 
 // SpawnEnemy 生成怪物
-func (p *SpawnEnemyGroupPoint) SpawnEnemy() {
+func (p *EnemyGroupSpawnPoint) SpawnEnemy() {
 	// 根据怪物组配置生成敌人 (一次性生成全部)
 	generated := p.Object.EnemyGroup.Generate(1) // todo menglc 传入玩家等级
 	if len(generated) == 0 {
@@ -97,7 +97,7 @@ func (p *SpawnEnemyGroupPoint) SpawnEnemy() {
 }
 
 // randomSpawnPosition 随机生成位置
-func (p *SpawnEnemyGroupPoint) randomSpawnPosition() (float32, float32) {
+func (p *EnemyGroupSpawnPoint) randomSpawnPosition() (float32, float32) {
 	for {
 		angle := rand.Float64() * 2 * math.Pi
 		distance := rand.Float32() * p.Object.SpawnRadius // 使用 SpawnRadius 作为生成半径
@@ -117,6 +117,6 @@ func (p *SpawnEnemyGroupPoint) randomSpawnPosition() (float32, float32) {
 }
 
 // GetAllEnemies 获取所有怪物
-func (p *SpawnEnemyGroupPoint) GetAllEnemies() []*Enemy {
+func (p *EnemyGroupSpawnPoint) GetAllEnemies() []*Enemy {
 	return p.Enemies
 }
