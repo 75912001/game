@@ -219,6 +219,12 @@ func (p *TiledMapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*Tiled
 							return nil, errors.WithMessagef(err, "解析对象 %d 的巡逻半径失败: %v %v", obj.ID, tmxPath, xruntime.Location())
 						}
 						obj.PatrolRadius = float32(v)
+					case TiledObjectProperty_RespawnSecond:
+						v, err := strconv.ParseInt(prop.Value, 10, 32)
+						if err != nil {
+							return nil, errors.WithMessagef(err, "解析对象 %d 的刷新间隔失败: %v %v", obj.ID, tmxPath, xruntime.Location())
+						}
+						obj.RespawnSecond = int(v)
 					default:
 						// 忽略未知属性
 					}
