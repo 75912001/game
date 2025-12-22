@@ -12,6 +12,7 @@ const TiledObjectProperty_ArrivalPortal = "arrivalPortal" // 对象-变量-到�
 const TiledObjectProperty_TargetPortal = "targetPortal"   // 对象-变量-传送目标 传送ID
 const TiledObjectProperty_EnemyGroupID = "enemyGroupID"   // 对象-变量-刷怪点敌人组ID
 const TiledObjectProperty_PatrolRadius = "patrolRadius"   // 对象-变量-刷怪点巡逻半径(world坐标单位)
+const TiledObjectProperty_RespawnSecond = "respawnSecond" // 对象-变量-刷怪点刷新间隔(秒)
 
 type TiledObjectType string
 
@@ -30,9 +31,10 @@ type TiledObject struct {
 	TargetPortal common.PortalID // 目标传送点ID
 	PortalCfg    *PortalPoint    // 传送点配置
 	// property 刷怪
-	EnemyGroupID uint32      // 刷怪点-敌人组ID (0表示非刷怪点)
-	EnemyGroup   *EnemyGroup // 运行时-敌人组配置引用
-	PatrolRadius float32     // 刷怪点-巡逻半径 (世界坐标单位)
+	EnemyGroupID  uint32      // 刷怪点-敌人组ID (0表示非刷怪点)
+	EnemyGroup    *EnemyGroup // 运行时-敌人组配置引用
+	PatrolRadius  float32     // 刷怪点-巡逻半径 (世界坐标单位)
+	RespawnSecond int         // 刷怪点-刷新间隔 (秒, 0表示不刷新)
 }
 
 // ============================================================================
