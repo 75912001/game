@@ -56,6 +56,12 @@ func (p *Role) collectRenderables() []commonrenderable.IRenderable {
 	// Y-Sorting 层
 	renderables := make([]commonrenderable.IRenderable, 0, 1024)
 	renderables = append(renderables, p) // 角色自己
+
+	// 添加怪物
+	for _, enemy := range p.scene.spawnManager.GetAllEnemies() {
+		renderables = append(renderables, enemy)
+	}
+
 	renderables = p.scene._map.GetTileSortInfoSlice(p.camera, cfg.TiledLayerType_Building, renderables)
 	renderables = p.scene._map.GetTileSortInfoSlice(p.camera, cfg.TiledLayerType_Objects, renderables)
 
