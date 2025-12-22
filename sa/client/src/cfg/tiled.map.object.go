@@ -23,12 +23,14 @@ type TiledObject struct {
 	Width                   float32         // 对象宽度
 	Height                  float32         // 对象高度
 	Visible                 bool            // 是否可见
-	TargetPortal            common.PortalID // 目标传送点ID
-	PortalCfg               *PortalPoint    // 传送点配置
 	Blocked                 bool            // 阻挡
 	IsWorldCoordinateSystem bool            // true: X/Y/Width/Height 是 World 坐标系; false: Tiled 等距像素坐标
-	EnemyGroupID            uint32          // 刷怪点-敌人组ID (0表示非刷怪点)
-	EnemyGroup              *EnemyGroup     // 运行时-敌人组配置引用
+	// portal 传送点
+	TargetPortal common.PortalID // 目标传送点ID
+	PortalCfg    *PortalPoint    // 传送点配置
+	// property 刷怪
+	EnemyGroupID uint32      // 刷怪点-敌人组ID (0表示非刷怪点)
+	EnemyGroup   *EnemyGroup // 运行时-敌人组配置引用
 }
 
 // ============================================================================
