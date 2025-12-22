@@ -10,6 +10,7 @@ import (
 const TiledObjectProperty_Blocked = "blocked"             // 对象-变量-阻挡
 const TiledObjectProperty_ArrivalPortal = "arrivalPortal" // 对象-变量-到达传送点
 const TiledObjectProperty_TargetPortal = "targetPortal"   // 对象-变量-传送目标 传送ID
+const TiledObjectProperty_EnemyGroupID = "enemyGroupID"   // 对象-变量-刷怪点敌人组ID
 
 type TiledObjectType string
 
@@ -26,6 +27,8 @@ type TiledObject struct {
 	PortalCfg               *PortalPoint    // 传送点配置
 	Blocked                 bool            // 阻挡
 	IsWorldCoordinateSystem bool            // true: X/Y/Width/Height 是 World 坐标系; false: Tiled 等距像素坐标
+	EnemyGroupID            uint32          // 刷怪点-敌人组ID (0表示非刷怪点)
+	EnemyGroup              *EnemyGroup     // 运行时-敌人组配置引用
 }
 
 // ============================================================================
@@ -89,4 +92,21 @@ func (p *TiledMap) FindPortalByObject(worldX, worldY float32) (*TiledObject, boo
 		}
 	}
 	return nil, false
+}
+
+// FindSpawnEnemyGroupPoints 查找所有刷怪点对象
+func (p *TiledMap) FindSpawnEnemyGroupPoints() []*TiledObject {
+	var result []*TiledObject
+	for _, layer := range p.Layers {
+		if layer.LayerType != TiledLayerType_Collision { // 非碰撞图层
+			continue
+		}
+		for _, obj := range layer.Objects { // 遍历对象
+			if obj.EnemyGroupID == 0 { // 非刷怪点
+				continue
+			}
+			result = append(result, obj)
+		}
+	}
+	return result
 }

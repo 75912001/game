@@ -207,8 +207,14 @@ func (p *TiledMapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*Tiled
 							return nil, errors.WithMessagef(err, "解析对象 %d 的目标传送点失败: %v %v", obj.ID, tmxPath, xruntime.Location())
 						}
 						obj.TargetPortal = common.PortalID(v)
+					case TiledObjectProperty_EnemyGroupID:
+						v, err := strconv.ParseUint(prop.Value, 10, 32)
+						if err != nil {
+							return nil, errors.WithMessagef(err, "解析对象 %d 的敌人组ID失败: %v %v", obj.ID, tmxPath, xruntime.Location())
+						}
+						obj.EnemyGroupID = uint32(v)
 					default:
-						return nil, fmt.Errorf("不支持的对象类型, 当前地图 %v 对象 %d 类型: %s %v", mapID, objXML.ID, objXML.Type, xruntime.Location())
+						// 忽略未知属性
 					}
 				}
 			}
@@ -355,6 +361,13 @@ func (p *TiledMapMgr) Check() error {
 								return false
 							}
 						}
+						if obj.EnemyGroupID != 0 {
+							exist = GEnemyGroupMgr.EnemyGroups.IsExist(obj.EnemyGroupID)
+							if !exist { // 检查敌人组是否存在
+								err = fmt.Errorf("Tiled 地图资源 %v 中对象 %d 的敌人组 %v 不存在 %v", mapID, obj.ID, obj.EnemyGroupID, xruntime.Location())
+								return false
+							}
+						}
 					}
 				}
 			}
@@ -462,6 +475,9 @@ func (p *TiledMapMgr) Assemble() error {
 					for _, obj := range layer.Objects {
 						if obj.TargetPortal != 0 { // 传送点对象
 							obj.PortalCfg = GPortalMgr.Points.Get(obj.TargetPortal)
+						}
+						if obj.EnemyGroupID != 0 { // 刷怪点对象
+							obj.EnemyGroup = GEnemyGroupMgr.EnemyGroups.Get(obj.EnemyGroupID)
 						}
 					}
 				default: // 其他图层
