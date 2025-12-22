@@ -3,11 +3,11 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "map/7000002.tsx",
+    "activeFile": "map/map.2000003.tmx",
     "expandedProjectPaths": [
-        ".",
         "tsx",
-        "map"
+        "map",
+        "."
     ],
     "fileStates": {
         "": {
@@ -184,7 +184,7 @@
                 7
             ],
             "scale": 0.75,
-            "selectedLayer": 2,
+            "selectedLayer": 0,
             "viewCenter": {
                 "x": 1685.3333333333335,
                 "y": 873.3333333333333
@@ -237,7 +237,9 @@
         "map/8000001.tsx",
         "map/backgroundTower.tsx",
         "map/7000002.tsx",
-        "map/map.2000001.tmx"
+        "map/map.2000001.tmx",
+        "map/iso-64x64-building.tsx",
+        "map/map.2000003.tmx"
     ],
     "project": "sa.tiled-project",
     "property.type": "int",
@@ -245,15 +247,15 @@
         "map/map.2000002.tmx",
         "map/8000001.tsx",
         "map/backgroundTower.tsx",
-        "map/map.2000001.tmx",
         "map/7000002.tsx",
+        "map/map.2000001.tmx",
         "map/iso-64x64-building.tsx",
+        "map/map.2000003.tmx",
         "map/64x64.empty.tsx",
         "map/4937_pixian_ai.tsx",
         "map/ss.tsx",
         "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_001.tmx",
-        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_002.tmx",
-        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_003.tmx"
+        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_002.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {
