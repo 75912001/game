@@ -2,6 +2,7 @@ package main
 
 import (
 	xpacket "github.com/75912001/xlib/packet"
+	xtime "github.com/75912001/xlib/time"
 	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
 	"image"
 	"log"
@@ -13,6 +14,7 @@ import (
 )
 
 func main() {
+	xtime.GTimeMgr.Update() // 初始化时间管理器
 	xpacket.SetEndianMode(xpacket.LittleEndian)
 	// todo menglc 初始化程序, 需要 加载 app 配置文件
 	err := LoadCfg()

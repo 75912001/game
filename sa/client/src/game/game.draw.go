@@ -1,6 +1,7 @@
 package game
 
 import (
+	xtime "github.com/75912001/xlib/time"
 	"saClient/src/cfg"
 	"saClient/src/ui"
 
@@ -8,6 +9,7 @@ import (
 )
 
 func (p *Game) Draw(screen *ebitenv2.Image) {
+	xtime.GTimeMgr.Update()
 	p.user.Draw(screen)
 
 	// 在屏幕右上角显示帧率
