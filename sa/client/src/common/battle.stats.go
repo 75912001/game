@@ -2,6 +2,7 @@ package common
 
 var GRoleBattleStats = &RoleBattleStats{}
 
+// 计算角色战斗数值
 type RoleBattleStats struct {
 }
 
@@ -31,3 +32,22 @@ func (p *RoleBattleStats) GetDefense(strength, endurance, agility, stamina uint3
 func (p *RoleBattleStats) GetAgility(agility uint32) uint32 {
 	return agility
 }
+
+// 计算宠物战斗数值
+type PetBattleStats struct {
+}
+
+func (p *PetBattleStats) GetHpMax(baseHP uint32, growthPerLevel float32, level uint32) uint32 {
+	return 0
+}
+
+//attack: 8
+//defense: 4
+//agility: 6
+//hp: 5
+//crit_rate: 0.12
+//counter_rate: 0.08
+//dodge_rate: 0.15
+//hit_rate: 0.92
+//crit_damage_bonus: 0.6
+//status_resist: 0.25
