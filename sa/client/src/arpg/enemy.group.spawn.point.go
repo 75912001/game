@@ -1,10 +1,11 @@
 package arpg
 
 import (
-	xtime "github.com/75912001/xlib/time"
 	"math"
 	"math/rand"
 	"saClient/src/cfg"
+
+	xtime "github.com/75912001/xlib/time"
 )
 
 // EnemyGroupSpawnPoint 刷怪点
@@ -73,7 +74,7 @@ func (p *EnemyGroupSpawnPoint) Update() {
 func (p *EnemyGroupSpawnPoint) removeDeadEnemies() {
 	alive := p.Enemies[:0]
 	for _, enemy := range p.Enemies {
-		if !enemy.IsDead {
+		if !enemy.IsDead() {
 			alive = append(alive, enemy)
 		}
 	}

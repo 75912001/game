@@ -1,12 +1,13 @@
 package user
 
 import (
-	"github.com/hajimehoshi/ebiten/v2"
 	"log"
 	"saClient/src/cfg"
 	"saClient/src/common"
 	commoncamera "saClient/src/common/camera"
 	"saClient/src/proto"
+
+	"github.com/hajimehoshi/ebiten/v2"
 )
 
 // HandleInput 处理键盘输入
@@ -82,7 +83,7 @@ func (p *Role) handleKeyMove(up, down, left, right bool) {
 	newRoleSprite.actionAnchorPointWY = newWorldY
 	// 更新动画帧
 	p.frameTick++
-	if p.frameTick >= 6 {
+	if common.FrameTickPerChange <= p.frameTick {
 		p.frameTick = 0
 		p.frameIdx++
 	}
