@@ -6,22 +6,13 @@ import (
 	"os"
 	"path/filepath"
 	"saClient/src/common"
+	"saClient/src/proto"
 
 	xmap "github.com/75912001/xlib/map"
 	xruntime "github.com/75912001/xlib/runtime"
 	xutil "github.com/75912001/xlib/util"
 	"github.com/pkg/errors"
 	"gopkg.in/yaml.v3"
-)
-
-// todo menglc 放入 proto 中
-const (
-	EnemyGroupCountMin    = 1      // 敌人数量最小值
-	EnemyGroupCountMax    = 10     // 敌人数量最大值
-	EnemyGroupLevelMin    = 1      // 敌人等级最小值
-	EnemyGroupLevelMax    = 140    // 敌人等级最大值
-	EnemyGroupBabyRateMin = 0      // 宝宝概率最小值
-	EnemyGroupBabyRateMax = 100000 // 宝宝概率最大值(十万分率,100000=100%)
 )
 
 // EnemyGroupEnemy 敌人组中的敌人条目
@@ -115,9 +106,9 @@ func (p *EnemyGroupMgr) validateBossGroup(group *EnemyGroup) error {
 		if enemy.Level == 0 {
 			return fmt.Errorf("敌人组ID %d (Boss) 的敌人[%d]必须指定等级 %v", group.ID, i, xruntime.Location())
 		}
-		if enemy.Level < EnemyGroupLevelMin || EnemyGroupLevelMax < enemy.Level {
+		if enemy.Level < uint32(proto.LevelRange_LevelRange_Min) || uint32(proto.LevelRange_LevelRange_Max) < enemy.Level {
 			return fmt.Errorf("敌人组ID %d (Boss) 的敌人[%d]等级超出范围[%d,%d]: %d %v",
-				group.ID, i, EnemyGroupLevelMin, EnemyGroupLevelMax, enemy.Level, xruntime.Location())
+				group.ID, i, proto.LevelRange_LevelRange_Min, proto.LevelRange_LevelRange_Max, enemy.Level, xruntime.Location())
 		}
 	}
 	return nil
@@ -129,9 +120,10 @@ func (p *EnemyGroupMgr) validateNormalGroup(group *EnemyGroup) error {
 	if len(group.CountRange) != 2 {
 		return fmt.Errorf("敌人组ID %d 的countRange必须是[min,max]格式 %v", group.ID, xruntime.Location())
 	}
-	if group.CountRange[0] < EnemyGroupCountMin || EnemyGroupCountMax < group.CountRange[1] {
+	if group.CountRange[0] < uint32(proto.CombatEnemyGroupEnemyCountRange_CombatEnemyGroupEnemyCountRange_Min) ||
+		uint32(proto.CombatEnemyGroupEnemyCountRange_CombatEnemyGroupEnemyCountRange_Max) < group.CountRange[1] {
 		return fmt.Errorf("敌人组ID %d 的countRange超出范围[%d,%d]: %v %v",
-			group.ID, EnemyGroupCountMin, EnemyGroupCountMax, group.CountRange, xruntime.Location())
+			group.ID, proto.CombatEnemyGroupEnemyCountRange_CombatEnemyGroupEnemyCountRange_Min, proto.CombatEnemyGroupEnemyCountRange_CombatEnemyGroupEnemyCountRange_Max, group.CountRange, xruntime.Location())
 	}
 	if group.CountRange[1] < group.CountRange[0] {
 		return fmt.Errorf("敌人组ID %d 的countRange[0]不能大于countRange[1]: %v %v",
@@ -147,9 +139,9 @@ func (p *EnemyGroupMgr) validateNormalGroup(group *EnemyGroup) error {
 
 	// 验证 levelRange 范围
 	if hasLevelRange {
-		if group.LevelRange[0] < EnemyGroupLevelMin || EnemyGroupLevelMax < group.LevelRange[1] {
+		if group.LevelRange[0] < uint32(proto.LevelRange_LevelRange_Min) || uint32(proto.LevelRange_LevelRange_Max) < group.LevelRange[1] {
 			return fmt.Errorf("敌人组ID %d 的levelRange超出范围[%d,%d]: %v %v",
-				group.ID, EnemyGroupLevelMin, EnemyGroupLevelMax, group.LevelRange, xruntime.Location())
+				group.ID, proto.LevelRange_LevelRange_Min, proto.LevelRange_LevelRange_Max, group.LevelRange, xruntime.Location())
 		}
 		if group.LevelRange[1] < group.LevelRange[0] {
 			return fmt.Errorf("敌人组ID %d 的levelRange[0]不能大于levelRange[1]: %v %v",
@@ -158,16 +150,16 @@ func (p *EnemyGroupMgr) validateNormalGroup(group *EnemyGroup) error {
 	}
 
 	// 验证 babyRate 范围
-	if group.BabyRate < EnemyGroupBabyRateMin || EnemyGroupBabyRateMax < group.BabyRate {
+	if group.BabyRate < uint32(proto.CombatEnemyGroupBabyRate_CombatEnemyGroupBabyRate_Min) || uint32(proto.CombatEnemyGroupBabyRate_CombatEnemyGroupBabyRate_Max) < group.BabyRate {
 		return fmt.Errorf("敌人组ID %d 的babyRate超出范围[%d,%d]: %d %v",
-			group.ID, EnemyGroupBabyRateMin, EnemyGroupBabyRateMax, group.BabyRate, xruntime.Location())
+			group.ID, proto.CombatEnemyGroupBabyRate_CombatEnemyGroupBabyRate_Min, proto.CombatEnemyGroupBabyRate_CombatEnemyGroupBabyRate_Max, group.BabyRate, xruntime.Location())
 	}
 
 	// 验证敌人条目
 	for i, enemy := range group.Enemies {
-		if enemy.Level != 0 && (enemy.Level < EnemyGroupLevelMin || EnemyGroupLevelMax < enemy.Level) {
+		if enemy.Level != 0 && (enemy.Level < uint32(proto.LevelRange_LevelRange_Min) || uint32(proto.LevelRange_LevelRange_Max) < enemy.Level) {
 			return fmt.Errorf("敌人组ID %d 的敌人[%d]等级超出范围[%d,%d]: %d %v",
-				group.ID, i, EnemyGroupLevelMin, EnemyGroupLevelMax, enemy.Level, xruntime.Location())
+				group.ID, i, proto.LevelRange_LevelRange_Min, proto.LevelRange_LevelRange_Max, enemy.Level, xruntime.Location())
 		}
 	}
 	return nil
@@ -314,11 +306,11 @@ func (group *EnemyGroup) calculateLevel(enemy *EnemyGroupEnemy, roleLevel uint32
 	} else { // roleLevelOffset
 		offset := xutil.RandomInt(group.RoleLevelOffset[0], group.RoleLevelOffset[1])
 		calcLevel := int(roleLevel) + offset
-		if calcLevel < EnemyGroupLevelMin {
-			calcLevel = EnemyGroupLevelMin
+		if calcLevel < int(proto.LevelRange_LevelRange_Min) {
+			calcLevel = int(proto.LevelRange_LevelRange_Min)
 		}
-		if EnemyGroupLevelMax < calcLevel {
-			calcLevel = EnemyGroupLevelMax
+		if int(proto.LevelRange_LevelRange_Max) < calcLevel {
+			calcLevel = int(proto.LevelRange_LevelRange_Max)
 		}
 		return uint32(calcLevel)
 	}
@@ -346,8 +338,8 @@ func (group *EnemyGroup) rollBaby() bool {
 	if group.BabyRate <= 0 {
 		return false
 	}
-	if EnemyGroupBabyRateMax <= group.BabyRate {
+	if uint32(proto.CombatEnemyGroupBabyRate_CombatEnemyGroupBabyRate_Max) <= group.BabyRate {
 		return true
 	}
-	return rand.Intn(EnemyGroupBabyRateMax) < int(group.BabyRate)
+	return rand.Intn(int(proto.CombatEnemyGroupBabyRate_CombatEnemyGroupBabyRate_Max)) < int(group.BabyRate)
 }

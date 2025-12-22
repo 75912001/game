@@ -106,7 +106,7 @@ func (p *Role) GetUUID() common.RoleUUID {
 
 // GetAssetID 获取-角色资产ID
 func (p *Role) GetAssetID() common.AssetID {
-	v, _ := p.roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_AssetID)]
+	v, _ := p.roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Role_AssetID)]
 	return common.AssetID(v)
 }
 

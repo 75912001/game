@@ -41,42 +41,44 @@ func (p *User) Login(account string, password string) error {
 		}
 		roleRecord := p.userRecord.RoleRecordMap[uint64(roleUUID)]
 
+		// 通用
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Exp)] = 0                                                            // 经验值
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_HP)] = 9999                                                          // 生命值
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_MP)] = uint64(cfg.GCommon.RoleMPMax)                                 // 魔法值
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_CreateTimestamp)] = now                                              // 创建时间戳
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_LastLoginTimestamp)] = now                                           // 上次登录时间戳
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_LastLogoutTimestamp)] = 0                                            // 上次登出时间戳
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_MapID)] = 2000001                                                    // 所在地图ID (地图ID范围起始)
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TX)] = uint64(24.500 * float32(common.Float32Ratio))    // 当前位置tx
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TY)] = uint64(24.500 * float32(common.Float32Ratio))    // 当前位置ty
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Orientation)] = uint64(proto.AssetOrientation_AssetOrientation_Down) // 当前朝向-下
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Pose)] = uint64(proto.RoleAction_RoleAction_Stand)                   // 姿势 0:站立
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_AvailablePoint)] = uint64(cfg.GCommon.RoleInitialAvailablePoint)     // 可用点数
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_RebirthCount)] = 0                                                   // 转生次数
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_AssetID)] = 1000101                                                  // 资产ID (角色ID范围起始)
 
-		// 元素属性 (101-104)
+		// 元素
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_ElementalEarth)] = 0 // 元素属性-土
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_ElementalWater)] = 5 // 元素属性-水
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_ElementalFire)] = 5  // 元素属性-火
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_ElementalWind)] = 0  // 元素属性-风
 
-		// 角色属性 (201-204)
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_AttributesStrength)] = 10  // 腕力
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_AttributesEndurance)] = 10 // 耐力
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_AttributesAgility)] = 10   // 速度
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_AttributesStamina)] = 10   // 体力
+		// 角色
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Role_LastLoginTimestamp)] = now                                       // 上次登录时间戳
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Role_LastLogoutTimestamp)] = 0                                        // 上次登出时间戳
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Role_AvailablePoint)] = uint64(cfg.GCommon.RoleInitialAvailablePoint) // 可用点数
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Role_AssetID)] = 1000101                                              // 资产ID (角色ID范围起始)
+
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Role_AttributesStrength)] = 10  // 腕力
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Role_AttributesEndurance)] = 10 // 耐力
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Role_AttributesAgility)] = 10   // 速度
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Role_AttributesStamina)] = 10   // 体力
 
 		roleObject := NewRole(roleRecord)
 		if roleObject == nil {
 			return fmt.Errorf("new role failed, roleUUID %d", roleUUID)
 		}
 
-		strength := uint32(roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_AttributesStrength)])
-		endurance := uint32(roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_AttributesEndurance)])
-		agility := uint32(roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_AttributesAgility)])
-		stamina := uint32(roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_AttributesStamina)])
+		strength := uint32(roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Role_AttributesStrength)])
+		endurance := uint32(roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Role_AttributesEndurance)])
+		agility := uint32(roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Role_AttributesAgility)])
+		stamina := uint32(roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Role_AttributesStamina)])
 		hpMax := common.GRoleBattleStats.GetHpMax(strength, endurance, agility, stamina)
 		roleObject.roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_HP)] = uint64(hpMax) // 将生命值设为最大值
 

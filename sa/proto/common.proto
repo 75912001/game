@@ -29,3 +29,10 @@ message Point {
   int32 Y = 2; // Y坐标
 }
 
+// 等级范围
+enum LevelRange {
+  LevelRange_Unknow = 0; // 未知参数
+
+  LevelRange_Min = 1; // 最小等级
+  LevelRange_Max = 140; // 最大等级
+}
