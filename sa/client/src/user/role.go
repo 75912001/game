@@ -22,12 +22,15 @@ type Role struct {
 	pendingScene *Scene  // 待切换的新场景
 	pendingTX    float32 // 待切换的目标 Tile X
 	pendingTY    float32 // 待切换的目标 Tile Y
+
+	BattleStats *RoleBattleStats
 }
 
 func NewRole(roleRecord *proto.RoleRecord) *Role {
 	role := &Role{
 		roleRecord: roleRecord,
 	}
+	role.BattleStats = NewRoleBattleStats(role)
 	roleAssetID := role.GetAssetID()
 	role.cfgRole = cfg.GRoleMgr.Roles.Get(roleAssetID)
 	if role.cfgRole == nil {

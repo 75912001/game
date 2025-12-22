@@ -75,11 +75,7 @@ func (p *User) Login(account string, password string) error {
 			return fmt.Errorf("new role failed, roleUUID %d", roleUUID)
 		}
 
-		strength := uint32(roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Role_AttributesStrength)])
-		endurance := uint32(roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Role_AttributesEndurance)])
-		agility := uint32(roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Role_AttributesAgility)])
-		stamina := uint32(roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Role_AttributesStamina)])
-		hpMax := common.GRoleBattleStats.GetHpMax(strength, endurance, agility, stamina)
+		hpMax := roleObject.BattleStats.GetHpMax()
 		roleObject.roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_HP)] = uint64(hpMax) // 将生命值设为最大值
 
 		ok := p.roleMgr.Roles.AddIfNotExist(roleUUID, roleObject)
