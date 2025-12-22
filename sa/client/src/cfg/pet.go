@@ -142,6 +142,9 @@ func (p *PetMgr) Load() error {
 		if xutil.Float32Less(pet.Attributes.StatusResist, 0) || xutil.Float32Less(1, pet.Attributes.StatusResist) {
 			return fmt.Errorf("宠物ID %d 异常状态抗性超出范围[0,1]: %v %v", pet.ID, pet.Attributes.StatusResist, xruntime.Location())
 		}
+		if pet.ID != 4000003 { // 4000003 是测试宠物 todo menglc
+			continue
+		}
 		ok := p.Pets.AddIfNotExist(pet.ID, pet)
 		if !ok { // 添加失败
 			return fmt.Errorf("添加宠物失败,宠物已存在: %v %v", pet.ID, xruntime.Location())
