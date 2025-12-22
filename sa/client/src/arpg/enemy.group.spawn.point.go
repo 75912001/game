@@ -1,4 +1,4 @@
-package entity
+package arpg
 
 import (
 	xtime "github.com/75912001/xlib/time"
