@@ -8,6 +8,7 @@ import (
 	"saClient/src/common"
 	commonelemental "saClient/src/common/elemental"
 	"saClient/src/proto"
+	"saClient/src/res"
 
 	xmap "github.com/75912001/xlib/map"
 	xruntime "github.com/75912001/xlib/runtime"
@@ -60,8 +61,7 @@ type Pet struct {
 	Elemental   PetElemental    `yaml:"elemental"`   // 元素属性
 	Attributes  PetAttributes   `yaml:"attributes"`  // 基础属性
 	Growth      PetGrowth       `yaml:"growth"`      // 成长配置
-
-	// todo menglc 装配出宠物的其他配置
+	Res         *res.Pet        // 宠物资源
 }
 
 var GPetMgr = newPetMgr()
@@ -162,7 +162,17 @@ func (p *PetMgr) Load() error {
 
 // Check 检查配置
 func (p *PetMgr) Check() error {
-	return nil
+	var err error
+	p.Pets.Foreach(func(id common.AssetID, pet *Pet) bool {
+		// 检查宠物资源
+		pet.Res = res.GPetMgr.Pets.Get(id)
+		if pet.Res == nil {
+			err = fmt.Errorf("宠物ID %d 资源不存在 %v", id, xruntime.Location())
+			return false
+		}
+		return true
+	})
+	return err
 }
 
 // Assemble 组装配置
