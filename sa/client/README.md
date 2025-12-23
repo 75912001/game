@@ -2,7 +2,6 @@
 
 # todo
 
-C:\game\sa\client\src\arpg\enemy.ai.go
 
 刷怪放在map 中. 不是放在 scene 中.C:\game\sa\client\src\user\scene.go
 
