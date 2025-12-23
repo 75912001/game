@@ -26,16 +26,17 @@ type PetElemental struct {
 
 // PetAttributes 宠物基础属性
 type PetAttributes struct {
-	Attack          uint32  `yaml:"attack"`            // 攻击
-	Defense         uint32  `yaml:"defense"`           // 防御
-	Agility         uint32  `yaml:"agility"`           // 敏捷
-	HP              uint32  `yaml:"hp"`                // 生命
-	CritRate        float32 `yaml:"crit_rate"`         // 暴击率
-	CounterRate     float32 `yaml:"counter_rate"`      // 反击率
-	DodgeRate       float32 `yaml:"dodge_rate"`        // 闪避率
-	HitRate         float32 `yaml:"hit_rate"`          // 命中率
-	CritDamageBonus float32 `yaml:"crit_damage_bonus"` // 暴击伤害加成倍数
-	StatusResist    float32 `yaml:"status_resist"`     // 异常状态抗性比率
+	Attack          uint32  `yaml:"attack"`          // 攻击
+	Defense         uint32  `yaml:"defense"`         // 防御
+	Agility         uint32  `yaml:"agility"`         // 敏捷
+	HP              uint32  `yaml:"hp"`              // 生命
+	CritRate        float32 `yaml:"critRate"`        // 暴击率
+	CounterRate     float32 `yaml:"counterRate"`     // 反击率
+	DodgeRate       float32 `yaml:"dodgeRate"`       // 闪避率
+	HitRate         float32 `yaml:"hitRate"`         // 命中率
+	CritDamageBonus float32 `yaml:"critDamageBonus"` // 暴击伤害加成倍数
+	StatusResist    float32 `yaml:"statusResist"`    // 异常状态抗性比率
+	ArpgSpeed       float32 `yaml:"arpgSpeed"`       // real time 战斗中移动速度
 }
 
 // GrowthRange 成长范围
@@ -123,6 +124,9 @@ func (p *PetMgr) Load() error {
 		if xutil.Float32Equal(pet.Attributes.StatusResist, 0) {
 			pet.Attributes.StatusResist = 0.2
 		}
+		if xutil.Float32Equal(pet.Attributes.ArpgSpeed, 0) {
+			pet.Attributes.ArpgSpeed = 1.0
+		}
 		// 验证战斗属性范围 [0,1]
 		if xutil.Float32Less(pet.Attributes.CritRate, 0) || xutil.Float32Less(1, pet.Attributes.CritRate) {
 			return fmt.Errorf("宠物ID %d 暴击率超出范围[0,1]: %v %v", pet.ID, pet.Attributes.CritRate, xruntime.Location())
@@ -141,6 +145,9 @@ func (p *PetMgr) Load() error {
 		}
 		if xutil.Float32Less(pet.Attributes.StatusResist, 0) || xutil.Float32Less(1, pet.Attributes.StatusResist) {
 			return fmt.Errorf("宠物ID %d 异常状态抗性超出范围[0,1]: %v %v", pet.ID, pet.Attributes.StatusResist, xruntime.Location())
+		}
+		if xutil.Float32Less(pet.Attributes.ArpgSpeed, 0) || xutil.Float32Less(10, pet.Attributes.ArpgSpeed) {
+			return fmt.Errorf("宠物ID %d ARPG移动速度超出范围[0,10]: %v %v", pet.ID, pet.Attributes.ArpgSpeed, xruntime.Location())
 		}
 		if pet.ID != 4000003 { // 4000003 是测试宠物 todo menglc
 			continue
