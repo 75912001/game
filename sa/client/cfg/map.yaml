@@ -2,6 +2,7 @@
 # 任何修改此文件的行为都需要通知客户端和服务端开发人员
 
 # transitionID: 引用 scene.transition.yaml 中定义的过渡效果ID
+# todo menglc 增加一个属性, 标识该地图是否战斗结束, 自动回满所有状态
 
 maps:
   - assetID: 2000001 # 地图资产ID

@@ -58,7 +58,7 @@ func (p *Role) collectRenderables() []commonrenderable.IRenderable {
 	renderables = append(renderables, p) // 角色自己
 
 	// 添加怪物
-	for _, enemy := range p.scene.spawnManager.GetAllEnemies() {
+	for _, enemy := range p.scene._map.spawnManager.GetAllEnemies() {
 		renderables = append(renderables, enemy)
 	}
 
