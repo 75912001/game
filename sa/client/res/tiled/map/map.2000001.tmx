@@ -40,7 +40,7 @@
   </object>
   <object id="185" x="615.333" y="1246"/>
   <object id="187" x="449.333" y="948" width="200" height="82.6667"/>
-  <object id="189" name="传送点-&gt;玛丽娜丝" x="1044.39" y="172.729" width="31.2142" height="126.542">
+  <object id="189" name="传送点-&gt;玛丽娜丝" x="976.39" y="736.729" width="31.2142" height="126.542">
    <properties>
     <property name="targetPortal" type="int" value="200000301"/>
    </properties>

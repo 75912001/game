@@ -117,3 +117,24 @@ func (p *TiledMap) IsBlockedByTileWithTF(tx, ty float32) bool {
 	tileY := int(ty + 0.5)
 	return p.IsBlockedByTileWithT(tileX, tileY)
 }
+
+// IsBlocked 综合检测位置是否被阻挡 (地图边界 + Tile阻挡 + Object阻挡)
+// wx, wy: World 坐标
+// 返回: clampedWX, clampedWY 限制在边界内的坐标, blocked 是否被阻挡
+func (p *TiledMap) IsBlocked(wx, wy float32) (clampedWX, clampedWY float32, blocked bool) {
+	// 限制在地图边界内
+	clampedWX, clampedWY = p.ClampMapBoundaryWithW(wx, wy)
+
+	// 检查 Tile 阻挡
+	tx, ty := p.IsometricCT.W2T(clampedWX, clampedWY)
+	if p.IsBlockedByTileWithTF(tx, ty) {
+		return clampedWX, clampedWY, true
+	}
+
+	// 检查 Object 阻挡
+	if _, objBlocked := p.FindBlockedByObject(clampedWX, clampedWY); objBlocked {
+		return clampedWX, clampedWY, true
+	}
+
+	return clampedWX, clampedWY, false
+}

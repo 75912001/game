@@ -111,17 +111,9 @@ func (p *EnemySpawnPoint) RandomPositionInRadius(radius float32) (float32, float
 		wx := p.WX + float32(math.Cos(angle))*distance
 		wy := p.WY + float32(math.Sin(angle))*distance
 
-		// 限制在地图边界内
-		wx, wy = p.TiledMapCfg.ClampMapBoundaryWithW(wx, wy)
-
-		// 检查位置是否阻挡 (Tile 阻挡)
-		tx, ty := p.TiledMapCfg.IsometricCT.W2T(wx, wy)
-		if p.TiledMapCfg.IsBlockedByTileWithTF(tx, ty) {
-			continue
-		}
-
-		// 检查位置是否在 Object 阻挡区域内
-		if _, blocked := p.TiledMapCfg.FindBlockedByObject(wx, wy); blocked {
+		// 综合检测 (地图边界 + Tile阻挡 + Object阻挡)
+		wx, wy, blocked := p.TiledMapCfg.IsBlocked(wx, wy)
+		if blocked {
 			continue
 		}
 

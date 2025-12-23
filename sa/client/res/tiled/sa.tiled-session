@@ -3,11 +3,11 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "map/map.2000003.tmx",
+    "activeFile": "map/map.2000001.tmx",
     "expandedProjectPaths": [
+        "tsx",
         ".",
-        "map",
-        "tsx"
+        "map"
     ],
     "fileStates": {
         "": {
@@ -184,7 +184,7 @@
                 7
             ],
             "scale": 0.75,
-            "selectedLayer": 2,
+            "selectedLayer": 0,
             "viewCenter": {
                 "x": 1600,
                 "y": 799.9999999999999
@@ -210,7 +210,7 @@
                 3
             ],
             "scale": 1.5,
-            "selectedLayer": 2,
+            "selectedLayer": 0,
             "viewCenter": {
                 "x": 536,
                 "y": 315.33333333333337
@@ -241,7 +241,8 @@
         "map/backgroundTower.tsx",
         "map/7000002.tsx",
         "map/map.2000001.tmx",
-        "map/map.2000003.tmx"
+        "map/map.2000003.tmx",
+        "map/iso-64x64-building.tsx"
     ],
     "project": "sa.tiled-project",
     "property.type": "int",
@@ -250,9 +251,9 @@
         "map/8000001.tsx",
         "map/backgroundTower.tsx",
         "map/7000002.tsx",
-        "map/map.2000001.tmx",
-        "map/map.2000003.tmx",
         "map/iso-64x64-building.tsx",
+        "map/map.2000003.tmx",
+        "map/map.2000001.tmx",
         "map/64x64.empty.tsx",
         "map/4937_pixian_ai.tsx",
         "map/ss.tsx",
