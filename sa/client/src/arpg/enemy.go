@@ -18,7 +18,7 @@ type Enemy struct {
 
 	// 位置信息
 	WX, WY      float32 // 世界坐标 (脚底中心)
-	TX, TY      float32 // Tile 坐标
+	TX, TY      float32 // Tile 坐标 // todo menglc 为什么需要这个坐标?
 	Orientation uint32  // 朝向
 
 	// 动画信息

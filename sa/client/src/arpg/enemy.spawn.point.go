@@ -97,11 +97,16 @@ func (p *EnemySpawnPoint) SpawnEnemy() {
 	}
 }
 
-// randomSpawnPosition 随机生成位置
+// randomSpawnPosition 随机生成位置 (使用 SpawnRadius)
 func (p *EnemySpawnPoint) randomSpawnPosition() (float32, float32) {
+	return p.RandomPositionInRadius(p.Object.SpawnRadius)
+}
+
+// RandomPositionInRadius 在指定半径内随机生成一个位置(无阻挡,不一定可达)
+func (p *EnemySpawnPoint) RandomPositionInRadius(radius float32) (float32, float32) {
 	for {
 		angle := rand.Float64() * 2 * math.Pi
-		distance := rand.Float32() * p.Object.SpawnRadius // 使用 SpawnRadius 作为生成半径
+		distance := rand.Float32() * radius
 
 		wx := p.WX + float32(math.Cos(angle))*distance
 		wy := p.WY + float32(math.Sin(angle))*distance
@@ -109,7 +114,7 @@ func (p *EnemySpawnPoint) randomSpawnPosition() (float32, float32) {
 		// 限制在地图边界内
 		wx, wy = p.TiledMapCfg.ClampMapBoundaryWithW(wx, wy)
 
-		// 检查位置是否可达 (Tile 阻挡)
+		// 检查位置是否阻挡 (Tile 阻挡)
 		tx, ty := p.TiledMapCfg.IsometricCT.W2T(wx, wy)
 		if p.TiledMapCfg.IsBlockedByTileWithTF(tx, ty) {
 			continue
