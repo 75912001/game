@@ -11,8 +11,8 @@ import (
 
 // Enemy 怪物实体
 type Enemy struct {
-	SpawnPoint  *EnemyGroupSpawnPoint // 归属刷怪点
-	Generated   *cfg.GeneratedEnemy   // 生成的敌人配置
+	SpawnPoint  *EnemySpawnPoint    // 归属刷怪点
+	Generated   *cfg.GeneratedEnemy // 生成的敌人配置
 	Level       uint32
 	BattleStats *EnemyBattleStats // 战斗属性
 
@@ -30,7 +30,7 @@ type Enemy struct {
 }
 
 // NewEnemy 创建怪物实体
-func NewEnemy(spawnPoint *EnemyGroupSpawnPoint, generated *cfg.GeneratedEnemy, wx, wy float32) *Enemy {
+func NewEnemy(spawnPoint *EnemySpawnPoint, generated *cfg.GeneratedEnemy, wx, wy float32) *Enemy {
 	enemy := &Enemy{
 		SpawnPoint:  spawnPoint,
 		Generated:   generated,

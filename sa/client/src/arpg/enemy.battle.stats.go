@@ -1,6 +1,6 @@
 package arpg
 
-// 计算敌人战斗数值
+// 计算敌人战斗数值 todo menglc 临时算法
 type EnemyBattleStats struct {
 	enemy *Enemy
 }

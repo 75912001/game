@@ -3,7 +3,6 @@
 # todo
 
 C:\game\sa\client\src\arpg\enemy.ai.go
-C:\game\sa\client\src\arpg\spawn_manager.go
 
 刷怪放在map 中. 不是放在 scene 中.C:\game\sa\client\src\user\scene.go
 

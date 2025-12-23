@@ -6,9 +6,9 @@ import (
 )
 
 type Scene struct {
-	_map         *Map               // Tiled 地图
-	transition   *SceneTransition   // 场景过渡效果
-	spawnManager *arpg.SpawnManager // 刷怪点管理器
+	_map         *Map                // Tiled 地图
+	transition   *SceneTransition    // 场景过渡效果
+	spawnManager *arpg.EnemySpawnMgr // 刷怪点管理器
 }
 
 func NewScene(mapID common.AssetID) *Scene {
@@ -16,7 +16,7 @@ func NewScene(mapID common.AssetID) *Scene {
 		_map: NewMap(mapID),
 	}
 	scene.transition = newSceneTransition(scene._map.mapCfg.SceneTransition)
-	scene.spawnManager = arpg.NewSpawnManager(scene._map.tiledMapCfg)
+	scene.spawnManager = arpg.NewEnemySpawnMgr(scene._map.tiledMapCfg)
 	return scene
 }
 

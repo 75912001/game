@@ -102,8 +102,8 @@ func (p *TiledMap) FindPortalByObject(worldX, worldY float32) (*TiledObject, boo
 	return nil, false
 }
 
-// FindSpawnEnemyGroupPoints 查找所有刷怪点对象
-func (p *TiledMap) FindSpawnEnemyGroupPoints() []*TiledObject {
+// GetSpawnEnemyGroupPoints 获取所有刷怪点对象
+func (p *TiledMap) GetSpawnEnemyGroupPoints() []*TiledObject {
 	var result []*TiledObject
 	for _, layer := range p.Layers {
 		if layer.LayerType != TiledLayerType_Collision { // 非碰撞图层

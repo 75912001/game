@@ -4,7 +4,7 @@ import (
 	"saClient/src/proto"
 )
 
-// 计算角色战斗数值
+// 计算角色战斗数值 todo menglc 临时算法
 type RoleBattleStats struct {
 	role *Role
 }

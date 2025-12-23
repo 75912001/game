@@ -3,7 +3,7 @@
  <image source="backgroundTower.png" width="129" height="332"/>
  <tile id="0">
   <objectgroup draworder="index" id="2">
-   <object id="1" x="21.3333" y="300.333" width="87" height="31"/>
+   <object id="1" x="2.3333" y="156.333" width="125" height="175"/>
   </objectgroup>
  </tile>
 </tileset>
