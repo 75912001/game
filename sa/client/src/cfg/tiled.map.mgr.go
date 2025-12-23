@@ -494,6 +494,15 @@ func (p *TiledMapMgr) Assemble() error {
 				switch layer.LayerType {
 				case TiledLayerType_Collision: // 碰撞图层
 					for _, obj := range layer.Objects {
+						// 计算 World 坐标 (从 TMX 等距像素坐标转换)
+						if !obj.IsWorldCoordinateSystem {
+							th := float32(tiledMap.TileHeight)
+							tx := obj.X/th - 0.5
+							ty := obj.Y/th - 0.5
+							obj.WX, obj.WY = tiledMap.IsometricCT.T2W(tx, ty)
+						} else {
+							obj.WX, obj.WY = obj.X, obj.Y
+						}
 						if obj.TargetPortal != 0 { // 传送点对象
 							obj.PortalCfg = GPortalMgr.Points.Get(obj.TargetPortal)
 						}

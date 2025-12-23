@@ -21,13 +21,15 @@ type TiledObjectType string
 type TiledObject struct {
 	ID                      int             // 对象ID
 	Type                    TiledObjectType // 对象类型
-	X                       float32         // 对象X坐标
-	Y                       float32         // 对象Y坐标
+	X                       float32         // 对象X坐标 (TMX 等距像素坐标)
+	Y                       float32         // 对象Y坐标 (TMX 等距像素坐标)
 	Width                   float32         // 对象宽度
 	Height                  float32         // 对象高度
 	Visible                 bool            // 是否可见
 	Blocked                 bool            // 阻挡
 	IsWorldCoordinateSystem bool            // true: X/Y/Width/Height 是 World 坐标系; false: Tiled 等距像素坐标
+	WX                      float32         // World X 坐标 (运行时计算)
+	WY                      float32         // World Y 坐标 (运行时计算)
 	// portal 传送点
 	TargetPortal common.PortalID // 目标传送点ID
 	PortalCfg    *PortalPoint    // 传送点配置
