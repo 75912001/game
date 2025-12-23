@@ -10,12 +10,8 @@ import (
 
 // EnemySpawnPoint 刷怪点
 type EnemySpawnPoint struct {
-	Object      *cfg.TiledObject // 关联的 Tiled 对象 (包含 ID, EnemyGroupID, EnemyGroup, PatrolRadius, RespawnSecond 等)
+	Object      *cfg.TiledObject // 关联的 Tiled 对象
 	TiledMapCfg *cfg.TiledMap    // 地图配置引用
-
-	// 缓存的世界坐标 (从 Object.X, Y 计算)
-	WX, WY float32
-	TX, TY float32
 
 	// 运行时状态
 	AllDeadTime int64    // 全部死亡时的时间戳 (秒)
@@ -24,24 +20,12 @@ type EnemySpawnPoint struct {
 
 // NewEnemySpawnPoint 从 TiledObject 创建刷怪点
 func NewEnemySpawnPoint(tiledMapCfg *cfg.TiledMap, obj *cfg.TiledObject) *EnemySpawnPoint {
-	// 将 Tiled 像素坐标转换为 World 坐标
-	th := float32(tiledMapCfg.TileHeight)
-	tx := obj.X/th - 0.5
-	ty := obj.Y/th - 0.5
-	wx, wy := tiledMapCfg.IsometricCT.T2W(tx, ty)
-
-	enemySpawnPoint := &EnemySpawnPoint{
+	return &EnemySpawnPoint{
 		Object:      obj,
 		TiledMapCfg: tiledMapCfg,
-		WX:          wx,
-		WY:          wy,
-		TX:          tx,
-		TY:          ty,
 		AllDeadTime: 0,
 		Enemies:     make([]*Enemy, 0),
 	}
-
-	return enemySpawnPoint
 }
 
 // Update 每帧更新
@@ -108,8 +92,8 @@ func (p *EnemySpawnPoint) RandomPositionInRadius(radius float32) (float32, float
 		angle := rand.Float64() * 2 * math.Pi
 		distance := rand.Float32() * radius
 
-		wx := p.WX + float32(math.Cos(angle))*distance
-		wy := p.WY + float32(math.Sin(angle))*distance
+		wx := p.Object.WX + float32(math.Cos(angle))*distance
+		wy := p.Object.WY + float32(math.Sin(angle))*distance
 
 		// 综合检测 (地图边界 + Tile阻挡 + Object阻挡)
 		wx, wy, blocked := p.TiledMapCfg.IsBlocked(wx, wy)

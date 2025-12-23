@@ -128,6 +128,11 @@ func AssembleCfg() error {
 	if err != nil {
 		return errors.WithMessagef(err, "Assemble sceneTransitionMgr error %v", xruntime.Location())
 	}
+	// 装配 Tiled 地图资源
+	err = cfg.GTiledMapMgr.Assemble()
+	if err != nil {
+		return errors.WithMessagef(err, "Assemble res tiledMapMgr error %v", xruntime.Location())
+	}
 	err = cfg.GMapMgr.Assemble()
 	if err != nil {
 		return errors.WithMessagef(err, "Assemble mapMgr error %v", xruntime.Location())
@@ -135,11 +140,6 @@ func AssembleCfg() error {
 	err = cfg.GPortalMgr.Assemble()
 	if err != nil {
 		return errors.WithMessagef(err, "Assemble teleportMgr error %v", xruntime.Location())
-	}
-	// 装配 Tiled 地图资源
-	err = cfg.GTiledMapMgr.Assemble()
-	if err != nil {
-		return errors.WithMessagef(err, "Assemble res tiledMapMgr error %v", xruntime.Location())
 	}
 	// 装配 enemy.group 配置
 	err = cfg.GEnemyGroupMgr.Assemble()

@@ -12,17 +12,17 @@
     如若有更好的方案, 请一并给出.并给出理由和对比.
     可以完全访问当前项目的代码和资源.
 # 背景
-    需要增加 real time combat. 就是在地图上直接战斗.
+    当前坐标主要有 世界坐标 WX,WY, tile 坐标 两种 TX, TY.
 # 问题
+    当前 tile x , tile y 坐标系, 是处理哪些功能?
 # 当前想法
-    地图上有设定刷怪点, 刷怪点对应的是怪物组配置.C:\game\sa\client\cfg\enemy.group.yaml
-    地图创建的时候, 读取刷怪点配置, 并在对应位置生成刷怪点实体.
-    怪物在刷怪点附近随机巡逻.
+    是否可以将所有的tile x, tile y 坐标, 转换为 世界坐标 world x, world y 呢?
+    这样保证所有的坐标系, 都是 世界坐标系. 方便计算距离等.
+
 # 可参考资料
-    宠物配置表:
-        C:\game\sa\client\cfg\pet.yaml
-    地图配置表:
-        C:\game\sa\client\res\tiled\map\map.2000003.tmx
-        <property name="enemyGroupID" type="int" value="1"/>  刷怪点对应的怪物组ID (怪物组id,在 C:\game\sa\client\cfg\enemy.group.yaml 中配置)
-# 任务
-    设计并实现地图上刷怪点和怪物巡逻功能.
+C:\game\sa\client\res\tiled\map 配置表中, 关于 tile 的坐标. 也会在配置中使用
+C:\game\sa\client\cfg 配置表中. 应该都使用 世界坐标系 wx,wy
+C:\game\sa\client\src\common\coordinatetransform 中, 有坐标转换的代码.
+  # 任务
+    如果可以, 那么需要在地图加载时, 预处理所有的 tile 坐标为 world 坐标吗?
+    给出方案.和可能涉及到的影响.

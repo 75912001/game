@@ -209,11 +209,11 @@
             "expandedObjectLayers": [
                 3
             ],
-            "scale": 1.5,
+            "scale": 23,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 536,
-                "y": 315.33333333333337
+                "x": 594,
+                "y": 357.0869565217391
             }
         },
         "map/ss.tsx": {

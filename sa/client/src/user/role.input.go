@@ -92,7 +92,7 @@ func (p *Role) handleKeyMove(up, down, left, right bool) {
 	var rollBack = false
 	if portalObject, ok := mapCfg.FindPortalByObject(newRoleSprite.actionAnchorPointWX, newRoleSprite.actionAnchorPointWY); ok { // 判断角色 wx, wy 是否触发了-传送
 		log.Printf("Role HandleInput portal at world (%.3f, %.3f) portalObject:%+v", newRoleSprite.actionAnchorPointWX, newRoleSprite.actionAnchorPointWY, portalObject)
-		p.SwitchScene(portalObject.PortalCfg.MapID, portalObject.PortalCfg.TX, portalObject.PortalCfg.TY)
+		p.SwitchScene(portalObject.PortalCfg.MapID, portalObject.PortalCfg.WX, portalObject.PortalCfg.WY)
 	} else if mapCfg.IsBlockedByTileWithTF(newRoleSprite.actionAnchorPointTX, newRoleSprite.actionAnchorPointTY) { // 使用 tile 图层 图块 阻挡检测
 		log.Printf("Role HandleInput tile blocked at world (%.2f, %.2f)", newRoleSprite.actionAnchorPointWX, newRoleSprite.actionAnchorPointWY)
 		rollBack = true
@@ -104,14 +104,14 @@ func (p *Role) handleKeyMove(up, down, left, right bool) {
 	if !rollBack { // 正常移动，更新动画帧索引
 		p.sprite = newRoleSprite
 		p.SetValueU64(proto.AssetIDRecord_AssetIDRecord_Orientation, uint64(newRoleSprite.orientation))
-		p.SetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TX, newRoleSprite.actionAnchorPointTX)
-		p.SetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_TY, newRoleSprite.actionAnchorPointTY)
+		p.SetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_WX, newRoleSprite.actionAnchorPointWX)
+		p.SetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_WY, newRoleSprite.actionAnchorPointWY)
 	}
 	p.UpdateWithAction()
 }
 
 // SwitchScene 切换场景 (带过渡动画)
-func (p *Role) SwitchScene(mapID common.AssetID, tx, ty float32) {
+func (p *Role) SwitchScene(mapID common.AssetID, wx, wy float32) {
 	// 如果已经在过渡中，忽略新的切换请求
 	if p.scene.transition.IsActive() || p.pendingScene != nil {
 		return
@@ -120,16 +120,16 @@ func (p *Role) SwitchScene(mapID common.AssetID, tx, ty float32) {
 	targetMapCfg := cfg.GMapMgr.Maps.Get(mapID)
 	// 预创建新场景 (使用目标地图的过渡配置)
 	p.pendingScene = NewScene(mapID)
-	p.pendingTX = tx
-	p.pendingTY = ty
+	p.pendingWX = wx
+	p.pendingWY = wy
 	// 当前场景转场退出 (使用目标地图的过渡配置)
 	p.scene.transition.Out(targetMapCfg.SceneTransition)
 }
 
 // doSwitchScene 执行实际的场景切换 (无过渡动画)
-func (p *Role) doSwitchScene(mapID common.AssetID, tx, ty float32) {
+func (p *Role) doSwitchScene(mapID common.AssetID, wx, wy float32) {
 	p.scene = NewScene(mapID)
 	p.camera = commoncamera.NewCamera()
 	// 初始化角色的 World 坐标
-	p.sprite.actionAnchorPointWX, p.sprite.actionAnchorPointWY = p.scene._map.tiledMapCfg.IsometricCT.T2W(tx, ty)
+	p.sprite.actionAnchorPointWX, p.sprite.actionAnchorPointWY = wx, wy
 }

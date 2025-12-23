@@ -66,8 +66,8 @@ enum AssetIDRecord {
   AssetIDRecord_MP = 3; // 魔法值
   AssetIDRecord_CreateTimestamp = 4; // 创建时间戳
   AssetIDRecord_MapID = 7; // 所在地图ID
-  AssetIDRecord_BottomCenter_TX = 8; // 当前位置x - 图像底-中心点坐标 tile-x * 1000
-  AssetIDRecord_BottomCenter_TY = 9; // 当前位置y - 图像底-中心点坐标 tile-y * 1000
+  AssetIDRecord_BottomCenter_WX = 8; // 当前位置x - 图像底-中心点坐标 x * 1000
+  AssetIDRecord_BottomCenter_WY = 9; // 当前位置y - 图像底-中心点坐标 y * 1000
   AssetIDRecord_Orientation = 10; // 当前朝向
   AssetIDRecord_Pose = 11; // 姿势 RoleAction
   AssetIDRecord_RebirthCount = 13; // 转生次数 [0, 配置表最大值]

@@ -18,7 +18,6 @@ type Enemy struct {
 
 	// 位置信息
 	WX, WY      float32 // 世界坐标 (脚底中心)
-	TX, TY      float32 // Tile 坐标 // todo menglc 为什么需要这个坐标?
 	Orientation uint32  // 朝向
 
 	// 动画信息
@@ -42,7 +41,6 @@ func NewEnemy(spawnPoint *EnemySpawnPoint, generated *cfg.GeneratedEnemy, wx, wy
 		FrameTick:   0,
 	}
 	enemy.BattleStats = NewEnemyBattleStats(enemy)
-	enemy.TX, enemy.TY = spawnPoint.TiledMapCfg.IsometricCT.W2T(wx, wy)
 	enemy.AI = NewEnemyAI(enemy)
 	enemy.HP = enemy.BattleStats.GetHpMax()
 	return enemy

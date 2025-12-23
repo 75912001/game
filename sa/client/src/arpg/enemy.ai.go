@@ -101,7 +101,6 @@ func (p *EnemyAI) updatePatrol() {
 	// 更新位置
 	enemy.WX = newWX
 	enemy.WY = newWY
-	enemy.TX, enemy.TY = mapCfg.IsometricCT.W2T(newWX, newWY)
 
 	// 更新朝向
 	enemy.Orientation = commonct.CalculateOrientation(dx, dy)
