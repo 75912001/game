@@ -85,7 +85,7 @@ pets:
       hit_rate: 0.92
       crit_damage_bonus: 0.6
       status_resist: 0.25
-      arpgSpeed: 3.000
+      arpgSpeed: 2.000
     growth:
       attack:
         min: 1.5

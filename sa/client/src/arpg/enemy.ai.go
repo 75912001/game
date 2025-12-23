@@ -79,12 +79,12 @@ func (p *EnemyAI) updatePatrol() {
 	distance := float32(math.Sqrt(float64(dx*dx + dy*dy)))
 
 	// 检查是否到达目标
-	if distance < 2.0 { // 阈值
+	if xutil.Float32Less(distance, 1.0) { // 阈值
 		p.switchToIdle()
 		return
 	}
 
-	// 归一化并移动
+	// 移动
 	moveSpeed := enemy.Generated.Config.Pet.Attributes.ArpgSpeed
 	dx = dx / distance * moveSpeed
 	dy = dy / distance * moveSpeed
@@ -92,19 +92,8 @@ func (p *EnemyAI) updatePatrol() {
 	newWX := enemy.WX + dx
 	newWY := enemy.WY + dy
 
-	// 碰撞检测
-	tx, ty := mapCfg.IsometricCT.W2T(newWX, newWY)
-	if mapCfg.IsBlockedByTileWithTF(tx, ty) {
-		// 碰到障碍物，回到 Idle
-		p.switchToIdle()
-		return
-	}
-
-	// 检查是否超出巡逻范围
-	distToSpawn := float32(math.Sqrt(float64(
-		(newWX-spawnPoint.WX)*(newWX-spawnPoint.WX) +
-			(newWY-spawnPoint.WY)*(newWY-spawnPoint.WY))))
-	if distToSpawn > spawnPoint.Object.PatrolRadius*1.5 { // 允许一定超出
+	newWX, newWY, blocked := mapCfg.IsBlocked(newWX, newWY)
+	if blocked { // 阻挡
 		p.switchToIdle()
 		return
 	}
@@ -112,8 +101,7 @@ func (p *EnemyAI) updatePatrol() {
 	// 更新位置
 	enemy.WX = newWX
 	enemy.WY = newWY
-	enemy.TX = tx
-	enemy.TY = ty
+	enemy.TX, enemy.TY = mapCfg.IsometricCT.W2T(newWX, newWY)
 
 	// 更新朝向
 	enemy.Orientation = commonct.CalculateOrientation(dx, dy)
@@ -125,5 +113,5 @@ func (p *EnemyAI) updatePatrol() {
 // switchToIdle 切换到待机状态
 func (p *EnemyAI) switchToIdle() {
 	p.State = EnemyAIState_Idle
-	p.IdleEndTime = xtime.GTimeMgr.ShadowTimestamp() + xutil.RandomInt64(1, 3)
+	p.IdleEndTime = xtime.GTimeMgr.ShadowTimestamp() + xutil.RandomInt64(1, 1)
 }

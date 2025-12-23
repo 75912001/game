@@ -7,6 +7,14 @@ C:\game\sa\client\src\arpg\enemy.ai.go
 刷怪放在map 中. 不是放在 scene 中.C:\game\sa\client\src\user\scene.go
 
 
+用户移动时候. 能跨越很窄的阻挡区域. 需要优化碰撞检测算法.
+敌人移动的时候. 也能跨越很窄的阻挡区域. 需要优化碰撞检测算法.
+
+用户移动时候. 能跨越很窄的阻挡区域. 
+敌人移动的时候. 也能跨越很窄的阻挡区域. 
+是什么原因造成的?
+
+
     当前 tile x , tile y 坐标系, 是处理哪些功能?
     是否可以将所有的tile x, tile y 坐标, 转换为 世界坐标 world x, world y 呢?
     这样保证所有的坐标系, 都是 世界坐标系. 方便计算距离等.
