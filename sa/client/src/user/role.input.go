@@ -74,8 +74,14 @@ func (p *Role) handleKeyMove(up, down, left, right bool) {
 	newWorldX := newRoleSprite.actionAnchorPointWX + dx*moveSpeed
 	newWorldY := newRoleSprite.actionAnchorPointWY + dy*moveSpeed
 	mapCfg := p.scene._map.tiledMapCfg
-	// 限制在菱形地图边界内 (World 坐标)
-	newWorldX, newWorldY = mapCfg.ClampMapBoundaryWithW(newWorldX, newWorldY)
+
+	{ // 限制在菱形地图边界内 (World 坐标)
+		clampedX, clampedY := mapCfg.ClampMapBoundaryWithW(newWorldX, newWorldY)
+		if !xutil.Float32Equal(clampedX, newWorldX) || !xutil.Float32Equal(clampedY, newWorldY) { // 坐标被限制了
+			log.Printf("Role HandleInput boundary hit at world (%.3f, %.3f)", newWorldX, newWorldY)
+		}
+		newWorldX, newWorldY = clampedX, clampedY
+	}
 
 	newRoleSprite.actionAnchorPointTX, newRoleSprite.actionAnchorPointTY = mapCfg.IsometricCT.W2T(newWorldX, newWorldY)
 	// 更新 World 坐标
