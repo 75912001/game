@@ -34,9 +34,9 @@ type TiledObject struct {
 	// property 刷怪
 	EnemyGroupID  uint32      // 刷怪点-敌人组ID (0表示非刷怪点)
 	EnemyGroup    *EnemyGroup // 运行时-敌人组配置引用
-	PatrolRadius  float32     // 刷怪点-巡逻半径 (世界坐标单位) [0表示不巡逻]
+	PatrolRadius  float32     // 刷怪点-巡逻半径 (世界坐标单位) [0表示不巡逻] 需要大于等于 SpawnRadius
 	RespawnSecond int         // 刷怪点-刷新间隔 (秒) [0表示不刷新]
-	SpawnRadius   float32     // 刷怪点-刷怪半径 (世界坐标单位) [0表示在点上刷怪]
+	SpawnRadius   float32     // 刷怪点-刷怪半径 (世界坐标单位) [0表示在点上刷怪] 需要小于等于 PatrolRadius
 }
 
 // ============================================================================

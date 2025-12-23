@@ -234,6 +234,9 @@ func (p *TiledMapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*Tiled
 					default:
 						// 忽略未知属性
 					}
+					if xutil.Float32Less(obj.PatrolRadius, obj.SpawnRadius) {
+						return nil, fmt.Errorf("对象 %d 的巡逻半径不能小于刷新半径: %v %v", obj.ID, tmxPath, xruntime.Location())
+					}
 				}
 			}
 			layer.Objects = append(layer.Objects, obj)
