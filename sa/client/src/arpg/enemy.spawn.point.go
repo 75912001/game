@@ -109,11 +109,18 @@ func (p *EnemySpawnPoint) randomSpawnPosition() (float32, float32) {
 		// 限制在地图边界内
 		wx, wy = p.TiledMapCfg.ClampMapBoundaryWithW(wx, wy)
 
-		// 检查位置是否可达
+		// 检查位置是否可达 (Tile 阻挡)
 		tx, ty := p.TiledMapCfg.IsometricCT.W2T(wx, wy)
-		if !p.TiledMapCfg.IsBlockedByTileWithTF(tx, ty) {
-			return wx, wy
+		if p.TiledMapCfg.IsBlockedByTileWithTF(tx, ty) {
+			continue
 		}
+
+		// 检查位置是否在 Object 阻挡区域内
+		if _, blocked := p.TiledMapCfg.FindBlockedByObject(wx, wy); blocked {
+			continue
+		}
+
+		return wx, wy
 	}
 }
 

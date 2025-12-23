@@ -5,9 +5,9 @@
     },
     "activeFile": "map/map.2000003.tmx",
     "expandedProjectPaths": [
-        "tsx",
+        ".",
         "map",
-        "."
+        "tsx"
     ],
     "fileStates": {
         "": {
@@ -184,10 +184,10 @@
                 7
             ],
             "scale": 0.75,
-            "selectedLayer": 1,
+            "selectedLayer": 0,
             "viewCenter": {
                 "x": 1600,
-                "y": 800
+                "y": 799.9999999999999
             }
         },
         "map/map.2000001.tmx#backgroundTower": {

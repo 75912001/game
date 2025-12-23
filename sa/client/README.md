@@ -6,6 +6,7 @@ C:\game\sa\client\src\arpg\enemy.ai.go
 
 刷怪放在map 中. 不是放在 scene 中.C:\game\sa\client\src\user\scene.go
 
+
     怪物组配置中, 生成出来的怪物, 需要有属性
         level
         hp
@@ -17,6 +18,7 @@ C:\game\sa\client\src\arpg\enemy.ai.go
 
     *怪物需要检测阻挡区域.     
     *role 走到地图 左上, 右上, 触碰地图边界, 没有消息输出.
+    *怪物设置的出生区域大于巡逻区域时, 会卡住不动.
 
 
     随机触发遇敌,并在不离开地图的情况下. 切换到战斗场景. 战斗结束之后.
