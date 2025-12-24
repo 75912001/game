@@ -117,3 +117,8 @@ func (p *Role) GetAssetID() common.AssetID {
 func (p *Role) GetRoleNick() string {
 	return p.roleRecord.Nick
 }
+
+// GetWX 获取-角色世界坐标X
+func (p *Role) GetWX() float32 {
+	return p.sprite.actionAnchorPointWX
+}

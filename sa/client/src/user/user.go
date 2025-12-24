@@ -15,6 +15,8 @@ type User struct {
 	role       *Role // 当前选择的角色
 }
 
+var GUser *User
+
 func NewUser() *User {
 	user := &User{
 		userRecord: &proto.UserRecord{
@@ -22,6 +24,7 @@ func NewUser() *User {
 		},
 		roleMgr: NewRoleMgr(),
 	}
+	GUser = user
 	return user
 }
 
