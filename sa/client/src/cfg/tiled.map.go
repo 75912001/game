@@ -26,7 +26,7 @@ type TiledMap struct {
 	BottomWX, BottomWY float32             // 地图边界-菱形四角坐标-底 (World 坐标)
 	LeftWX, LeftWY     float32             // 地图边界-菱形四角坐标-左 (World 坐标)
 	IsometricCT        *commonct.Isometric // 坐标转换器
-	TileBlocked        [][]bool            // 阻挡2维数组 [Width][Height] true 表示阻挡 (由多个图层合成)
+	TileBlocked        [][]bool            // [废弃][参见 README.md] 阻挡2维数组 [Width][Height] true 表示阻挡 (由多个图层合成)
 }
 
 // 限制在菱形地图边界内-叉积版 (World 坐标)

@@ -22,5 +22,6 @@
 # 可参考资料
     敌人配置 C:\game\sa\client\cfg\pet.yaml
     当前敌人ai C:\game\sa\client\src\arpg\enemy.ai.go
+    宠物视野 C:\game\sa\client\cfg\common.yaml````
   # 任务
     给出方案.
