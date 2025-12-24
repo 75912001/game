@@ -12,17 +12,16 @@
     如若有更好的方案, 请一并给出.并给出理由和对比.
     可以完全访问当前项目的代码和资源.
 # 背景
-    当前坐标主要有 世界坐标 WX,WY, tile 坐标 两种 TX, TY.
+    当前 arpg, 敌人ai, 缺少追击功能.
 # 问题
-    当前 tile x , tile y 坐标系, 是处理哪些功能?
 # 当前想法
-    是否可以将所有的tile x, tile y 坐标, 转换为 世界坐标 world x, world y 呢?
-    这样保证所有的坐标系, 都是 世界坐标系. 方便计算距离等.
+    (在C:\game\sa\client\cfg\pet.yaml 配置敌人的视野范围 viewRange, 默认为 200, 单位: 像素)
+    如果有角色进入敌人的视野范围, 那么敌人会追击该目标. 
+    当距离大于2倍的巡逻范围时, 敌人会停止追击, 返回巡逻点.
+    追击过程中, 敌人会避开不可到达区域.
 
 # 可参考资料
-C:\game\sa\client\res\tiled\map 配置表中, 关于 tile 的坐标. 也会在配置中使用
-C:\game\sa\client\cfg 配置表中. 应该都使用 世界坐标系 wx,wy
-C:\game\sa\client\src\common\coordinatetransform 中, 有坐标转换的代码.
+    敌人配置 C:\game\sa\client\cfg\pet.yaml
+    当前敌人ai C:\game\sa\client\src\arpg\enemy.ai.go
   # 任务
-    如果可以, 那么需要在地图加载时, 预处理所有的 tile 坐标为 world 坐标吗?
-    给出方案.和可能涉及到的影响.
+    给出方案.

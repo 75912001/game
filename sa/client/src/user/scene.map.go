@@ -7,7 +7,6 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/vector"
 	"image"
 	"image/color"
-	"saClient/src/arpg"
 	"saClient/src/cfg"
 	"saClient/src/common"
 	commoncamera "saClient/src/common/camera"
@@ -66,10 +65,10 @@ func (p *TileSortInfo) Draw(screen *ebitenv2.Image, camera *commoncamera.Camera)
 
 // Map Tiled 地图场景
 type Map struct {
-	id           common.AssetID      // 地图ID
-	tiledMapCfg  *cfg.TiledMap       // Tiled 地图资源
-	mapCfg       *cfg.Map            // 地图配置
-	spawnManager *arpg.EnemySpawnMgr // 刷怪点管理器
+	id           common.AssetID     // 地图ID
+	tiledMapCfg  *cfg.TiledMap      // Tiled 地图资源
+	mapCfg       *cfg.Map           // 地图配置
+	spawnManager *ArpgEnemySpawnMgr // 刷怪点管理器
 
 	tileCache    *xmap.MapMgr[int, *TileCacheInfo] // key:GID val:TileCacheInfo 缓存 (位于 多个图层中 相同 GID 只存一份)
 	tileSortPool *xpool.Pool[*TileSortInfo]        // TileSortInfo 对象池
@@ -99,7 +98,7 @@ func NewMap(mapID common.AssetID) *Map {
 	}
 	m.tiledMapCfg = cfg.GTiledMapMgr.Maps.Get(mapID)
 	m.mapCfg = cfg.GMapMgr.Maps.Get(mapID)
-	m.spawnManager = arpg.NewEnemySpawnMgr(m.tiledMapCfg)
+	m.spawnManager = NewArpgEnemySpawnMgr(m.tiledMapCfg)
 	m.buildTileCache()
 	return m
 }

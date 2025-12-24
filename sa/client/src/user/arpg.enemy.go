@@ -1,4 +1,4 @@
-package arpg
+package user
 
 import (
 	"saClient/src/cfg"
@@ -9,12 +9,12 @@ import (
 	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
 )
 
-// Enemy 怪物实体
-type Enemy struct {
-	SpawnPoint  *EnemySpawnPoint    // 归属刷怪点
-	Generated   *cfg.GeneratedEnemy // 生成的敌人配置
+// ArpgEnemy 怪物实体
+type ArpgEnemy struct {
+	SpawnPoint  *ArpgEnemySpawnPoint // 归属刷怪点
+	Generated   *cfg.GeneratedEnemy  // 生成的敌人配置
 	Level       uint32
-	BattleStats *EnemyBattleStats // 战斗属性
+	BattleStats *ArpgEnemyBattleStats // 战斗属性
 
 	// 位置信息
 	WX, WY      float32 // 世界坐标 (脚底中心)
@@ -24,13 +24,13 @@ type Enemy struct {
 	FrameIdx  uint32 // 当前帧索引
 	FrameTick uint32 // 帧计时器
 
-	AI *EnemyAI // AI 控制器
-	HP uint32   // 当前生命值
+	AI *ArpgEnemyAI // AI 控制器
+	HP uint32       // 当前生命值
 }
 
-// NewEnemy 创建怪物实体
-func NewEnemy(spawnPoint *EnemySpawnPoint, generated *cfg.GeneratedEnemy, wx, wy float32) *Enemy {
-	enemy := &Enemy{
+// NewArpgEnemy 创建怪物实体
+func NewArpgEnemy(spawnPoint *ArpgEnemySpawnPoint, generated *cfg.GeneratedEnemy, wx, wy float32) *ArpgEnemy {
+	enemy := &ArpgEnemy{
 		SpawnPoint:  spawnPoint,
 		Generated:   generated,
 		Level:       generated.Level,
@@ -40,22 +40,22 @@ func NewEnemy(spawnPoint *EnemySpawnPoint, generated *cfg.GeneratedEnemy, wx, wy
 		FrameIdx:    0,
 		FrameTick:   0,
 	}
-	enemy.BattleStats = NewEnemyBattleStats(enemy)
-	enemy.AI = NewEnemyAI(enemy)
+	enemy.BattleStats = NewArpgEnemyBattleStats(enemy)
+	enemy.AI = NewArpgEnemyAI(enemy)
 	enemy.HP = enemy.BattleStats.GetHpMax()
 	return enemy
 }
 
-func (p *Enemy) GetCfg() *cfg.Pet {
+func (p *ArpgEnemy) GetCfg() *cfg.Pet {
 	return p.Generated.Config.Pet
 }
 
-func (p *Enemy) IsDead() bool {
+func (p *ArpgEnemy) IsDead() bool {
 	return p.HP <= 0
 }
 
 // Update 每帧更新
-func (p *Enemy) Update() {
+func (p *ArpgEnemy) Update() {
 	if p.IsDead() {
 		return
 	}
@@ -64,12 +64,12 @@ func (p *Enemy) Update() {
 }
 
 // GetWY 实现 IRenderable 接口 - 获取用于 Y-Sorting 的坐标
-func (p *Enemy) GetWY() float32 {
+func (p *ArpgEnemy) GetWY() float32 {
 	return p.WY
 }
 
 // Draw 实现 IRenderable 接口 - 绘制怪物
-func (p *Enemy) Draw(screen *ebitenv2.Image, camera *commoncamera.Camera) {
+func (p *ArpgEnemy) Draw(screen *ebitenv2.Image, camera *commoncamera.Camera) {
 	if p.IsDead() { // 死亡不绘制 todo menglc , 绘制死亡动画
 		return
 	}
@@ -93,7 +93,7 @@ func (p *Enemy) Draw(screen *ebitenv2.Image, camera *commoncamera.Camera) {
 }
 
 // TakeDamage 受到伤害
-func (p *Enemy) TakeDamage(damage uint32) {
+func (p *ArpgEnemy) TakeDamage(damage uint32) {
 	if p.IsDead() {
 		return
 	}
@@ -105,7 +105,7 @@ func (p *Enemy) TakeDamage(damage uint32) {
 }
 
 // UpdateAnimation 更新动画帧
-func (p *Enemy) UpdateAnimation() {
+func (p *ArpgEnemy) UpdateAnimation() {
 	p.FrameTick++
 	if common.FrameTickPerChange <= p.FrameTick {
 		p.FrameTick = 0

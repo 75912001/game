@@ -1,4 +1,4 @@
-package arpg
+package user
 
 import (
 	xtime "github.com/75912001/xlib/time"
@@ -7,29 +7,29 @@ import (
 	commonct "saClient/src/common/coordinatetransform"
 )
 
-// EnemyAIState 怪物 AI 状态
-type EnemyAIState int
+// ArpgEnemyAIState 怪物 AI 状态
+type ArpgEnemyAIState int
 
 const (
-	EnemyAIState_Idle   EnemyAIState = iota // 待机
-	EnemyAIState_Patrol                     // 巡逻
+	ArpgEnemyAIState_Idle   ArpgEnemyAIState = iota // 待机
+	ArpgEnemyAIState_Patrol                         // 巡逻
 	// 后续扩展
-	// EnemyAIState_Chase                   // 追击
-	// EnemyAIState_Attack                  // 攻击
+	// ArpgEnemyAIState_Chase                   // 追击
+	// ArpgEnemyAIState_Attack                  // 攻击
 )
 
-// EnemyAI 怪物 AI 控制器
-type EnemyAI struct {
-	Enemy       *Enemy       // 所属怪物
-	State       EnemyAIState // 当前状态
-	TargetWX    float32      // 目标点 X
-	TargetWY    float32      // 目标点 Y
-	IdleEndTime int64        // Idle 状态结束时间 (秒)
+// ArpgEnemyAI 怪物 AI 控制器
+type ArpgEnemyAI struct {
+	Enemy       *ArpgEnemy       // 所属怪物
+	State       ArpgEnemyAIState // 当前状态
+	TargetWX    float32          // 目标点 X
+	TargetWY    float32          // 目标点 Y
+	IdleEndTime int64            // Idle 状态结束时间 (秒)
 }
 
-// NewEnemyAI 创建怪物 AI
-func NewEnemyAI(enemy *Enemy) *EnemyAI {
-	ai := &EnemyAI{
+// NewArpgEnemyAI 创建怪物 AI
+func NewArpgEnemyAI(enemy *ArpgEnemy) *ArpgEnemyAI {
+	ai := &ArpgEnemyAI{
 		Enemy: enemy,
 	}
 	ai.switchToPatrol()
@@ -37,17 +37,17 @@ func NewEnemyAI(enemy *Enemy) *EnemyAI {
 }
 
 // Update 每帧更新 AI
-func (p *EnemyAI) Update() {
+func (p *ArpgEnemyAI) Update() {
 	switch p.State {
-	case EnemyAIState_Idle:
+	case ArpgEnemyAIState_Idle:
 		p.updateIdle()
-	case EnemyAIState_Patrol:
+	case ArpgEnemyAIState_Patrol:
 		p.updatePatrol()
 	}
 }
 
 // updateIdle 待机状态更新
-func (p *EnemyAI) updateIdle() {
+func (p *ArpgEnemyAI) updateIdle() {
 	// Idle 超时后切换到 Patrol
 	if xtime.GTimeMgr.ShadowTimestamp() >= p.IdleEndTime {
 		p.switchToPatrol()
@@ -55,7 +55,7 @@ func (p *EnemyAI) updateIdle() {
 }
 
 // switchToPatrol 切换到巡逻状态
-func (p *EnemyAI) switchToPatrol() {
+func (p *ArpgEnemyAI) switchToPatrol() {
 	spawnPoint := p.Enemy.SpawnPoint
 
 	// 在巡逻半径内随机选择目标点
@@ -64,11 +64,11 @@ func (p *EnemyAI) switchToPatrol() {
 	// 设置目标并切换状态
 	p.TargetWX = targetWX
 	p.TargetWY = targetWY
-	p.State = EnemyAIState_Patrol
+	p.State = ArpgEnemyAIState_Patrol
 }
 
 // updatePatrol 巡逻状态更新
-func (p *EnemyAI) updatePatrol() {
+func (p *ArpgEnemyAI) updatePatrol() {
 	enemy := p.Enemy
 	spawnPoint := enemy.SpawnPoint
 	mapCfg := spawnPoint.TiledMapCfg
@@ -110,7 +110,7 @@ func (p *EnemyAI) updatePatrol() {
 }
 
 // switchToIdle 切换到待机状态
-func (p *EnemyAI) switchToIdle() {
-	p.State = EnemyAIState_Idle
+func (p *ArpgEnemyAI) switchToIdle() {
+	p.State = ArpgEnemyAIState_Idle
 	p.IdleEndTime = xtime.GTimeMgr.ShadowTimestamp() + xutil.RandomInt64(1, 1)
 }
