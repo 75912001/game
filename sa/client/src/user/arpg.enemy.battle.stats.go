@@ -56,12 +56,12 @@ func (p *ArpgEnemyBattleStats) GetHitRate() float32 {
 	return p.enemy.GetCfg().Attributes.HitRate
 }
 
-// GetCritDamageBonus 获取暴击伤害加成
-func (p *ArpgEnemyBattleStats) GetCritDamageBonus() float32 {
-	return p.enemy.GetCfg().Attributes.CritDamageBonus
+// GetCritDamageBonusRate 获取暴击伤害加成
+func (p *ArpgEnemyBattleStats) GetCritDamageBonusRate() float32 {
+	return p.enemy.GetCfg().Attributes.CritDamageBonusRate
 }
 
-// GetStatusResist 获取异常状态抗性比率
-func (p *ArpgEnemyBattleStats) GetStatusResist() float32 {
-	return p.enemy.GetCfg().Attributes.StatusResist
+// GetStatusResistRate 获取异常状态抗性比率
+func (p *ArpgEnemyBattleStats) GetStatusResistRate() float32 {
+	return p.enemy.GetCfg().Attributes.StatusResistRate
 }

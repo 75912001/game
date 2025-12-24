@@ -30,7 +30,7 @@ func main() {
 		panic(err)
 	}
 	// 设置窗口大小和标题
-	ebitenv2.SetWindowSize(cfg.GCommon.WindowDefaultWidth, cfg.GCommon.WindowDefaultHeight)
+	ebitenv2.SetWindowSize(cfg.GCommon.WindowDefWidth, cfg.GCommon.WindowDefHeight)
 	ebitenv2.SetWindowTitle(common.AppWindowTitle)
 
 	// 使用标准库加载图标

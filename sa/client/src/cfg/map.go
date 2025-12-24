@@ -98,7 +98,7 @@ func (p *MapMgr) Assemble() error {
 		case SceneTransitionIDVertical, SceneTransitionIDHorizontal, SceneTransitionIDFade:
 			m.SceneTransition = GSceneTransitionMgr.Transitions.Get(m.TransitionID)
 		default:
-			m.SceneTransition = DefaultSceneTransition()
+			m.SceneTransition = DefSceneTransition()
 			log.Printf("地图 %d 引用的场景过渡效果不存在: %d, 使用默认过渡效果 %d %v", id, m.TransitionID, m.SceneTransition.ID, xruntime.Location())
 		}
 		return true

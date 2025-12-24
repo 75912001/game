@@ -4,6 +4,7 @@ import (
 	xtime "github.com/75912001/xlib/time"
 	xutil "github.com/75912001/xlib/util"
 	"math"
+	"saClient/src/cfg"
 	commonct "saClient/src/common/coordinatetransform"
 )
 
@@ -85,9 +86,8 @@ func (p *ArpgEnemyAI) updatePatrol() {
 	}
 
 	// 移动
-	moveSpeed := enemy.Generated.Config.Pet.Attributes.ArpgSpeed
-	dx = dx / distance * moveSpeed
-	dy = dy / distance * moveSpeed
+	dx = dx / distance * cfg.GCommon.PetDefArpgSpeed
+	dy = dy / distance * cfg.GCommon.PetDefArpgSpeed
 
 	newWX := enemy.WX + dx
 	newWY := enemy.WY + dy

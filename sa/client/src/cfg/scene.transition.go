@@ -25,7 +25,7 @@ type SceneTransition struct {
 	Speed float32 `yaml:"speed"` // 过渡速度 (每帧进度增量)
 }
 
-func DefaultSceneTransition() *SceneTransition {
+func DefSceneTransition() *SceneTransition {
 	return &SceneTransition{
 		ID:    SceneTransitionIDVertical,
 		Speed: 0.1,

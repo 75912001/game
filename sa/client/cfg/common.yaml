@@ -1,31 +1,71 @@
 # 全局配置
 # 任何修改此文件的行为都需要通知客户端和服务端开发人员
 
-# 允许创建的最大角色数
+############################################################
+# role 角色
+############################################################
+# 角色-允许创建的最大角色数
 roleCountMax: 5
-
-# 允许转生的最大次数
+# 角色-允许转生的最大次数
 roleRebirthCountMax: 5
-
-# 角色默认移动速度
-roleDefaultMoveSpeed: 6.0
-
-# 角色默认缩放比例
-roleDefaultScale: 1.0
-
-# 角色每升一级,获得可用点数
+# 角色-默认-移动速度
+roleDefMoveSpeed: 6.0
+# 角色-默认-缩放比例
+roleDefScale: 1.0
+# 角色-每升一级,获得可用点数
 roleLevelUpAvailablePoint: 3
-
-# 角色属性-MP最大值
+# 角色-属性-MP最大值
 roleMPMax: 100
-
-# 角色初始可分配点数
+# 角色-初始可分配点数
 roleInitialAvailablePoint: 20
 
+# 角色-默认-暴击率 范围[0,1]
+roleDefCritRate: 0.10
+# 角色-默认-反击率 范围[0,1]
+roleDefCounterRate: 0.10
+# 角色-默认-闪避率 范围[0,1]
+roleDefDodgeRate: 0.10
+# 角色-默认-命中率 范围[0,1]
+roleDefHitRate: 0.90
+# 角色-默认-暴击伤害加成倍数 范围[0,1]
+roleDefCritDamageBonusRate: 0.50
+# 角色-默认-异常状态抗性比率 范围[0,1]
+roleDefStatusResistRate: 0.20
+
+############################################################
+# pet 宠物
+############################################################
+# 宠物-最大转生次数
+petRebirthCountMax: 3
+# 宠物-默认-移动速度
+petDefMoveSpeed: 5.0
+# 宠物-属性-MP最大值
+petMPMax: 100
+# 宠物-默认-视野范围
+petDefViewRange: 200
+# 宠物-默认-战斗中移动速度
+petDefArpgSpeed: 1.0
+
+# 宠物-默认-暴击率 范围[0,1]
+petDefCritRate: 0.10
+# 角色-默认-反击率 范围[0,1]
+petDefCounterRate: 0.10
+# 角色-默认-闪避率 范围[0,1]
+petDefDodgeRate: 0.10
+# 角色-默认-命中率 范围[0,1]
+petDefHitRate: 0.90
+# 角色-默认-暴击伤害加成倍数 范围[0,1]
+petDefCritDamageBonusRate: 0.50
+# 角色-默认-异常状态抗性比率 范围[0,1]
+petDefStatusResistRate: 0.20
+
+############################################################
+# 系统 system
+############################################################
 # 窗口默认宽度
-windowDefaultWidth: 1920
+windowDefWidth: 1920
 # 窗口默认高度
-windowDefaultHeight: 1080
+windowDefHeight: 1080
 
 # 屏幕最大宽度
 screenMaxWidth: 1920

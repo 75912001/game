@@ -75,7 +75,7 @@ func (p *EnemyGroupMgr) Load() error {
 		if err := p.validateGroup(group); err != nil {
 			return err
 		}
-		p.processDefaults(group)
+		p.processDef(group)
 		p.classifyEnemies(group)
 
 		ok := p.EnemyGroups.AddIfNotExist(group.ID, group)
@@ -165,18 +165,18 @@ func (p *EnemyGroupMgr) validateNormalGroup(group *EnemyGroup) error {
 	return nil
 }
 
-// processDefaults 处理默认值
-func (p *EnemyGroupMgr) processDefaults(group *EnemyGroup) {
+// processDef 处理默认值
+func (p *EnemyGroupMgr) processDef(group *EnemyGroup) {
 	// captured 默认为 true
 	if group.Captured == nil {
-		var defaultCaptured = true
-		group.Captured = &defaultCaptured
+		var defCaptured = true
+		group.Captured = &defCaptured
 	}
 
 	// Boss组强制不可捕获
 	if group.IsBoss {
-		var defaultCaptured = false
-		group.Captured = &defaultCaptured
+		var defCaptured = false
+		group.Captured = &defCaptured
 		group.BabyRate = 0
 	}
 }

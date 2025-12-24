@@ -10,7 +10,12 @@ import (
 
 // LoadCfg 加载配置
 func LoadCfg() error {
-	err := cfg.GRoleMgr.Load()
+	var err error
+	err = cfg.GCommon.Load()
+	if err != nil {
+		return errors.WithMessagef(err, "load common error %v", xruntime.Location())
+	}
+	err = cfg.GRoleMgr.Load()
 	if err != nil {
 		return errors.WithMessagef(err, "load role error %v", xruntime.Location())
 	}
@@ -21,10 +26,6 @@ func LoadCfg() error {
 	err = res.GPetMgr.Load()
 	if err != nil {
 		return errors.WithMessagef(err, "load res pet error %v", xruntime.Location())
-	}
-	err = cfg.GCommon.Load()
-	if err != nil {
-		return errors.WithMessagef(err, "load common error %v", xruntime.Location())
 	}
 	err = cfg.GPetMgr.Load()
 	if err != nil {
@@ -57,7 +58,12 @@ func LoadCfg() error {
 
 // CheckCfg 检查配置
 func CheckCfg() error {
-	err := cfg.GRoleMgr.Check()
+	var err error
+	err = cfg.GCommon.Check()
+	if err != nil {
+		return errors.WithMessagef(err, "check common error %v", xruntime.Location())
+	}
+	err = cfg.GRoleMgr.Check()
 	if err != nil {
 		return errors.WithMessagef(err, "check role error %v", xruntime.Location())
 	}
@@ -68,10 +74,6 @@ func CheckCfg() error {
 	err = res.GPetMgr.Check()
 	if err != nil {
 		return errors.WithMessagef(err, "check res pet error %v", xruntime.Location())
-	}
-	err = cfg.GCommon.Check()
-	if err != nil {
-		return errors.WithMessagef(err, "check common error %v", xruntime.Location())
 	}
 	err = cfg.GPetMgr.Check()
 	if err != nil {
@@ -104,7 +106,12 @@ func CheckCfg() error {
 
 // AssembleCfg 装配配置
 func AssembleCfg() error {
-	err := cfg.GRoleMgr.Assemble()
+	var err error
+	err = cfg.GCommon.Assemble()
+	if err != nil {
+		return errors.WithMessagef(err, "Assemble common error %v", xruntime.Location())
+	}
+	err = cfg.GRoleMgr.Assemble()
 	if err != nil {
 		return errors.WithMessagef(err, "Assemble role error %v", xruntime.Location())
 	}
@@ -115,10 +122,6 @@ func AssembleCfg() error {
 	err = res.GPetMgr.Assemble()
 	if err != nil {
 		return errors.WithMessagef(err, "Assemble res pet error %v", xruntime.Location())
-	}
-	err = cfg.GCommon.Assemble()
-	if err != nil {
-		return errors.WithMessagef(err, "Assemble common error %v", xruntime.Location())
 	}
 	err = cfg.GPetMgr.Assemble()
 	if err != nil {
