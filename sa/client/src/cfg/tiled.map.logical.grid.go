@@ -16,6 +16,24 @@ func (p *TiledMapLogicalGrid) Grid2W(gx, gy int) (wx, wy float32) {
 	return
 }
 
+// W2Grid World 坐标 → 逻辑网格坐标
+func (p *TiledMapLogicalGrid) W2Grid(wx, wy float32) (gx, gy int) {
+	gx = int(wx) / p.CellW
+	gy = int(wy) / p.CellH
+	// 边界限制
+	if gx < 0 {
+		gx = 0
+	} else if gx >= p.GridW {
+		gx = p.GridW - 1
+	}
+	if gy < 0 {
+		gy = 0
+	} else if gy >= p.GridH {
+		gy = p.GridH - 1
+	}
+	return
+}
+
 // IsBlocked 检查逻辑网格坐标是否阻挡
 // 返回: true=阻挡, false=可通行
 func (p *TiledMapLogicalGrid) IsBlocked(gx, gy int) bool {
@@ -43,21 +61,50 @@ func (p *TiledMapLogicalGrid) build(tiledMap *TiledMap) {
 		p.Grid[gx] = make([]bool, p.GridH)
 	}
 
+	// 采样点偏移 (相对于格子左上角)
+	// 检测: 中心 + 四角 + 四边中点 = 9 个采样点
+	halfW := float32(p.CellW) / 2
+	halfH := float32(p.CellH) / 2
+	cellW := float32(p.CellW)
+	cellH := float32(p.CellH)
+	sampleOffsets := [][2]float32{
+		{halfW, halfH}, // 中心
+		{0, 0},         // 左上
+		{cellW, 0},     // 右上
+		{0, cellH},     // 左下
+		{cellW, cellH}, // 右下
+		{halfW, 0},     // 上中
+		{halfW, cellH}, // 下中
+		{0, halfH},     // 左中
+		{cellW, halfH}, // 右中
+	}
+
 	// 遍历所有格子，检测阻挡
 	for gx := 0; gx < p.GridW; gx++ {
 		for gy := 0; gy < p.GridH; gy++ {
-			// 计算格子中心的 World 坐标
-			wx := float32(gx*p.CellW + p.CellW/2)
-			wy := float32(gy*p.CellH + p.CellH/2)
+			// 格子左上角 World 坐标
+			baseX := float32(gx * p.CellW)
+			baseY := float32(gy * p.CellH)
 
-			// 检查是否在菱形边界内
-			if !tiledMap.IsInsideDiamond(wx, wy) {
-				p.Grid[gx][gy] = true // 菱形外 = 阻挡
-				continue
+			blocked := false
+			for _, offset := range sampleOffsets {
+				wx := baseX + offset[0]
+				wy := baseY + offset[1]
+
+				// 检查是否在菱形边界外
+				if !tiledMap.IsInsideDiamond(wx, wy) {
+					blocked = true
+					break
+				}
+
+				// 检查是否被阻挡
+				_, _, isBlocked := tiledMap.IsBlocked(wx, wy)
+				if isBlocked {
+					blocked = true
+					break
+				}
 			}
 
-			// 调用现有阻挡检测
-			_, _, blocked := tiledMap.IsBlocked(wx, wy)
 			p.Grid[gx][gy] = blocked
 		}
 	}

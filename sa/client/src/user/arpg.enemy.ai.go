@@ -19,6 +19,14 @@ const (
 	// ArpgEnemyAIState_Attack                  // 攻击
 )
 
+// 追击相关常量
+const (
+	chasePathRecalcIntervalSec = 1    // 路径重计算间隔 (秒)
+	chaseTargetMoveThreshold   = 50.0 // 目标移动阈值 (超过则重算路径)
+	chaseAttackRange           = 30.0 // 攻击范围
+	chaseArriveThreshold       = 5.0  // 到达路径点阈值
+)
+
 // ArpgEnemyAI 怪物 AI 控制器
 type ArpgEnemyAI struct {
 	Enemy       *ArpgEnemy       // 所属怪物
@@ -26,6 +34,14 @@ type ArpgEnemyAI struct {
 	TargetWX    float32          // 目标点 X
 	TargetWY    float32          // 目标点 Y
 	IdleEndTime int64            // Idle 状态结束时间 (秒)
+
+	// 追击寻路相关
+	Pathfinder   *AStarPathfinder  // A* 寻路器
+	Path         []AStarWorldPoint // 当前路径
+	PathIndex    int               // 当前路径点索引
+	LastPathTime int64             // 上次计算路径时间 (毫秒)
+	LastTargetWX float32           // 上次目标位置 X
+	LastTargetWY float32           // 上次目标位置 Y
 }
 
 // NewArpgEnemyAI 创建怪物 AI
@@ -130,6 +146,15 @@ func (p *ArpgEnemyAI) switchToIdle() {
 // switchToChase 切换到追击状态
 func (p *ArpgEnemyAI) switchToChase() {
 	p.State = ArpgEnemyAIState_Chase
+	p.Path = nil
+	p.PathIndex = 0
+	p.LastPathTime = 0
+
+	// 初始化寻路器 (如果地图支持逻辑网格)
+	mapCfg := p.Enemy.SpawnPoint.TiledMapCfg
+	if mapCfg.LogicalGrid != nil && p.Pathfinder == nil {
+		p.Pathfinder = NewAStarPathfinder(mapCfg.LogicalGrid)
+	}
 }
 
 // updateChase 追击状态更新
@@ -152,53 +177,97 @@ func (p *ArpgEnemyAI) updateChase() {
 		return
 	}
 
-	// 计算移动方向
+	// 计算与目标的距离
 	dx := targetWX - enemy.WX
 	dy := targetWY - enemy.WY
 	distance := float32(math.Sqrt(float64(dx*dx + dy*dy)))
 
 	// 检查是否到达目标 (攻击范围)
-	if xutil.Float32Less(distance, 30.0) { // 假设攻击范围 30
+	if distance < chaseAttackRange {
 		// todo 切换到攻击状态
 		return
 	}
 
-	// 移动
-	dx = dx / distance * cfg.GCommon.PetDefArpgSpeed
-	dy = dy / distance * cfg.GCommon.PetDefArpgSpeed
+	// 使用 A* 寻路
+	if p.Pathfinder != nil {
+		p.updateChaseWithAStar(targetWX, targetWY, mapCfg)
+	}
+}
 
-	newWX := enemy.WX + dx
-	newWY := enemy.WY + dy
+// updateChaseWithAStar 使用 A* 寻路追击
+func (p *ArpgEnemyAI) updateChaseWithAStar(targetWX, targetWY float32, mapCfg *cfg.TiledMap) {
+	enemy := p.Enemy
+	now := xtime.GTimeMgr.ShadowTimestamp()
 
-	newWX, newWY, blocked := mapCfg.IsBlocked(newWX, newWY)
-	// 追击时遇到阻挡，简单处理为停止移动，或者尝试滑动（这里简化处理）
-	if blocked {
-		// 简单的滑动处理：尝试只移动 X 或只移动 Y
-		newWX2, _, blockedX := mapCfg.IsBlocked(enemy.WX+dx, enemy.WY)
-		if !blockedX {
-			newWX = newWX2
-			newWY = enemy.WY
-		} else {
-			_, newWY2, blockedY := mapCfg.IsBlocked(enemy.WX, enemy.WY+dy)
-			if !blockedY {
-				newWX = enemy.WX
-				newWY = newWY2
-			} else {
-				// 完全阻挡，停止
-				return
-			}
+	// 检查是否需要重新计算路径
+	needRecalc := false
+	if p.Path == nil || len(p.Path) == 0 {
+		needRecalc = true // 无路径
+	} else if p.PathIndex >= len(p.Path) {
+		needRecalc = true // 路径走完
+	} else if now-p.LastPathTime >= chasePathRecalcIntervalSec {
+		// 定时刷新: 检查目标是否移动超过阈值
+		dx := targetWX - p.LastTargetWX
+		dy := targetWY - p.LastTargetWY
+		if dx*dx+dy*dy > chaseTargetMoveThreshold*chaseTargetMoveThreshold {
+			needRecalc = true
 		}
 	}
 
-	// 更新位置
-	enemy.WX = newWX
-	enemy.WY = newWY
+	// 重新计算路径
+	if needRecalc {
+		p.Path = p.Pathfinder.FindPath(enemy.WX, enemy.WY, targetWX, targetWY)
+		p.PathIndex = 0
+		p.LastPathTime = now
+		p.LastTargetWX = targetWX
+		p.LastTargetWY = targetWY
 
-	// 更新朝向
-	enemy.Orientation = commonct.CalculateOrientation(dx, dy)
+		// 找不到路径, 等待下次重算
+		if p.Path == nil || len(p.Path) == 0 {
+			return
+		}
+	}
 
-	// 更新动画帧
-	enemy.UpdateAnimation()
+	// 沿路径移动
+	if p.PathIndex < len(p.Path) {
+		waypoint := p.Path[p.PathIndex]
+		dx := waypoint.WX - enemy.WX
+		dy := waypoint.WY - enemy.WY
+		distance := float32(math.Sqrt(float64(dx*dx + dy*dy)))
+
+		// 检查是否到达当前路径点
+		if distance < chaseArriveThreshold {
+			p.PathIndex++
+			if p.PathIndex >= len(p.Path) {
+				return // 路径走完
+			}
+			// 继续移动到下一个点
+			waypoint = p.Path[p.PathIndex]
+			dx = waypoint.WX - enemy.WX
+			dy = waypoint.WY - enemy.WY
+			distance = float32(math.Sqrt(float64(dx*dx + dy*dy)))
+		}
+
+		// 移动
+		if distance > 0.01 {
+			dx = dx / distance * cfg.GCommon.PetDefArpgSpeed
+			dy = dy / distance * cfg.GCommon.PetDefArpgSpeed
+
+			newWX := enemy.WX + dx
+			newWY := enemy.WY + dy
+
+			newWX, newWY, blocked := mapCfg.IsBlocked(newWX, newWY)
+			if !blocked {
+				enemy.WX = newWX
+				enemy.WY = newWY
+				enemy.Orientation = commonct.CalculateOrientation(dx, dy)
+				enemy.UpdateAnimation()
+			} else {
+				// 路径上遇到阻挡 (动态障碍物?), 重算路径
+				p.Path = nil
+			}
+		}
+	}
 }
 
 // checkVision 检查视野
