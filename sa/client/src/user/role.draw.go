@@ -43,8 +43,8 @@ func (p *Role) GetWY() float32 {
 
 // Draw 仅绘制角色本身(实现 Renderable 接口)
 func (p *Role) Draw(screen *ebitenv2.Image, cam *commoncamera.Camera) {
-	screenX := p.sprite.cameraAnchorPointWX - float32(cam.ViewportWX) - float32(p.sprite.roleImageSprite.Frame.Width/2)
-	screenY := p.sprite.cameraAnchorPointWY - float32(cam.ViewportWY) - float32(p.sprite.roleImageSprite.Frame.Height/2)
+	screenX := p.sprite.cameraAnchorPointWX - float32(cam.ViewportWX) - float32(p.sprite.roleImageSprite.Frame.W/2)
+	screenY := p.sprite.cameraAnchorPointWY - float32(cam.ViewportWY) - float32(p.sprite.roleImageSprite.Frame.H/2)
 
 	op := &ebitenv2.DrawImageOptions{}
 	op.GeoM.Translate(float64(screenX), float64(screenY))

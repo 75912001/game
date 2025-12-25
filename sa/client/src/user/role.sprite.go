@@ -1,6 +1,7 @@
 package user
 
 import (
+	"saClient/src/proto"
 	"saClient/src/res"
 
 	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
@@ -18,7 +19,7 @@ type RoleSprite struct {
 	cameraAnchorPointWX float32 // camera锚点-角色中心 World 坐标 X
 	cameraAnchorPointWY float32 // camera锚点-角色中心 World 坐标 Y
 
-	orientation     uint32               // 方向
-	image           *ebitenv2.Image      // 角色图片
-	roleImageSprite *res.RoleImageSprite // 角色图片配置
+	orientation     proto.AssetOrientation // 方向
+	image           *ebitenv2.Image        // 角色图片
+	roleImageSprite *res.RoleImageSprite   // 角色图片配置
 }

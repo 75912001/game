@@ -119,6 +119,23 @@ func (p *TiledMapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*Tiled
 			switch prop.Name {
 			case TiledMapTag_BgmFilePath: // 背景音乐文件路径
 				tiledMap.BackgroundMusicFilePath = prop.Value // todo menglc 需要检查合法性
+			case TiledMapTag_LogicalGrid: // 逻辑网格
+				parts := strings.Split(prop.Value, ",")
+				if len(parts) != 2 {
+					return nil, fmt.Errorf("解析地图 %v 的 logicalGrid 属性失败, 格式错误 (期望: 宽,高): %s %v", mapID, prop.Value, xruntime.Location())
+				}
+				cellW, err := strconv.Atoi(strings.TrimSpace(parts[0]))
+				if err != nil || cellW <= 0 {
+					return nil, fmt.Errorf("解析地图 %v 的 logicalGrid 宽度失败: %s %v", mapID, prop.Value, xruntime.Location())
+				}
+				cellH, err := strconv.Atoi(strings.TrimSpace(parts[1]))
+				if err != nil || cellH <= 0 {
+					return nil, fmt.Errorf("解析地图 %v 的 logicalGrid 高度失败: %s %v", mapID, prop.Value, xruntime.Location())
+				}
+				tiledMap.LogicalGrid = &TiledMapLogicalGrid{
+					CellW: cellW,
+					CellH: cellH,
+				}
 			default: // 未知属性 忽略
 			}
 		}
@@ -523,6 +540,12 @@ func (p *TiledMapMgr) Assemble() error {
 					}
 				}
 			}
+
+			// 生成逻辑网格
+			if tiledMap.LogicalGrid != nil {
+				tiledMap.LogicalGrid.build(tiledMap)
+			}
+
 			return true
 		},
 	)

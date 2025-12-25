@@ -68,7 +68,7 @@ func (p *Role) handleKeyMove(up, down, left, right bool) {
 	}
 
 	// 更新方向
-	newRoleSprite.orientation = uint32(orientation)
+	newRoleSprite.orientation = orientation
 	// 移动速度 (像素/帧)
 	moveSpeed := cfg.GCommon.RoleDefMoveSpeed
 	// 计算新的 World 坐标

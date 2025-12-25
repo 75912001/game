@@ -7,10 +7,10 @@ import (
 
 // Rect 矩形
 type Rect struct {
-	X      int `json:"x"` // x 坐标
-	Y      int `json:"y"` // y 坐标
-	Width  int `json:"w"` // 宽度
-	Height int `json:"h"` // 高度
+	X int `json:"x"` // x 坐标
+	Y int `json:"y"` // y 坐标
+	W int `json:"w"` // 宽度
+	H int `json:"h"` // 高度
 }
 
 // GetNameByAssetOrientation 根据资产方向获取名称

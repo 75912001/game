@@ -6,7 +6,7 @@ import (
 )
 
 // CalculateOrientation 根据移动方向计算朝向
-func CalculateOrientation(dx, dy float32) uint32 {
+func CalculateOrientation(dx, dy float32) proto.AssetOrientation {
 	// 8 方向判断
 	angle := math.Atan2(float64(dy), float64(dx))
 	// 转换为 0-360 度
@@ -20,20 +20,20 @@ func CalculateOrientation(dx, dy float32) uint32 {
 	// 左: 157.5 ~ 202.5, 左上: 202.5 ~ 247.5, 上: 247.5 ~ 292.5, 右上: 292.5 ~ 337.5
 	switch {
 	case degrees < 22.5 || degrees >= 337.5:
-		return uint32(proto.AssetOrientation_AssetOrientation_Right)
+		return proto.AssetOrientation_AssetOrientation_Right
 	case degrees < 67.5:
-		return uint32(proto.AssetOrientation_AssetOrientation_DownRight)
+		return proto.AssetOrientation_AssetOrientation_DownRight
 	case degrees < 112.5:
-		return uint32(proto.AssetOrientation_AssetOrientation_Down)
+		return proto.AssetOrientation_AssetOrientation_Down
 	case degrees < 157.5:
-		return uint32(proto.AssetOrientation_AssetOrientation_DownLeft)
+		return proto.AssetOrientation_AssetOrientation_DownLeft
 	case degrees < 202.5:
-		return uint32(proto.AssetOrientation_AssetOrientation_Left)
+		return proto.AssetOrientation_AssetOrientation_Left
 	case degrees < 247.5:
-		return uint32(proto.AssetOrientation_AssetOrientation_UpLeft)
+		return proto.AssetOrientation_AssetOrientation_UpLeft
 	case degrees < 292.5:
-		return uint32(proto.AssetOrientation_AssetOrientation_Up)
+		return proto.AssetOrientation_AssetOrientation_Up
 	default:
-		return uint32(proto.AssetOrientation_AssetOrientation_UpRight)
+		return proto.AssetOrientation_AssetOrientation_UpRight
 	}
 }

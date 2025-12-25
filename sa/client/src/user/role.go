@@ -51,7 +51,7 @@ func NewRole(roleRecord *proto.RoleRecord) *Role {
 // UpdateWithAction 更新角色状态和摄像机位置
 func (p *Role) UpdateWithAction() {
 	// 设置方向
-	p.sprite.orientation = p.GetValueU32(proto.AssetIDRecord_AssetIDRecord_Orientation)
+	p.sprite.orientation = proto.AssetOrientation(p.GetValueU64(proto.AssetIDRecord_AssetIDRecord_Orientation))
 
 	// 设置图像
 	images := p.cfgRole.ResRole.Move.Frames[p.sprite.orientation]
@@ -62,7 +62,7 @@ func (p *Role) UpdateWithAction() {
 
 	// 更新角色中心 World 坐标 (脚底中心向上偏移半个角色高度)
 	p.sprite.cameraAnchorPointWX = p.sprite.actionAnchorPointWX
-	p.sprite.cameraAnchorPointWY = p.sprite.actionAnchorPointWY - float32(p.sprite.roleImageSprite.Frame.Height/2)
+	p.sprite.cameraAnchorPointWY = p.sprite.actionAnchorPointWY - float32(p.sprite.roleImageSprite.Frame.H/2)
 
 	// 更新摄像机跟随点 (World 坐标)
 	p.camera.FollowWX = int(p.sprite.cameraAnchorPointWX)

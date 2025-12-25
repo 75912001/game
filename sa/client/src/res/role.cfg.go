@@ -121,8 +121,8 @@ func roleCutFrames(role *Role, imageFilePath string, orientationFrames map[proto
 			subImg := img.SubImage(image.Rect(
 				fd.spriteInfo.Frame.X,
 				fd.spriteInfo.Frame.Y,
-				fd.spriteInfo.Frame.X+fd.spriteInfo.Frame.Width,
-				fd.spriteInfo.Frame.Y+fd.spriteInfo.Frame.Height,
+				fd.spriteInfo.Frame.X+fd.spriteInfo.Frame.W,
+				fd.spriteInfo.Frame.Y+fd.spriteInfo.Frame.H,
 			)).(*ebitenv2.Image)
 			switch fd.roleAction {
 			case proto.RoleAction_RoleAction_Move:

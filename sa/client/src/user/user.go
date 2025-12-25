@@ -2,8 +2,7 @@ package user
 
 import (
 	"fmt"
-	"time"
-
+	xtime "github.com/75912001/xlib/time"
 	"saClient/src/cfg"
 	"saClient/src/common"
 	"saClient/src/proto"
@@ -34,7 +33,6 @@ func (p *User) Login(account string, password string) error {
 	// 初始化用户数据 - 模拟数据
 	if true {
 		var roleUUID common.RoleUUID = 1
-		now := uint64(time.Now().Unix())
 		p.userRecord.RoleRecordMap[uint64(roleUUID)] = &proto.RoleRecord{
 			UUID:             uint64(roleUUID),
 			Nick:             "role.uuid.1",
@@ -48,7 +46,7 @@ func (p *User) Login(account string, password string) error {
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Exp)] = 0                                                            // 经验值
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_HP)] = 9999                                                          // 生命值
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_MP)] = uint64(cfg.GCommon.RoleMPMax)                                 // 魔法值
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_CreateTimestamp)] = now                                              // 创建时间戳
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_CreateTimestamp)] = uint64(xtime.GTimeMgr.ShadowTimestamp())         // 创建时间戳
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_MapID)] = 2000001                                                    // 所在地图ID (地图ID范围起始)
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_WX)] = uint64(1600 * float32(common.Float32Ratio))      // 当前位置tx
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_WY)] = uint64(800 * float32(common.Float32Ratio))       // 当前位置ty
@@ -63,7 +61,7 @@ func (p *User) Login(account string, password string) error {
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_ElementalWind)] = 0  // 元素属性-风
 
 		// 角色
-		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Role_LastLoginTimestamp)] = now                                       // 上次登录时间戳
+		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Role_LastLoginTimestamp)] = uint64(xtime.GTimeMgr.ShadowTimestamp())  // 上次登录时间戳
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Role_LastLogoutTimestamp)] = 0                                        // 上次登出时间戳
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Role_AvailablePoint)] = uint64(cfg.GCommon.RoleInitialAvailablePoint) // 可用点数
 		roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Role_AssetID)] = 1000101                                              // 资产ID (角色ID范围起始)

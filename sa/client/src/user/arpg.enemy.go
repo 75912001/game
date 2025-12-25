@@ -17,8 +17,8 @@ type ArpgEnemy struct {
 	BattleStats *ArpgEnemyBattleStats // 战斗属性
 
 	// 位置信息
-	WX, WY      float32 // 世界坐标 (脚底中心)
-	Orientation uint32  // 朝向
+	WX, WY      float32                // 世界坐标 (脚底中心)
+	Orientation proto.AssetOrientation // 朝向
 
 	// 动画信息
 	FrameIdx  uint32 // 当前帧索引
@@ -36,7 +36,7 @@ func NewArpgEnemy(spawnPoint *ArpgEnemySpawnPoint, generated *cfg.GeneratedEnemy
 		Level:       generated.Level,
 		WX:          wx,
 		WY:          wy,
-		Orientation: uint32(proto.AssetOrientation_AssetOrientation_Down),
+		Orientation: proto.AssetOrientation_AssetOrientation_Down,
 		FrameIdx:    0,
 		FrameTick:   0,
 	}
@@ -84,8 +84,8 @@ func (p *ArpgEnemy) Draw(screen *ebitenv2.Image, camera *commoncamera.Camera) {
 	screenX := p.WX - float32(camera.ViewportWX)
 	screenY := p.WY - float32(camera.ViewportWY)
 	// 调整到图像左上角 (脚底中心 -> 图像左上角)
-	screenX -= float32(frameInfo.Frame.Width / 2)
-	screenY -= float32(frameInfo.Frame.Height)
+	screenX -= float32(frameInfo.Frame.W / 2)
+	screenY -= float32(frameInfo.Frame.H)
 	// 绘制
 	op := &ebitenv2.DrawImageOptions{}
 	op.GeoM.Translate(float64(screenX), float64(screenY))

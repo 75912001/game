@@ -7,6 +7,7 @@ import (
 
 // TiledMap 属性标签
 const TiledMapTag_BgmFilePath = "backgroundMusicFilePath" // 背景音乐文件路径-标签
+const TiledMapTag_LogicalGrid = "logicalGrid"             // 逻辑网格-标签 (格式: "宽,高", 如 "8,8")
 
 // TiledMap Tiled 地图资源
 type TiledMap struct {
@@ -26,7 +27,9 @@ type TiledMap struct {
 	BottomWX, BottomWY float32             // 地图边界-菱形四角坐标-底 (World 坐标)
 	LeftWX, LeftWY     float32             // 地图边界-菱形四角坐标-左 (World 坐标)
 	IsometricCT        *commonct.Isometric // 坐标转换器
-	TileBlocked        [][]bool            // [废弃][参见 README.md] 阻挡2维数组 [Width][Height] true 表示阻挡 (由多个图层合成)
+	TileBlocked        [][]bool            // [废弃][参见 README.md] 阻挡2维数组 [W][H] true 表示阻挡 (由多个图层合成)
+
+	LogicalGrid *TiledMapLogicalGrid // 逻辑网格 (用于 A* 寻路), nil 表示未启用
 }
 
 // 限制在菱形地图边界内-叉积版 (World 坐标)
@@ -137,4 +140,11 @@ func (p *TiledMap) IsBlocked(wx, wy float32) (clampedWX, clampedWY float32, bloc
 	}
 
 	return clampedWX, clampedWY, false
+}
+
+// IsInsideDiamond 检查 World 坐标是否在菱形地图边界内
+func (p *TiledMap) IsInsideDiamond(wx, wy float32) bool {
+	tx, ty := p.IsometricCT.W2T(wx, wy)
+	return tx >= -0.5 && tx <= float32(p.Width)-0.5 &&
+		ty >= -0.5 && ty <= float32(p.Height)-0.5
 }
