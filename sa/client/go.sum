@@ -4,6 +4,8 @@ github.com/75912001/xlib v0.0.0-20251212133549-5462533e1239 h1:4YNd9BfXcK8Psg2kw
 github.com/75912001/xlib v0.0.0-20251212133549-5462533e1239/go.mod h1:0AgcVP4Bqg/XpULE8uF4qi4SWZtBN6eVek8EXq7fAC0=
 github.com/75912001/xlib v0.0.0-20251217063118-80248e1147e0 h1:6Uo5/iOKPJOfGcOItyY7iFD41Ua/vvhpSQaNmoWMVxw=
 github.com/75912001/xlib v0.0.0-20251217063118-80248e1147e0/go.mod h1:0AgcVP4Bqg/XpULE8uF4qi4SWZtBN6eVek8EXq7fAC0=
+github.com/beefsack/go-astar v0.0.0-20200827232313-4ecf9e304482 h1:p4g4uok3+r6Tg6fxXEQUAcMAX/WdK6WhkQW9s0jaT7k=
+github.com/beefsack/go-astar v0.0.0-20200827232313-4ecf9e304482/go.mod h1:Cu3t5VeqE8kXjUBeNXWQprfuaP5UCIc5ggGjgMx9KFc=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/ebitengine/gomobile v0.0.0-20250923094054-ea854a63cce1 h1:+kz5iTT3L7uU+VhlMfTb8hHcxLO3TlaELlX8wa4XjA0=
