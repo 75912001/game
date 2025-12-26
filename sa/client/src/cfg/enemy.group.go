@@ -231,8 +231,8 @@ func (p *EnemyGroupMgr) Assemble() error {
 
 // GeneratedEnemy 生成的敌人实例
 type GeneratedEnemy struct {
-	Config *EnemyGroupEnemy // 配置引用
-	Level  uint32           // 实际等级(1级即为宝宝)
+	Pet   *Pet   // 宠物配置
+	Level uint32 // 实际等级(1级即为宝宝)
 }
 
 // Generate 根据敌人组配置生成敌人数组
@@ -251,8 +251,8 @@ func (group *EnemyGroup) generateBoss() []*GeneratedEnemy {
 	result := make([]*GeneratedEnemy, 0, len(group.Enemies))
 	for _, enemy := range group.Enemies {
 		result = append(result, &GeneratedEnemy{
-			Config: enemy,
-			Level:  enemy.Level,
+			Pet:   enemy.Pet,
+			Level: enemy.Level,
 		})
 	}
 	return result
@@ -273,8 +273,8 @@ func (group *EnemyGroup) generateNormal(roleLevel uint32) []*GeneratedEnemy {
 			level = 1
 		}
 		result = append(result, &GeneratedEnemy{
-			Config: enemy,
-			Level:  level,
+			Pet:   enemy.Pet,
+			Level: level,
 		})
 		mustAppearIdx++
 	}
@@ -287,8 +287,8 @@ func (group *EnemyGroup) generateNormal(roleLevel uint32) []*GeneratedEnemy {
 			level = 1
 		}
 		result = append(result, &GeneratedEnemy{
-			Config: enemy,
-			Level:  level,
+			Pet:   enemy.Pet,
+			Level: level,
 		})
 	}
 

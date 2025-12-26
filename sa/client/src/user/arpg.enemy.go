@@ -47,7 +47,7 @@ func NewArpgEnemy(spawnPoint *ArpgEnemySpawnPoint, generated *cfg.GeneratedEnemy
 }
 
 func (p *ArpgEnemy) GetCfg() *cfg.Pet {
-	return p.Generated.Config.Pet
+	return p.Generated.Pet
 }
 
 func (p *ArpgEnemy) IsDead() bool {
