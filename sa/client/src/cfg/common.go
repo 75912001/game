@@ -30,7 +30,7 @@ type Common struct {
 	PetDefMoveSpeed           float32 `yaml:"petDefMoveSpeed"`           // 宠物默认移动速度
 	PetMPMax                  uint32  `yaml:"petMPMax"`                  // 宠物属性-MP最大值
 	PetDefViewRange           float32 `yaml:"petDefViewRange"`           // 宠物-默认-视野范围
-	PetDefArpgSpeed           float32 `yaml:"petDefArpgSpeed"`           // 宠物-默认-战斗中移动速度
+	PetDefArpgMoveSpeed       float32 `yaml:"petDefArpgMoveSpeed"`       // 宠物-默认-战斗中移动速度
 	PetDefCritRate            float32 `yaml:"petDefCritRate"`            // 宠物-默认-暴击率
 	PetDefCounterRate         float32 `yaml:"petDefCounterRate"`         // 宠物-默认-反击率
 	PetDefDodgeRate           float32 `yaml:"petDefDodgeRate"`           // 宠物-默认-闪避率

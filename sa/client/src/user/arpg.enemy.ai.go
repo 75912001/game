@@ -114,8 +114,8 @@ func (p *ArpgEnemyAI) updatePatrol() {
 	}
 
 	// 移动
-	dx = dx / distance * cfg.GCommon.PetDefArpgSpeed
-	dy = dy / distance * cfg.GCommon.PetDefArpgSpeed
+	dx = dx / distance * cfg.GCommon.PetDefArpgMoveSpeed
+	dy = dy / distance * cfg.GCommon.PetDefArpgMoveSpeed
 
 	newWX := enemy.WX + dx
 	newWY := enemy.WY + dy
@@ -250,8 +250,8 @@ func (p *ArpgEnemyAI) updateChaseWithAStar(targetWX, targetWY float32, mapCfg *c
 
 		// 移动
 		if distance > 0.01 {
-			dx = dx / distance * cfg.GCommon.PetDefArpgSpeed
-			dy = dy / distance * cfg.GCommon.PetDefArpgSpeed
+			dx = dx / distance * cfg.GCommon.PetDefArpgMoveSpeed
+			dy = dy / distance * cfg.GCommon.PetDefArpgMoveSpeed
 
 			newWX := enemy.WX + dx
 			newWY := enemy.WY + dy

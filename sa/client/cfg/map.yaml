@@ -2,17 +2,18 @@
 # 任何修改此文件的行为都需要通知客户端和服务端开发人员
 
 # transitionID: 引用 scene.transition.yaml 中定义的过渡效果ID
-# todo menglc 增加一个属性, 标识该地图是否战斗结束, 自动回满所有状态
+# fullRecoveryAfterBattle: true/false # 战斗结束后是否自动回满状态 [默认:false] todo menglc
 
 maps:
-  - assetID: 2000001 # 地图资产ID
-    name: "玛丽娜丝-村长家" # 地图名称
-    transitionID: 1 # 垂直-标准
+  - assetID: 2000001 
+    name: "玛丽娜丝-村长家"
+    transitionID: 1
 
   - assetID: 2000002
     name: "玛丽娜丝"
-    transitionID: 2 # 水平-标准
+    transitionID: 2
+    fullRecoveryAfterBattle: true
 
   - assetID: 2000003
     name: "测试战场"
-    transitionID: 3 # 淡入淡出
+    transitionID: 3

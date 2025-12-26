@@ -1,14 +1,18 @@
 # 传送点配置文件
 # 传送点ID规则: 地图ID * 100 + 序号 (如 2000001 * 100 + 01 = 200000101)
 # 任何修改此文件的行为都需要通知客户端和服务端开发人员
+
+# targetPoints[].id - 传送点ID
+# targetPoints[].name - 传送点名称
+# targetPoints[].mapID - 所在地图ID
 # targetPoints[].x - World X 坐标
 # targetPoints[].y - World Y 坐标
 
 targetPoints: # 目标-传送点列表
   # 玛丽娜丝-村长家 (2000001) 传送点范围: 200000101 - 200000199
-  - id: 200000101 # 传送点ID
+  - id: 200000101
     name: "玛丽娜丝-村长家-门口"
-    mapID: 2000001 # 所在地图ID
+    mapID: 2000001
     x: 2375.68
     y: 1176.32
 
@@ -45,7 +49,7 @@ targetPoints: # 目标-传送点列表
 
   - id: 200000301
     name: "玛丽娜丝-测试战场-门口"
-    mapID: 2000003 # 所在地图ID
-    x: 640.00
-    y: 336.00
+    mapID: 2000003
+    x: 1600.00
+    y: 600.00
 

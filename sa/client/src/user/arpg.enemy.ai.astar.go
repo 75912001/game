@@ -136,7 +136,7 @@ func (p *AStarPathfinder) FindPath(startWX, startWY, endWX, endWY float32) []ASt
 	startGX, startGY := p.grid.W2Grid(startWX, startWY)
 	endGX, endGY := p.grid.W2Grid(endWX, endWY)
 
-	if p.grid.IsBlocked(startGX, startGY) || p.grid.IsBlocked(endGX, endGY) {
+	if p.grid.IsBlocked(endGX, endGY) {
 		return nil
 	}
 
