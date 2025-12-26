@@ -2,10 +2,18 @@ package cfg
 
 // TiledMapBoundary Tiled 地图边界 (菱形四角坐标 World 坐标)
 type TiledMapBoundary struct {
+	tiledMap           *TiledMap
 	TopWX, TopWY       float32 // 地图边界-菱形四角坐标-顶 (World 坐标)
 	RightWX, RightWY   float32 // 地图边界-菱形四角坐标-右 (World 坐标)
 	BottomWX, BottomWY float32 // 地图边界-菱形四角坐标-底 (World 坐标)
 	LeftWX, LeftWY     float32 // 地图边界-菱形四角坐标-左 (World 坐标)
+}
+
+func NewTiledMapBoundary(tiledMap *TiledMap) *TiledMapBoundary {
+	tiledMapBoundary := &TiledMapBoundary{
+		tiledMap: tiledMap,
+	}
+	return tiledMapBoundary
 }
 
 // 限制在菱形地图边界内-叉积版 (World 坐标)
@@ -45,33 +53,35 @@ func (p *TiledMap) ClampMapBoundary(wx, wy float32) (clampedWX float32, clampedW
 	return wx, wy
 }
 
-// ClampMapBoundaryWithW 限制在菱形地图边界内-Tile版 (高效版)
-func (p *TiledMap) ClampMapBoundaryWithW(wx, wy float32) (float32, float32) {
-	tx, ty := p.IsometricCT.W2T(wx, wy)
+// ClampWithW 限制在菱形地图边界内
+func (p *TiledMapBoundary) ClampWithW(wx, wy float32) (clampedWX float32, clampedWY float32, blocked bool) {
+	tx, ty := p.tiledMap.IsometricCT.W2T(wx, wy)
 
 	// 菱形边界对应 Tile 坐标 [-0.5, Size-0.5]
 	minT := float32(-0.5)
-	maxTX := float32(p.TileCountW) - 0.5
-	maxTY := float32(p.TileCountH) - 0.5
+	maxTX := float32(p.tiledMap.TileCountW) - 0.5
+	maxTY := float32(p.tiledMap.TileCountH) - 0.5
 
-	clamped := false
 	if tx < minT {
 		tx = minT
-		clamped = true
-	} else if tx > maxTX {
+		blocked = true
+	} else if maxTX < tx {
 		tx = maxTX
-		clamped = true
+		blocked = true
 	}
 	if ty < minT {
 		ty = minT
-		clamped = true
-	} else if ty > maxTY {
+		blocked = true
+	} else if maxTY < ty {
 		ty = maxTY
-		clamped = true
+		blocked = true
 	}
 
-	if clamped {
-		return p.IsometricCT.T2W(tx, ty)
+	if blocked {
+		clampedWX, clampedWY = p.tiledMap.IsometricCT.T2W(tx, ty)
+		return
 	}
-	return wx, wy
+	clampedWX = wx
+	clampedWY = wy
+	return
 }
