@@ -106,13 +106,12 @@ func (p *TiledMapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*Tiled
 		return nil, fmt.Errorf("仅支持等宽高比 2:1 的等距(isometric)地图,当前地图 %v 瓦片宽高: %d x %d %v", mapID, mapXML.TileWidth, mapXML.TileHeight, xruntime.Location())
 	}
 
-	tiledMap := &TiledMap{
-		ID:         mapID,
-		TileCountW: mapXML.Width,
-		TileCountH: mapXML.Height,
-		TileWPixel: mapXML.TileWidth,
-		TileHPixel: mapXML.TileHeight,
-	}
+	tiledMap := NewTiledMap()
+	tiledMap.ID = mapID
+	tiledMap.TileCountW = mapXML.Width
+	tiledMap.TileCountH = mapXML.Height
+	tiledMap.TileWPixel = mapXML.TileWidth
+	tiledMap.TileHPixel = mapXML.TileHeight
 
 	if mapXML.Properties != nil { // 解析地图属性
 		for _, prop := range mapXML.Properties.Properties {
@@ -132,10 +131,7 @@ func (p *TiledMapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*Tiled
 				if err != nil || cellH <= 0 {
 					return nil, fmt.Errorf("解析地图 %v 的 logicalGrid 高度失败: %s %v", mapID, prop.Value, xruntime.Location())
 				}
-				tiledMap.LogicalGrid = &TiledMapLogicalGridMgr{
-					CellW: cellW,
-					CellH: cellH,
-				}
+				tiledMap.LogicalGrid = NewTiledMapLogicalGridMgr(cellW, cellH)
 			default: // 未知属性 忽略
 			}
 		}
@@ -428,9 +424,9 @@ func (p *TiledMapMgr) Assemble() error {
 			// 初始化碰撞网格
 			gridSize := tiledMap.TileCountW * tiledMap.TileCountH
 			// 创建二维布尔切片，按 [width][height]
-			tiledMap.TileBlocked = make([][]bool, tiledMap.TileCountW)
+			tiledMap.TileBlocked.Blocked = make([][]bool, tiledMap.TileCountW)
 			for x := 0; x < tiledMap.TileCountW; x++ {
-				tiledMap.TileBlocked[x] = make([]bool, tiledMap.TileCountH)
+				tiledMap.TileBlocked.Blocked[x] = make([]bool, tiledMap.TileCountH)
 			}
 
 			// 查找或创建 Collision 图层 (用于存储 tile 碰撞体)
@@ -534,7 +530,7 @@ func (p *TiledMapMgr) Assemble() error {
 							if gid != 0 && i < gridSize {
 								x := i % tiledMap.TileCountW
 								y := i / tiledMap.TileCountW
-								tiledMap.TileBlocked[x][y] = true
+								tiledMap.TileBlocked.Blocked[x][y] = true
 							}
 						}
 					}

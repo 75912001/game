@@ -184,7 +184,7 @@
                 7
             ],
             "scale": 0.75,
-            "selectedLayer": 0,
+            "selectedLayer": 2,
             "viewCenter": {
                 "x": 1539.333333333333,
                 "y": 799.9999999999999
@@ -199,7 +199,7 @@
                 6
             ],
             "scale": 0.75,
-            "selectedLayer": 0,
+            "selectedLayer": 2,
             "viewCenter": {
                 "x": 3200.6666666666665,
                 "y": 1600
@@ -209,11 +209,11 @@
             "expandedObjectLayers": [
                 3
             ],
-            "scale": 0.75,
+            "scale": 0.5,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 1956.6666666666665,
-                "y": 1058.6666666666667
+                "x": 1049,
+                "y": 742
             }
         },
         "map/ss.tsx": {

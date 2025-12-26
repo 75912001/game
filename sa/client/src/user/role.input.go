@@ -1,7 +1,6 @@
 package user
 
 import (
-	xutil "github.com/75912001/xlib/util"
 	"log"
 	"saClient/src/cfg"
 	"saClient/src/common"
@@ -77,8 +76,8 @@ func (p *Role) handleKeyMove(up, down, left, right bool) {
 	mapCfg := p.scene._map.tiledMapCfg
 
 	{ // 限制在菱形地图边界内 (World 坐标)
-		clampedX, clampedY := mapCfg.ClampMapBoundaryWithW(newWorldX, newWorldY)
-		if !xutil.Float32Equal(clampedX, newWorldX) || !xutil.Float32Equal(clampedY, newWorldY) { // 坐标被限制了
+		clampedX, clampedY, blocked := mapCfg.Boundary.ClampWithW(newWorldX, newWorldY)
+		if blocked { // 坐标被限制了
 			log.Printf("Role HandleInput boundary hit at world (%.3f, %.3f)", newWorldX, newWorldY)
 		}
 		newWorldX, newWorldY = clampedX, clampedY
@@ -100,7 +99,7 @@ func (p *Role) handleKeyMove(up, down, left, right bool) {
 	if portalObject, ok := mapCfg.FindPortalByObject(newRoleSprite.actionAnchorPointWX, newRoleSprite.actionAnchorPointWY); ok { // 判断角色 wx, wy 是否触发了-传送
 		log.Printf("Role HandleInput portal at world (%.3f, %.3f) portalObject:%+v", newRoleSprite.actionAnchorPointWX, newRoleSprite.actionAnchorPointWY, portalObject)
 		p.SwitchScene(portalObject.PortalCfg.MapID, portalObject.PortalCfg.WX, portalObject.PortalCfg.WY)
-	} else if mapCfg.IsBlockedByTileWithTF(newRoleSprite.actionAnchorPointTX, newRoleSprite.actionAnchorPointTY) { // 使用 tile 图层 图块 阻挡检测
+	} else if mapCfg.TileBlocked.IsBlockedWithTF(newRoleSprite.actionAnchorPointTX, newRoleSprite.actionAnchorPointTY) { // 使用 tile 图层 图块 阻挡检测
 		log.Printf("Role HandleInput tile blocked at world (%.2f, %.2f)", newRoleSprite.actionAnchorPointWX, newRoleSprite.actionAnchorPointWY)
 		rollBack = true
 	} else if blockedObject, ok := mapCfg.FindBlockedByObject(newRoleSprite.actionAnchorPointWX, newRoleSprite.actionAnchorPointWY); ok { // 判断角色 wx, wy 是否触发了-阻挡

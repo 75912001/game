@@ -1,5 +1,7 @@
 package cfg
 
+import xutil "github.com/75912001/xlib/util"
+
 // TiledMapBoundary Tiled 地图边界 (菱形四角坐标 World 坐标)
 type TiledMapBoundary struct {
 	tiledMap           *TiledMap
@@ -25,33 +27,40 @@ func (p *TiledMapBoundary) ClampWithW(wx, wy float32) (clampedWX float32, clampe
 	maxTX := float32(p.tiledMap.TileCountW) - 0.5
 	maxTY := float32(p.tiledMap.TileCountH) - 0.5
 
-	if tx < minT {
+	// 直接进行边界检查和 clamp，避免重复检查
+	if xutil.Float32Less(tx, minT) {
 		tx = minT
 		blocked = true
-	} else if maxTX < tx {
+	} else if xutil.Float32Less(maxTX, tx) {
 		tx = maxTX
 		blocked = true
 	}
-	if ty < minT {
+	if xutil.Float32Less(ty, minT) {
 		ty = minT
 		blocked = true
-	} else if maxTY < ty {
+	} else if xutil.Float32Less(maxTY, ty) {
 		ty = maxTY
 		blocked = true
 	}
 
 	if blocked {
 		clampedWX, clampedWY = p.tiledMap.IsometricCT.T2W(tx, ty)
-		return
+		return clampedWX, clampedWY, true
 	}
-	clampedWX = wx
-	clampedWY = wy
-	return
+	return wx, wy, false
 }
 
 // IsInside 检查 World 坐标是否在菱形地图边界内
 func (p *TiledMapBoundary) IsInside(wx, wy float32) bool {
 	tx, ty := p.tiledMap.IsometricCT.W2T(wx, wy)
-	return tx >= -0.5 && tx <= float32(p.tiledMap.TileCountW)-0.5 &&
-		ty >= -0.5 && ty <= float32(p.tiledMap.TileCountH)-0.5
+
+	minT := float32(-0.5)
+	maxTX := float32(p.tiledMap.TileCountW) - 0.5
+	maxTY := float32(p.tiledMap.TileCountH) - 0.5
+
+	// 使用 xutil.Float32Less 进行边界判断
+	// tx >= minT 等价于 !Float32Less(tx, minT)
+	// tx <= maxTX 等价于 !Float32Less(maxTX, tx)
+	return !xutil.Float32Less(tx, minT) && !xutil.Float32Less(maxTX, tx) &&
+		!xutil.Float32Less(ty, minT) && !xutil.Float32Less(maxTY, ty)
 }

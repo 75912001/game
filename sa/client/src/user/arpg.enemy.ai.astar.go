@@ -36,7 +36,7 @@ func newAstarNodeWorld(grid *cfg.TiledMapLogicalGridMgr, maxSearch int) *astarNo
 }
 
 func (w *astarNodeWorld) getNode(gx, gy int) *astarNode {
-	key := gy*w.Grid.GridW + gx
+	key := gy*w.Grid.GridCountW + gx
 	if node, ok := w.Nodes[key]; ok {
 		return node
 	}
