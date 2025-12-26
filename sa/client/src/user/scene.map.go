@@ -132,7 +132,7 @@ func (p *Map) buildTileCache() {
 			}
 			// 处理垂直切分的 tile
 			if 0 < tileset.VerticalSlicePixel {
-				verticalSliced := cfg.NewTileVerticalSliced()
+				verticalSliced := cfg.NewTileSlicedVertical()
 				verticalSliced.Split(img, tileset)
 				cacheInfo.SlicedVertical = verticalSliced // 存入缓存
 			}

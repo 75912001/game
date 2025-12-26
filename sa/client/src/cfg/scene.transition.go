@@ -28,7 +28,7 @@ type SceneTransition struct {
 func DefSceneTransition() *SceneTransition {
 	return &SceneTransition{
 		ID:    SceneTransitionIDVertical,
-		Speed: 0.1,
+		Speed: 0.1, // 默认速度
 	}
 }
 
@@ -70,9 +70,8 @@ func (p *SceneTransitionMgr) Load() error {
 		default:
 			return fmt.Errorf("无效的过渡效果ID: %d %v", t.ID, xruntime.Location())
 		}
-		// 补充默认值
 		if t.Speed <= 0 {
-			t.Speed = 0.1
+			return fmt.Errorf("过渡效果速度必须大于0: %v %v", t.ID, xruntime.Location())
 		}
 		ok := p.Transitions.AddIfNotExist(t.ID, t)
 		if !ok {
@@ -80,11 +79,6 @@ func (p *SceneTransitionMgr) Load() error {
 		}
 	}
 	return nil
-}
-
-// Get 获取过渡效果配置
-func (p *SceneTransitionMgr) Get(id uint32) *SceneTransition {
-	return p.Transitions.Get(id)
 }
 
 // Check 检查地图配置
