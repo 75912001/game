@@ -211,10 +211,10 @@ func (p *Map) drawBorder(screen *ebitenv2.Image, cam *commoncamera.Camera) {
 	camX := float32(cam.ViewportWX)
 	camY := float32(cam.ViewportWY)
 
-	sTopX, sTopY := p.tiledMapCfg.IsometricCT.W2S(p.tiledMapCfg.TopWX, p.tiledMapCfg.TopWY, camX, camY)
-	sRightX, sRightY := p.tiledMapCfg.IsometricCT.W2S(p.tiledMapCfg.RightWX, p.tiledMapCfg.RightWY, camX, camY)
-	sBottomX, sBottomY := p.tiledMapCfg.IsometricCT.W2S(p.tiledMapCfg.BottomWX, p.tiledMapCfg.BottomWY, camX, camY)
-	sLeftX, sLeftY := p.tiledMapCfg.IsometricCT.W2S(p.tiledMapCfg.LeftWX, p.tiledMapCfg.LeftWY, camX, camY)
+	sTopX, sTopY := p.tiledMapCfg.IsometricCT.W2S(p.tiledMapCfg.Boundary.TopWX, p.tiledMapCfg.Boundary.TopWY, camX, camY)
+	sRightX, sRightY := p.tiledMapCfg.IsometricCT.W2S(p.tiledMapCfg.Boundary.RightWX, p.tiledMapCfg.Boundary.RightWY, camX, camY)
+	sBottomX, sBottomY := p.tiledMapCfg.IsometricCT.W2S(p.tiledMapCfg.Boundary.BottomWX, p.tiledMapCfg.Boundary.BottomWY, camX, camY)
+	sLeftX, sLeftY := p.tiledMapCfg.IsometricCT.W2S(p.tiledMapCfg.Boundary.LeftWX, p.tiledMapCfg.Boundary.LeftWY, camX, camY)
 
 	// 绘制四条边界线
 	drawDiamond(screen, sTopX, sTopY, sRightX, sRightY, sBottomX, sBottomY, sLeftX, sLeftY, common.Colors_Red, 3.0)
@@ -265,7 +265,7 @@ func (p *Map) drawTiledObjectRect(screen *ebitenv2.Image, obj *cfg.TiledObject, 
 	}
 
 	// Tiled 等距像素坐标：转换为 Tile 坐标绘制菱形
-	th := float32(p.tiledMapCfg.TileHeight)
+	th := float32(p.tiledMapCfg.TileHPixel)
 	tileX := obj.X/th - 0.5
 	tileY := obj.Y/th - 0.5
 	tileW := obj.Width / th
@@ -315,7 +315,7 @@ func (p *Map) drawData(screen *ebitenv2.Image, cam *commoncamera.Camera, data []
 		}
 
 		// 修正 Y 坐标：tileset 高度大于 map tile 高度时，图像底部需对齐到 tile 基准位置
-		screenY -= tileInfo.Height - p.tiledMapCfg.TileHeight
+		screenY -= tileInfo.Height - p.tiledMapCfg.TileHPixel
 
 		// 裁剪：跳过屏幕外的 tile
 		if screenX < -tileInfo.Width || cfg.GCommon.ScreenMaxWidth < screenX ||
@@ -333,8 +333,8 @@ func (p *Map) drawData(screen *ebitenv2.Image, cam *commoncamera.Camera, data []
 // getTileImage 根据 GID 获取 tile 图像和所属的 tileset
 func (p *Map) getTileImage(gid int) (*ebitenv2.Image, *cfg.TiledTileset) {
 	var tileset *cfg.TiledTileset
-	for i := len(p.tiledMapCfg.Tilesets) - 1; i >= 0; i-- {
-		ts := p.tiledMapCfg.Tilesets[i]
+	for i := len(p.tiledMapCfg.Tiles) - 1; i >= 0; i-- {
+		ts := p.tiledMapCfg.Tiles[i]
 		if gid >= ts.FirstGID {
 			tileset = ts
 			break
@@ -394,7 +394,7 @@ func (p *Map) collectLayerTiles(cam *commoncamera.Camera, layer *cfg.TiledLayer,
 		}
 
 		// 修正 Y 坐标
-		screenY -= tileInfo.Height - p.tiledMapCfg.TileHeight
+		screenY -= tileInfo.Height - p.tiledMapCfg.TileHPixel
 
 		// 裁剪：跳过屏幕外的 tile
 		if screenX < -tileInfo.Width || cfg.GCommon.ScreenMaxWidth < screenX ||

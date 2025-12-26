@@ -108,10 +108,10 @@ func (p *TiledMapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*Tiled
 
 	tiledMap := &TiledMap{
 		ID:         mapID,
-		Width:      mapXML.Width,
-		Height:     mapXML.Height,
-		TileWidth:  mapXML.TileWidth,
-		TileHeight: mapXML.TileHeight,
+		TileCountW: mapXML.Width,
+		TileCountH: mapXML.Height,
+		TileWPixel: mapXML.TileWidth,
+		TileHPixel: mapXML.TileHeight,
 	}
 
 	if mapXML.Properties != nil { // 解析地图属性
@@ -147,7 +147,7 @@ func (p *TiledMapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*Tiled
 		if err != nil {
 			return nil, errors.WithMessagef(err, "加载地图 %v 的 tileset 失败: %v %v", mapID, tmxPath, xruntime.Location())
 		}
-		tiledMap.Tilesets = append(tiledMap.Tilesets, tileset) // todo menglc 这里不同的 mapID, 相同的 tileset 会重复加载,可以考虑缓存优化
+		tiledMap.Tiles = append(tiledMap.Tiles, tileset) // todo menglc 这里不同的 mapID, 相同的 tileset 会重复加载,可以考虑缓存优化
 	}
 
 	for _, layerXML := range mapXML.Layers { // 加载 tile layers
@@ -317,7 +317,7 @@ func (p *TiledMapMgr) loadTileset(tmxDir string, tsRef tmxTilesetRef) (*TiledTil
 					return nil, fmt.Errorf("解析 tileset 属性失败, verticalSlicePixel 必须大于 0:%v %v", prop.Name, xruntime.Location())
 				}
 				if tileset.TileWidth <= slicePixel {
-					return nil, fmt.Errorf("解析 tileset 属性失败, verticalSlicePixel 必须小于 TileWidth:%v %v", prop.Name, xruntime.Location())
+					return nil, fmt.Errorf("解析 tileset 属性失败, verticalSlicePixel 必须小于 TileWPixel:%v %v", prop.Name, xruntime.Location())
 				}
 				tileset.VerticalSlicePixel = slicePixel
 			}
@@ -421,16 +421,16 @@ func (p *TiledMapMgr) Assemble() error {
 		func(mapID common.AssetID, tiledMap *TiledMap) (isContinue bool) {
 			// 等距地图像素尺寸 (包含完整的菱形内容区域)
 			// +TileHeight 是为了包含第一行 tile 上方和最后一行 tile 下方的菱形边缘
-			tiledMap.PixelW = (tiledMap.Width + tiledMap.Height) * (tiledMap.TileWidth / 2)
-			tiledMap.PixelH = (tiledMap.Width + tiledMap.Height) * (tiledMap.TileHeight / 2)
-			tiledMap.IsometricCT = commonct.NewIsometric(tiledMap.Width, tiledMap.Height, tiledMap.TileWidth, tiledMap.TileHeight)
-			tiledMap.TopWX, tiledMap.TopWY, tiledMap.RightWX, tiledMap.RightWY, tiledMap.BottomWX, tiledMap.BottomWY, tiledMap.LeftWX, tiledMap.LeftWY = tiledMap.IsometricCT.GetDiamondCorners()
+			tiledMap.WPixel = (tiledMap.TileCountW + tiledMap.TileCountH) * (tiledMap.TileWPixel / 2)
+			tiledMap.HPixel = (tiledMap.TileCountW + tiledMap.TileCountH) * (tiledMap.TileHPixel / 2)
+			tiledMap.IsometricCT = commonct.NewIsometric(tiledMap.TileCountW, tiledMap.TileCountH, tiledMap.TileWPixel, tiledMap.TileHPixel)
+			tiledMap.Boundary.TopWX, tiledMap.Boundary.TopWY, tiledMap.Boundary.RightWX, tiledMap.Boundary.RightWY, tiledMap.Boundary.BottomWX, tiledMap.Boundary.BottomWY, tiledMap.Boundary.LeftWX, tiledMap.Boundary.LeftWY = tiledMap.IsometricCT.GetDiamondCorners()
 			// 初始化碰撞网格
-			gridSize := tiledMap.Width * tiledMap.Height
+			gridSize := tiledMap.TileCountW * tiledMap.TileCountH
 			// 创建二维布尔切片，按 [width][height]
-			tiledMap.TileBlocked = make([][]bool, tiledMap.Width)
-			for x := 0; x < tiledMap.Width; x++ {
-				tiledMap.TileBlocked[x] = make([]bool, tiledMap.Height)
+			tiledMap.TileBlocked = make([][]bool, tiledMap.TileCountW)
+			for x := 0; x < tiledMap.TileCountW; x++ {
+				tiledMap.TileBlocked[x] = make([]bool, tiledMap.TileCountH)
 			}
 
 			// 查找或创建 Collision 图层 (用于存储 tile 碰撞体)
@@ -477,18 +477,18 @@ func (p *TiledMapMgr) Assemble() error {
 						continue
 					}
 					// 计算 tile 在地图中的位置
-					tileX := i % tiledMap.Width
-					tileY := i / tiledMap.Width
+					tileX := i % tiledMap.TileCountW
+					tileY := i / tiledMap.TileCountW
 					// 计算 tile 的 World 中心坐标
 					tileWorldX, tileWorldY := tiledMap.IsometricCT.T2W(float32(tileX), float32(tileY))
 					// tile 图像左上角的 World 坐标
 					// 参考 TileImagePos: imageY = (tileX+tileY)*halfTH (比 T2W 少 halfTH)
 					// 加上渲染调整: screenY -= tileInfo.Height - 地图TileHeight
 					// 所以: imgTopLeftY = worldY - halfTH - (tileset.TileHeight - 地图TileHeight)
-					halfTW := float32(tiledMap.TileWidth) / 2
-					halfTH := float32(tiledMap.TileHeight) / 2
+					halfTW := float32(tiledMap.TileWPixel) / 2
+					halfTH := float32(tiledMap.TileHPixel) / 2
 					imgTopLeftWorldX := tileWorldX - halfTW
-					imgTopLeftWorldY := tileWorldY - halfTH - (float32(tileset.TileHeight) - float32(tiledMap.TileHeight))
+					imgTopLeftWorldY := tileWorldY - halfTH - (float32(tileset.TileHeight) - float32(tiledMap.TileHPixel))
 
 					for _, coll := range blockedSlice {
 						obj := &TiledObject{
@@ -513,7 +513,7 @@ func (p *TiledMapMgr) Assemble() error {
 					for _, obj := range layer.Objects {
 						// 计算 World 坐标 (从 TMX 等距像素坐标转换)
 						if !obj.IsWorldCoordinateSystem {
-							th := float32(tiledMap.TileHeight)
+							th := float32(tiledMap.TileHPixel)
 							tx := obj.X/th - 0.5
 							ty := obj.Y/th - 0.5
 							obj.WX, obj.WY = tiledMap.IsometricCT.T2W(tx, ty)
@@ -532,8 +532,8 @@ func (p *TiledMapMgr) Assemble() error {
 					if layer.BlockedLayer && len(layer.Data) > 0 {
 						for i, gid := range layer.Data {
 							if gid != 0 && i < gridSize {
-								x := i % tiledMap.Width
-								y := i / tiledMap.Width
+								x := i % tiledMap.TileCountW
+								y := i / tiledMap.TileCountW
 								tiledMap.TileBlocked[x][y] = true
 							}
 						}
@@ -555,7 +555,7 @@ func (p *TiledMapMgr) Assemble() error {
 // findTilesetByGID 根据 GID 查找对应的 tileset
 func (p *TiledMap) findTilesetByGID(gid int) *TiledTileset {
 	var result *TiledTileset
-	for _, ts := range p.Tilesets {
+	for _, ts := range p.Tiles {
 		if ts.FirstGID <= gid {
 			if result == nil || ts.FirstGID > result.FirstGID {
 				result = ts

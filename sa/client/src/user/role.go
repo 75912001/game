@@ -73,7 +73,7 @@ func (p *Role) UpdateWithAction() {
 	viewportY := p.camera.FollowWY - cfg.GCommon.ScreenMaxHeight/2
 
 	// 获取地图尺寸
-	mapWidth, mapHeight := p.scene._map.tiledMapCfg.PixelW, p.scene._map.tiledMapCfg.PixelH
+	mapWidth, mapHeight := p.scene._map.tiledMapCfg.WPixel, p.scene._map.tiledMapCfg.HPixel
 
 	// 限制摄像机不显示地图边界之外
 	if mapWidth <= cfg.GCommon.ScreenMaxWidth {

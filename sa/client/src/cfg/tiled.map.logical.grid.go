@@ -65,8 +65,8 @@ func (p *TiledMapLogicalGridMgr) IsWalkable(gx, gy int) bool {
 // build 生成逻辑网格 (在 Assemble 阶段调用)
 func (p *TiledMapLogicalGridMgr) build(tiledMap *TiledMap) {
 	// 计算网格尺寸
-	p.GridW = (tiledMap.PixelW + p.CellW - 1) / p.CellW // 向上取整
-	p.GridH = (tiledMap.PixelH + p.CellH - 1) / p.CellH
+	p.GridW = (tiledMap.WPixel + p.CellW - 1) / p.CellW // 向上取整
+	p.GridH = (tiledMap.HPixel + p.CellH - 1) / p.CellH
 
 	// 初始化网格数组
 	p.Grids = make([][]*TiledMapLogicalGrid, p.GridW)

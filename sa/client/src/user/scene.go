@@ -23,5 +23,5 @@ func (p *Scene) Update() {
 
 // GetMapTileSize 获取地图 tile 尺寸
 func (p *Scene) GetMapTileSize() (width, height int) {
-	return p._map.tiledMapCfg.Width, p._map.tiledMapCfg.Height
+	return p._map.tiledMapCfg.TileCountW, p._map.tiledMapCfg.TileCountH
 }

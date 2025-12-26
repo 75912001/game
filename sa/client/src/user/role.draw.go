@@ -95,9 +95,9 @@ func (p *Role) drawDebugInfo(screen *ebitenv2.Image) {
 	y += 20
 	ui.Printf(screen, 10, y, "Map ID: %d", mapCfg.ID)
 	y += 20
-	ui.Printf(screen, 10, y, "Tile Size: %d x %d", mapCfg.Width, mapCfg.Height)
+	ui.Printf(screen, 10, y, "Tile Size: %d x %d", mapCfg.TileCountW, mapCfg.TileCountH)
 	y += 20
-	ui.Printf(screen, 10, y, "Pixel Size: %d x %d", mapCfg.PixelW, mapCfg.PixelH)
+	ui.Printf(screen, 10, y, "Pixel Size: %d x %d", mapCfg.WPixel, mapCfg.HPixel)
 
 	// 显示角色坐标信息
 	y += 30
