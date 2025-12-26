@@ -29,7 +29,7 @@ type TiledMap struct {
 	IsometricCT        *commonct.Isometric // 坐标转换器
 	TileBlocked        [][]bool            // [废弃][参见 README.md] 阻挡2维数组 [W][H] true 表示阻挡 (由多个图层合成)
 
-	LogicalGrid *TiledMapLogicalGrid // 逻辑网格 (用于 A* 寻路), nil 表示未启用
+	LogicalGrid *TiledMapLogicalGridMgr // 逻辑网格 (用于 A* 寻路), nil 表示未启用
 }
 
 // 限制在菱形地图边界内-叉积版 (World 坐标)

@@ -132,7 +132,7 @@ func (p *TiledMapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*Tiled
 				if err != nil || cellH <= 0 {
 					return nil, fmt.Errorf("解析地图 %v 的 logicalGrid 高度失败: %s %v", mapID, prop.Value, xruntime.Location())
 				}
-				tiledMap.LogicalGrid = &TiledMapLogicalGrid{
+				tiledMap.LogicalGrid = &TiledMapLogicalGridMgr{
 					CellW: cellW,
 					CellH: cellH,
 				}

@@ -15,19 +15,19 @@ type AStarWorldPoint struct {
 // astarNode A* 搜索节点 (实现 astar.Pather 接口)
 type astarNode struct {
 	GX, GY int
-	Grid   *cfg.TiledMapLogicalGrid
+	Grid   *cfg.TiledMapLogicalGridMgr
 	World  *astarNodeWorld
 }
 
 // astarNodeWorld 节点世界
 type astarNodeWorld struct {
-	Grid         *cfg.TiledMapLogicalGrid
+	Grid         *cfg.TiledMapLogicalGridMgr
 	Nodes        map[int]*astarNode
 	SearchCount  int // 搜索计数
 	MaxSearchNum int // 最大搜索数
 }
 
-func newAstarNodeWorld(grid *cfg.TiledMapLogicalGrid, maxSearch int) *astarNodeWorld {
+func newAstarNodeWorld(grid *cfg.TiledMapLogicalGridMgr, maxSearch int) *astarNodeWorld {
 	return &astarNodeWorld{
 		Grid:         grid,
 		Nodes:        make(map[int]*astarNode),
@@ -110,12 +110,12 @@ func (n *astarNode) PathEstimatedCost(to astar.Pather) float64 {
 
 // AStarPathfinder A* 寻路器
 type AStarPathfinder struct {
-	grid         *cfg.TiledMapLogicalGrid
+	grid         *cfg.TiledMapLogicalGridMgr
 	maxSearchNum int
 }
 
 // NewAStarPathfinder 创建寻路器
-func NewAStarPathfinder(grid *cfg.TiledMapLogicalGrid) *AStarPathfinder {
+func NewAStarPathfinder(grid *cfg.TiledMapLogicalGridMgr) *AStarPathfinder {
 	return &AStarPathfinder{
 		grid:         grid,
 		maxSearchNum: 5000000, // 增大搜索限制
@@ -157,8 +157,8 @@ func (p *AStarPathfinder) FindPath(startWX, startWY, endWX, endWY float32) []ASt
 	worldPath := make([]AStarWorldPoint, 0, len(path)-1)
 	for i := len(path) - 2; i >= 0; i-- {
 		node := path[i].(*astarNode)
-		wx, wy := p.grid.Grid2W(node.GX, node.GY)
-		worldPath = append(worldPath, AStarWorldPoint{wx, wy})
+		grid := p.grid.GetGrid(node.GX, node.GY)
+		worldPath = append(worldPath, AStarWorldPoint{grid.WX, grid.WY})
 	}
 
 	if len(worldPath) > 0 {

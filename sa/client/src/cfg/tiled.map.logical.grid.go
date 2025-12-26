@@ -1,23 +1,36 @@
 package cfg
 
-// TiledMapLogicalGrid 逻辑网格 (用于 A* 寻路)
+// TiledMapLogicalGridMgr 逻辑网格 (用于 A* 寻路)
+type TiledMapLogicalGridMgr struct {
+	CellW int                      // 单元格宽度 (像素)
+	CellH int                      // 单元格高度 (像素)
+	GridW int                      // 网格列数
+	GridH int                      // 网格行数
+	Grids [][]*TiledMapLogicalGrid // 网格数据 [x][y]
+}
+
 type TiledMapLogicalGrid struct {
-	CellW int      // 单元格宽度 (像素)
-	CellH int      // 单元格高度 (像素)
-	GridW int      // 网格列数
-	GridH int      // 网格行数
-	Grid  [][]bool // 网格数据 [x][y], true=阻挡, false=可通行
+	Blocked bool    // 是否阻挡 true=阻挡, false=可通行
+	WX      float32 // 单元格中心 World 坐标
+	WY      float32 // 单元格中心 World 坐标
+}
+
+func NewTiledMapLogicalGrid() *TiledMapLogicalGrid {
+	return &TiledMapLogicalGrid{}
+}
+func (p *TiledMapLogicalGridMgr) GetGrid(gx, gy int) *TiledMapLogicalGrid {
+	return p.Grids[gx][gy]
 }
 
 // Grid2W 逻辑网格坐标 → World 坐标 (单元格中心)
-func (p *TiledMapLogicalGrid) Grid2W(gx, gy int) (wx, wy float32) {
+func (p *TiledMapLogicalGridMgr) Grid2W(gx, gy int) (wx, wy float32) {
 	wx = float32(gx*p.CellW + p.CellW/2)
 	wy = float32(gy*p.CellH + p.CellH/2)
 	return
 }
 
 // W2Grid World 坐标 → 逻辑网格坐标
-func (p *TiledMapLogicalGrid) W2Grid(wx, wy float32) (gx, gy int) {
+func (p *TiledMapLogicalGridMgr) W2Grid(wx, wy float32) (gx, gy int) {
 	gx = int(wx) / p.CellW
 	gy = int(wy) / p.CellH
 	// 边界限制
@@ -36,29 +49,29 @@ func (p *TiledMapLogicalGrid) W2Grid(wx, wy float32) (gx, gy int) {
 
 // IsBlocked 检查逻辑网格坐标是否阻挡
 // 返回: true=阻挡, false=可通行
-func (p *TiledMapLogicalGrid) IsBlocked(gx, gy int) bool {
+func (p *TiledMapLogicalGridMgr) IsBlocked(gx, gy int) bool {
 	if gx < 0 || gx >= p.GridW || gy < 0 || gy >= p.GridH {
 		return true // 越界视为阻挡
 	}
-	return p.Grid[gx][gy]
+	return p.Grids[gx][gy].Blocked
 }
 
 // IsWalkable 检查逻辑网格坐标是否可通行 (IsBlocked 的反向)
 // 返回: true=可通行, false=阻挡
-func (p *TiledMapLogicalGrid) IsWalkable(gx, gy int) bool {
+func (p *TiledMapLogicalGridMgr) IsWalkable(gx, gy int) bool {
 	return !p.IsBlocked(gx, gy)
 }
 
 // build 生成逻辑网格 (在 Assemble 阶段调用)
-func (p *TiledMapLogicalGrid) build(tiledMap *TiledMap) {
+func (p *TiledMapLogicalGridMgr) build(tiledMap *TiledMap) {
 	// 计算网格尺寸
 	p.GridW = (tiledMap.PixelW + p.CellW - 1) / p.CellW // 向上取整
 	p.GridH = (tiledMap.PixelH + p.CellH - 1) / p.CellH
 
 	// 初始化网格数组
-	p.Grid = make([][]bool, p.GridW)
+	p.Grids = make([][]*TiledMapLogicalGrid, p.GridW)
 	for gx := 0; gx < p.GridW; gx++ {
-		p.Grid[gx] = make([]bool, p.GridH)
+		p.Grids[gx] = make([]*TiledMapLogicalGrid, p.GridH)
 	}
 
 	// 采样点偏移 (相对于格子左上角)
@@ -104,8 +117,10 @@ func (p *TiledMapLogicalGrid) build(tiledMap *TiledMap) {
 					break
 				}
 			}
-
-			p.Grid[gx][gy] = blocked
+			logicalGrid := NewTiledMapLogicalGrid()
+			logicalGrid.Blocked = blocked
+			logicalGrid.WX, logicalGrid.WY = p.Grid2W(gx, gy)
+			p.Grids[gx][gy] = logicalGrid
 		}
 	}
 }
