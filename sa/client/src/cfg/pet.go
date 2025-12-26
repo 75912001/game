@@ -38,18 +38,18 @@ type PetAttributes struct {
 	StatusResistRate    float32 `yaml:"statusResistRate"`    // 异常状态抗性比率
 }
 
-// GrowthRange 成长范围
-type GrowthRange struct {
+// PetGrowthRange 成长范围 todo menglc 如何控制成长范围合理性? 比如接近最大值的概率更小, 接近最小值的概率较小, 中间值概率较大. 如何做到非均匀分布?
+type PetGrowthRange struct {
 	Min float32 `yaml:"min"` // 最小值
 	Max float32 `yaml:"max"` // 最大值
 }
 
 // PetGrowth 宠物成长配置
 type PetGrowth struct {
-	Attack  GrowthRange `yaml:"attack"`  // 攻击成长
-	Defense GrowthRange `yaml:"defense"` // 防御成长
-	Agility GrowthRange `yaml:"agility"` // 敏捷成长
-	HP      GrowthRange `yaml:"hp"`      // 生命成长
+	Attack  PetGrowthRange `yaml:"attack"`  // 攻击成长
+	Defense PetGrowthRange `yaml:"defense"` // 防御成长
+	Agility PetGrowthRange `yaml:"agility"` // 敏捷成长
+	HP      PetGrowthRange `yaml:"hp"`      // 生命成长
 }
 
 // Pet 宠物信息
@@ -142,7 +142,7 @@ func (p *PetMgr) Load() error {
 		if xutil.Float32Less(pet.Attributes.StatusResistRate, 0) || xutil.Float32Less(1, pet.Attributes.StatusResistRate) {
 			return fmt.Errorf("宠物ID %d 异常状态抗性超出范围[0,1]: %v %v", pet.ID, pet.Attributes.StatusResistRate, xruntime.Location())
 		}
-		if pet.ID != 4000003 { // 4000003 是测试宠物 todo menglc
+		if pet.ID != 4000003 { // 4000003 只有测试宠物生效 todo menglc
 			continue
 		}
 		ok := p.Pets.AddIfNotExist(pet.ID, pet)
