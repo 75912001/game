@@ -1,5 +1,9 @@
 package cfg
 
+import (
+	"math"
+)
+
 // TiledMapLogicalGridMgr 逻辑网格 (用于 A* 寻路)
 type TiledMapLogicalGridMgr struct {
 	CellPixelW int                      // 单元格宽度 (像素)
@@ -62,6 +66,44 @@ func (p *TiledMapLogicalGridMgr) IsBlocked(gx, gy int) bool {
 		return true
 	}
 	return p.Grids[gx][gy].Blocked
+}
+
+// HasLineOfSight 检查两点之间是否有视线 (无阻挡)
+// 使用 Bresenham 算法遍历经过的网格
+func (p *TiledMapLogicalGridMgr) HasLineOfSight(startWX, startWY, endWX, endWY float32) bool {
+	x0, y0 := p.W2Grid(startWX, startWY)
+	x1, y1 := p.W2Grid(endWX, endWY)
+
+	dx := int(math.Abs(float64(x1 - x0)))
+	dy := -int(math.Abs(float64(y1 - y0)))
+	sx := -1
+	if x0 < x1 {
+		sx = 1
+	}
+	sy := -1
+	if y0 < y1 {
+		sy = 1
+	}
+	err := dx + dy
+
+	for {
+		if p.IsBlocked(x0, y0) {
+			return false
+		}
+		if x0 == x1 && y0 == y1 {
+			break
+		}
+		e2 := 2 * err
+		if e2 >= dy {
+			err += dy
+			x0 += sx
+		}
+		if e2 <= dx {
+			err += dx
+			y0 += sy
+		}
+	}
+	return true
 }
 
 // build 生成逻辑网格 (在 Assemble 阶段调用)

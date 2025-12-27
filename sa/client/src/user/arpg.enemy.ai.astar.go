@@ -118,7 +118,7 @@ type AStarPathfinder struct {
 func NewAStarPathfinder(grid *cfg.TiledMapLogicalGridMgr) *AStarPathfinder {
 	return &AStarPathfinder{
 		grid:         grid,
-		maxSearchNum: 5000000, // 增大搜索限制
+		maxSearchNum: 10000, // 增大搜索限制
 	}
 }
 
