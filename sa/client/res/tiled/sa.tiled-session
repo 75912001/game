@@ -3,11 +3,11 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "map/8000001.tsx",
+    "activeFile": "map/map.2000003.tmx",
     "expandedProjectPaths": [
+        "tsx",
         "map",
-        ".",
-        "tsx"
+        "."
     ],
     "fileStates": {
         "": {
@@ -183,11 +183,11 @@
             "expandedObjectLayers": [
                 7
             ],
-            "scale": 0.33,
+            "scale": 0.75,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 1425.7575757575755,
-                "y": 1193.939393939394
+                "x": 1468.6666666666665,
+                "y": 600
             }
         },
         "map/map.2000001.tmx#backgroundTower": {
@@ -201,7 +201,7 @@
             "scale": 0.75,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 3200.6666666666665,
+                "x": 3043.333333333333,
                 "y": 1600
             }
         },
@@ -209,11 +209,11 @@
             "expandedObjectLayers": [
                 3
             ],
-            "scale": 32,
+            "scale": 1.5,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 1598.234375,
-                "y": 19.75
+                "x": 1755.6666666666665,
+                "y": 770
             }
         },
         "map/ss.tsx": {
@@ -236,24 +236,20 @@
     "map.tileWidth": 64,
     "map.width": 20,
     "openFiles": [
-        "map/map.2000002.tmx",
-        "map/8000001.tsx",
-        "map/backgroundTower.tsx",
-        "map/7000002.tsx",
         "map/map.2000001.tmx",
-        "map/map.2000003.tmx",
-        "map/iso-64x64-building.tsx"
+        "map/map.2000002.tmx",
+        "map/map.2000003.tmx"
     ],
     "project": "sa.tiled-project",
     "property.type": "bool",
     "recentFiles": [
+        "map/map.2000001.tmx",
+        "map/map.2000002.tmx",
+        "map/map.2000003.tmx",
         "map/iso-64x64-building.tsx",
         "map/8000001.tsx",
         "map/7000002.tsx",
         "map/backgroundTower.tsx",
-        "map/map.2000002.tmx",
-        "map/map.2000003.tmx",
-        "map/map.2000001.tmx",
         "map/64x64.empty.tsx",
         "map/4937_pixian_ai.tsx",
         "map/ss.tsx",

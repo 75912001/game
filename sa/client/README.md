@@ -8,6 +8,7 @@ astar 寻路算法优化,
     中间有阻挡, 则走寻路算法计算的路径.
 
 
+地图调整为 16*16 的网格单位. 会有敌人卡主. 好像是出生地点,是blocked区域.???
 C:\game\sa\client\src\user\arpg.enemy.ai.go
 
 
