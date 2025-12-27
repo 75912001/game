@@ -318,12 +318,7 @@ func (p *TiledMapMgr) loadTileset(tmxDir string, tsRef tmxTilesetRef) (*TiledTil
 		}
 		var blockedSlice []*TiledTileBlocked
 		for _, obj := range tile.ObjectGroup.Objects {
-			blockedSlice = append(blockedSlice, &TiledTileBlocked{
-				X:      obj.X,
-				Y:      obj.Y,
-				Width:  obj.Width,
-				Height: obj.Height,
-			})
+			blockedSlice = append(blockedSlice, NewTiledTileBlocked(obj.X, obj.Y, obj.Width, obj.Height))
 		}
 		tileset.TileBlocked[tile.ID] = blockedSlice
 	}

@@ -4,23 +4,6 @@ import (
 	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
 )
 
-// TiledTileBlocked tile 阻挡定义 (相对于 tile 左上角的偏移)
-type TiledTileBlocked struct {
-	X      float32 // 相对 tile 左上角的 X 偏移
-	Y      float32 // 相对 tile 左上角的 Y 偏移
-	Width  float32 // 阻挡体宽度
-	Height float32 // 阻挡体高度
-}
-
-func NewTiledTileBlocked(x, y, width, height float32) *TiledTileBlocked {
-	return &TiledTileBlocked{
-		X:      x,
-		Y:      y,
-		Width:  width,
-		Height: height,
-	}
-}
-
 // TiledTileset Tiled-瓦片集
 type TiledTileset struct {
 	FirstGID    int             // 起始 GID
@@ -41,5 +24,22 @@ type TiledTileset struct {
 func NewTiledTileset() *TiledTileset {
 	return &TiledTileset{
 		TileBlocked: make(map[int][]*TiledTileBlocked),
+	}
+}
+
+// TiledTileBlocked tile 阻挡定义 (相对于 tile 左上角的偏移)
+type TiledTileBlocked struct {
+	X      float32 // 相对 tile 左上角的 X 偏移
+	Y      float32 // 相对 tile 左上角的 Y 偏移
+	Width  float32 // 阻挡体宽度
+	Height float32 // 阻挡体高度
+}
+
+func NewTiledTileBlocked(x, y, width, height float32) *TiledTileBlocked {
+	return &TiledTileBlocked{
+		X:      x,
+		Y:      y,
+		Width:  width,
+		Height: height,
 	}
 }
