@@ -239,7 +239,7 @@ func (p *TiledMapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*Tiled
 						}
 						obj.SpawnRadius = float32(v)
 					default:
-						// 忽略未知属性
+						return nil, fmt.Errorf("解析对象 %d 的属性失败, 未知属性: %s %v", obj.ID, prop.Name, xruntime.Location())
 					}
 					if xutil.Float32Less(obj.PatrolRadius, obj.SpawnRadius) {
 						return nil, fmt.Errorf("对象 %d 的巡逻半径不能小于刷新半径: %v %v", obj.ID, tmxPath, xruntime.Location())
@@ -505,7 +505,7 @@ func (p *TiledMapMgr) Assemble() error {
 					}
 				default: // 其他图层
 					// 如果图层有阻挡属性，该图层所有非空 tile 都阻挡
-					if layer.BlockedLayer && len(layer.Data) > 0 {
+					if layer.BlockedLayer && 0 < len(layer.Data) {
 						for i, gid := range layer.Data {
 							if gid != 0 && i < gridSize {
 								x := i % tiledMap.TileCountW

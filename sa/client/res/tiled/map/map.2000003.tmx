@@ -80,7 +80,7 @@
    </properties>
    <point/>
   </object>
-  <object id="46" name="刷怪点.1" x="203.333" y="564.667">
+  <object id="46" name="刷怪点.10" x="32" y="32">
    <properties>
     <property name="enemyGroupID" type="int" value="1"/>
     <property name="patrolRadius" type="float" value="10000"/>

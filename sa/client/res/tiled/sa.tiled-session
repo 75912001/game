@@ -183,11 +183,11 @@
             "expandedObjectLayers": [
                 7
             ],
-            "scale": 0.75,
-            "selectedLayer": 2,
+            "scale": 0.33,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 1539.333333333333,
-                "y": 799.9999999999999
+                "x": 1425.7575757575755,
+                "y": 1193.939393939394
             }
         },
         "map/map.2000001.tmx#backgroundTower": {
@@ -209,11 +209,11 @@
             "expandedObjectLayers": [
                 3
             ],
-            "scale": 0.5,
+            "scale": 32,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 1049,
-                "y": 742
+                "x": 1598.234375,
+                "y": 19.75
             }
         },
         "map/ss.tsx": {
