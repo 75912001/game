@@ -11,11 +11,12 @@ const TiledMapTag_LogicalGrid = "logicalGrid"             // 逻辑网格-标签
 
 // TiledMap Tiled 地图资源
 type TiledMap struct {
-	ID                      common.AssetID  // 地图ID
-	TileCountW              int             // tile 数量 - 宽度
-	TileCountH              int             // tile 数量 - 高度
-	TileWPixel              int             // tile 宽度 - 像素
-	TileHPixel              int             // tile 高度 - 像素
+	ID         common.AssetID // 地图ID
+	TileCountW int            // tile 数量 - 宽度
+	TileCountH int            // tile 数量 - 高度
+	TileWPixel int            // tile 宽度 - 像素
+	TileHPixel int            // tile 高度 - 像素
+
 	Layers                  []*TiledLayer   // 图层列表
 	Tiles                   []*TiledTileset // tileset 列表
 	BackgroundMusicFilePath string          // 背景音乐文件路径
@@ -31,10 +32,24 @@ type TiledMap struct {
 	LogicalGrid *TiledMapLogicalGridMgr // 逻辑网格 (用于 A* 寻路), nil 表示未启用
 }
 
-func NewTiledMap() *TiledMap {
-	tiledMap := &TiledMap{}
+func NewTiledMap(id common.AssetID, tileCountW, tileCountH int, tileWWPixel, tileHPixel int) *TiledMap {
+	tiledMap := &TiledMap{
+		ID:         id,
+		TileCountW: tileCountW,
+		TileCountH: tileCountH,
+		TileWPixel: tileWWPixel,
+		TileHPixel: tileHPixel,
+	}
+	// 等距地图像素尺寸 (包含完整的菱形内容区域)
+	// +TileHeight 是为了包含第一行 tile 上方和最后一行 tile 下方的菱形边缘
+	tiledMap.WPixel = (tiledMap.TileCountW + tiledMap.TileCountH) * (tiledMap.TileWPixel / 2)
+	tiledMap.HPixel = (tiledMap.TileCountW + tiledMap.TileCountH) * (tiledMap.TileHPixel / 2)
+	tiledMap.IsometricCT = commonct.NewIsometric(tiledMap.TileCountW, tiledMap.TileCountH, tiledMap.TileWPixel, tiledMap.TileHPixel)
+
 	tiledMap.Boundary = NewTiledMapBoundary(tiledMap)
+
 	tiledMap.TileBlocked = NewTiledMapTileBlocked(tiledMap)
+
 	return tiledMap
 }
 

@@ -12,10 +12,11 @@ type TiledMapBoundary struct {
 }
 
 func NewTiledMapBoundary(tiledMap *TiledMap) *TiledMapBoundary {
-	tiledMapBoundary := &TiledMapBoundary{
+	boundary := &TiledMapBoundary{
 		tiledMap: tiledMap,
 	}
-	return tiledMapBoundary
+	boundary.TopWX, boundary.TopWY, boundary.RightWX, boundary.RightWY, boundary.BottomWX, boundary.BottomWY, boundary.LeftWX, boundary.LeftWY = tiledMap.IsometricCT.GetDiamondCorners()
+	return boundary
 }
 
 // ClampWithW 限制在菱形地图边界内

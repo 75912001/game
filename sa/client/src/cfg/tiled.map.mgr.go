@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	commonct "saClient/src/common/coordinatetransform"
 	"strconv"
 	"strings"
 
@@ -106,12 +105,7 @@ func (p *TiledMapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*Tiled
 		return nil, fmt.Errorf("仅支持等宽高比 2:1 的等距(isometric)地图,当前地图 %v 瓦片宽高: %d x %d %v", mapID, mapXML.TileWidth, mapXML.TileHeight, xruntime.Location())
 	}
 
-	tiledMap := NewTiledMap()
-	tiledMap.ID = mapID
-	tiledMap.TileCountW = mapXML.Width
-	tiledMap.TileCountH = mapXML.Height
-	tiledMap.TileWPixel = mapXML.TileWidth
-	tiledMap.TileHPixel = mapXML.TileHeight
+	tiledMap := NewTiledMap(mapID, mapXML.Width, mapXML.Height, mapXML.TileWidth, mapXML.TileHeight)
 
 	if mapXML.Properties != nil { // 解析地图属性
 		for _, prop := range mapXML.Properties.Properties {
@@ -172,7 +166,7 @@ func (p *TiledMapMgr) loadTiledMap(mapID common.AssetID, tmxPath string) (*Tiled
 		if layerXML.Properties != nil { // 解析属性
 			for _, prop := range layerXML.Properties.Properties {
 				switch prop.Name {
-				case TileLayerProperty_Blocked:
+				case TiledLayerProperty_Blocked:
 					layer.BlockedLayer = prop.Value == "true"
 				}
 			}
@@ -273,23 +267,20 @@ func (p *TiledMapMgr) loadTileset(tmxDir string, tsRef tmxTilesetRef) (*TiledTil
 	if err := xml.Unmarshal(data, &tsxXML); err != nil {
 		return nil, errors.WithMessagef(err, "解析 TSX XML 失败: %v %v", tsxPath, xruntime.Location())
 	}
-
-	tileset := &TiledTileset{
-		FirstGID:    tsRef.FirstGID,
-		TileWidth:   tsxXML.TileWidth,
-		TileHeight:  tsxXML.TileHeight,
-		TileCount:   tsxXML.TileCount,
-		Columns:     tsxXML.Columns,
-		ImageWidth:  tsxXML.Image.Width,
-		ImageHeight: tsxXML.Image.Height,
-		TileBlocked: make(map[int][]*TiledTileBlocked),
-	}
+	tileset := NewTiledTileset()
+	tileset.FirstGID = tsRef.FirstGID
+	tileset.TileWidth = tsxXML.TileWidth
+	tileset.TileHeight = tsxXML.TileHeight
+	tileset.TileCount = tsxXML.TileCount
+	tileset.Columns = tsxXML.Columns
+	tileset.ImageWidth = tsxXML.Image.Width
+	tileset.ImageHeight = tsxXML.Image.Height
 
 	// 解析 tileset 属性
 	if tsxXML.Properties != nil {
 		for _, prop := range tsxXML.Properties.Properties {
 			switch prop.Name {
-			case TiledLayerProperty_HorizontalSlicePixel: // overheadRatio
+			case TiledLayerProperty_HorizontalSlicePixel:
 				if prop.Type != "int" {
 					return nil, fmt.Errorf("解析 tileset 属性失败, 必须是 int 类型:%v %v", prop.Name, xruntime.Location())
 				}
@@ -301,7 +292,7 @@ func (p *TiledMapMgr) loadTileset(tmxDir string, tsRef tmxTilesetRef) (*TiledTil
 					return nil, fmt.Errorf("解析 tileset 属性失败, ratio 必须在 (0, 1) 范围内:%v %v", prop.Name, xruntime.Location())
 				}
 				tileset.HorizontalSlicePixel = slicePixel
-			case TiledLayerProperty_VerticalSlicePixel: // verticalSlicePixel
+			case TiledLayerProperty_VerticalSlicePixel:
 				if prop.Type != "int" {
 					return nil, fmt.Errorf("解析 tileset 属性失败, 必须是 int 类型:%v %v", prop.Name, xruntime.Location())
 				}
@@ -415,12 +406,6 @@ func (p *TiledMapMgr) Check() error {
 func (p *TiledMapMgr) Assemble() error {
 	p.Maps.Foreach(
 		func(mapID common.AssetID, tiledMap *TiledMap) (isContinue bool) {
-			// 等距地图像素尺寸 (包含完整的菱形内容区域)
-			// +TileHeight 是为了包含第一行 tile 上方和最后一行 tile 下方的菱形边缘
-			tiledMap.WPixel = (tiledMap.TileCountW + tiledMap.TileCountH) * (tiledMap.TileWPixel / 2)
-			tiledMap.HPixel = (tiledMap.TileCountW + tiledMap.TileCountH) * (tiledMap.TileHPixel / 2)
-			tiledMap.IsometricCT = commonct.NewIsometric(tiledMap.TileCountW, tiledMap.TileCountH, tiledMap.TileWPixel, tiledMap.TileHPixel)
-			tiledMap.Boundary.TopWX, tiledMap.Boundary.TopWY, tiledMap.Boundary.RightWX, tiledMap.Boundary.RightWY, tiledMap.Boundary.BottomWX, tiledMap.Boundary.BottomWY, tiledMap.Boundary.LeftWX, tiledMap.Boundary.LeftWY = tiledMap.IsometricCT.GetDiamondCorners()
 			// 初始化碰撞网格
 			gridSize := tiledMap.TileCountW * tiledMap.TileCountH
 			// 创建二维布尔切片，按 [width][height]

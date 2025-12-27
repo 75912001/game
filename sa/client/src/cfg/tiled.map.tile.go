@@ -12,6 +12,15 @@ type TiledTileBlocked struct {
 	Height float32 // 阻挡体高度
 }
 
+func NewTiledTileBlocked(x, y, width, height float32) *TiledTileBlocked {
+	return &TiledTileBlocked{
+		X:      x,
+		Y:      y,
+		Width:  width,
+		Height: height,
+	}
+}
+
 // TiledTileset Tiled-瓦片集
 type TiledTileset struct {
 	FirstGID    int             // 起始 GID
@@ -27,4 +36,10 @@ type TiledTileset struct {
 	VerticalSlicePixel   int // 垂直切分像素值 (切多次, 64=每64像素垂直切分一次)
 
 	TileBlocked map[int][]*TiledTileBlocked // tile 阻挡体 (key: tile 本地 ID)
+}
+
+func NewTiledTileset() *TiledTileset {
+	return &TiledTileset{
+		TileBlocked: make(map[int][]*TiledTileBlocked),
+	}
 }
