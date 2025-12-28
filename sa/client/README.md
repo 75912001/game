@@ -41,23 +41,37 @@ C:\game\sa\client\src\user\arpg.enemy.ai.go
     2.5D mmorpg 游戏素材
     伪3d(Fake 3D)
     视角:等轴测视角 45度 (Isometric view)
-    风格:角色二次元/卡通,非真实感渲染(NPR),赛璐璐渲染(Cel-shaded)
-    线条清晰
-    加粗轮廓(Bold outlines)
+    风格:角色二次元/卡通,非真实感渲染(NPR),赛璐璐渲染(Cel-shaded),插画感和手绘感的美术风格,细腻手绘铅笔/水彩插画风(Delicate Hand-Drawn Pencil/Watercolor Illustration)
+    光影渲染(Shading & Lighting):光影过渡非常柔和,没有生硬的边缘切光.阴影部分常使用排线(Hatching)或素描涂抹的方式来表现体积感,而非平滑的渐变.
+    描边(Outline):角色和物体需要有描边,但描边不能是死板的黑色均一线条.需要编写Shader来实现模拟铅笔笔触的描边效果(带有噪点,粗细不匀,颜色偏暖灰)
     高饱和度(High saturation)
-    矢量艺术(Vector art)
-    平涂色(Flat color)
+    线条感(Linework):线条并非也是纯黑或完美的矢量线条,而是呈现出铅笔或炭笔手稿的质感.线条细腻,略带颤抖和不透明度的变化,颜色偏向深棕色或暖灰色,而非纯黑.
+    材质与纹理(Texture):画面具有明显的纸张纹理.色彩的填充不是平涂,而是带有彩色铅笔素描或干水彩的颗粒感和笔触感.
+    色彩(Color Palette):整体色调低饱和度,柔和且偏暖.大面积的留白与主色调形成对比,但即使是亮色也显得克制且温润.
+    贴图(Texturing):
+        所有贴图必须手绘
+        在漫反射贴图(Diffuse Map)中烘焙入纸张纹理和铅笔笔触
+        避免使用高光贴图(Specular/Roughness),物体的质感主要靠手绘的素描关系体现
+    阴影(Shadows):场景和角色的阴影不应是纯黑色块.最好使用色调分离(Cel-shading)技术,但阴影边缘要羽化,且阴影内部要带有排线或涂抹的纹理素材
+    后期处理(Post-Processing):屏幕空间需要叠加一层淡淡的纸张纹理滤镜,使整个画面统一在一种介质上
     画面干净
     纹理简洁
     细节:极简纹理(Minimal texture)
     高质量
     背景透明
+    营造出一种安静,文艺,且略带怀旧的氛围,动起来的手绘绘本
 ## 任务:
     制作规格为每个图块64*64
     图块之间无缝衔接
     制作16种草地,4*4排列
     最终出图为*.png
 
+
+
+线条清晰
+加粗轮廓(Bold outlines)
+矢量艺术(Vector art)
+平涂色(Flat color)
 色彩鲜艳
 整体色调明亮,温暖
 营造出轻松,愉快的童话冒险氛围
