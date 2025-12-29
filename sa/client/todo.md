@@ -12,13 +12,23 @@
     如若有更好的方案, 请一并给出.并给出理由和对比.
     可以完全访问当前项目的代码和资源.
 # 背景
-    当前 arpg, 敌人寻路ai,使用了 astar寻路算法.
+    当前 arpg, 只加载了角色 move 的动作资源.和动作逻辑.
 # 问题
-    当角色移动时, 离怪物距离越远, 则,出现卡帧的现象, 应该是离得远了.运算消耗较大.
+    需要添加角色攻击动作. 以及攻击动作的资源.
 # 当前想法
-    如何优化寻路算法.
+    参考 move 动作的实现方式. 
+    增加角色动作的枚举值.
+    增加角色动作的资源文件.
+    增加角色动作的逻辑代码.
+    之前 move 动作是使用了 5 个方向的资源. 加上镜像, 一共8个方向.
+    攻击动作只有一个方向的资源, 加上镜像, 一共2个方向.
+    逻辑处理上,要和 move 相似. 就算之后增加更多攻击动作的方向, 不用修改逻辑代码.
 # 可参考资料
-    现有地图网格 C:\game\sa\client\src\cfg\tiled.map.logical.grid.go
+    增加了角色动作
+        C:\game\sa\proto\role.proto   RoleAction_AttackAxe = 4; // 攻击-斧头
+    增加了角色动作的资源 
+        C:\game\sa\client\res\role\1000101\role.1000101.attackAxe.left.json
+        C:\game\sa\client\res\role\1000101\role.1000101.attackAxe.left.png
 # 任务
     给出方案.
 

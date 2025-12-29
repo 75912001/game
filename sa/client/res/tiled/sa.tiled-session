@@ -186,8 +186,8 @@
             "scale": 0.75,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 1468.6666666666665,
-                "y": 600
+                "x": 1600,
+                "y": 800
             }
         },
         "map/map.2000001.tmx#backgroundTower": {
@@ -201,7 +201,7 @@
             "scale": 0.75,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 3043.333333333333,
+                "x": 3200,
                 "y": 1600
             }
         },
