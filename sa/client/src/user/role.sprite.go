@@ -19,6 +19,7 @@ type RoleSprite struct {
 	cameraAnchorPointWX float32 // camera锚点-角色中心 World 坐标 X
 	cameraAnchorPointWY float32 // camera锚点-角色中心 World 坐标 Y
 
+	action          proto.RoleAction       // 当前播放的动作 (Move, AttackAxe等)
 	orientation     proto.AssetOrientation // 方向
 	image           *ebitenv2.Image        // 角色图片
 	roleImageSprite *res.RoleImageSprite   // 角色图片配置

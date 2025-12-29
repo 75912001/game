@@ -79,10 +79,10 @@ func (p *RoleMgr) Load() error {
 }
 
 func (p *RoleMgr) Check() error {
-	// 验证每个角色的8个方向是否完整
+	// 验证每个角色的所有动作是否有完整的8个方向
 	var checkErr error
 	p.Roles.Foreach(func(key common.AssetID, role *Role) bool {
-		if err := checkRole8Directions(role); err != nil {
+		if err := checkRoleActions(role); err != nil {
 			checkErr = err
 			return false // 停止遍历
 		}
@@ -91,24 +91,33 @@ func (p *RoleMgr) Check() error {
 	return checkErr
 }
 
-// checkRole8Directions 验证角色8个方向是否完整
-func checkRole8Directions(role *Role) error {
-	// 需要验证的8个方向
-	directions := []proto.AssetOrientation{
-		proto.AssetOrientation_AssetOrientation_Up,
-		proto.AssetOrientation_AssetOrientation_UpRight,
-		proto.AssetOrientation_AssetOrientation_Right,
-		proto.AssetOrientation_AssetOrientation_DownRight,
-		proto.AssetOrientation_AssetOrientation_Down,
-		proto.AssetOrientation_AssetOrientation_DownLeft,
-		proto.AssetOrientation_AssetOrientation_Left,
-		proto.AssetOrientation_AssetOrientation_UpLeft,
-	}
-
-	// 验证 Move 动画的8个方向
-	for _, dir := range directions {
-		if len(role.Move.Frames[dir]) == 0 {
-			return fmt.Errorf("角色 %v 移动动画缺少方向 %v %v", role.ID, GetNameByAssetOrientation(dir), xruntime.Location())
+// checkRoleActions 验证角色所有动作的8个方向是否完整
+// 要求: 每个动作必须有完整的8个方向
+// 参数:
+//   - role: 要检查的角色资源对象
+//
+// 返回: 如果有动作缺少任何方向, 返回详细错误信息
+func checkRoleActions(role *Role) error {
+	// 遍历角色已加载的所有动作
+	for roleAction, actionData := range role.Actions {
+		// 验证该动作的8个方向是否完整
+		for _, value := range proto.AssetOrientation_value {
+			orientation := proto.AssetOrientation(value)
+			if orientation == proto.AssetOrientation_AssetOrientation_Unknow {
+				continue // 跳过未知方向
+			}
+			if orientation == proto.AssetOrientation_AssetOrientation_Max {
+				continue // 跳过最大值
+			}
+			if len(actionData.Frames[orientation]) == 0 {
+				return fmt.Errorf(
+					"角色 %v 的动作 %v 缺少方向 %v (要求所有动作必须有完整的8个方向) %v",
+					role.ID,
+					GetNameByRoleAction(roleAction),
+					GetNameByAssetOrientation(orientation),
+					xruntime.Location(),
+				)
+			}
 		}
 	}
 
