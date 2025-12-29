@@ -12,23 +12,19 @@
     如若有更好的方案, 请一并给出.并给出理由和对比.
     可以完全访问当前项目的代码和资源.
 # 背景
-    当前 arpg, 只加载了角色 move 的动作资源.和动作逻辑.
+    当前 arpg, 生成的怪物具有hp的属性
 # 问题
-    需要添加角色攻击动作. 以及攻击动作的资源.
+    需要添加怪物 当前hp / 最大hp 的显示.
 # 当前想法
-    参考 move 动作的实现方式. 
-    增加角色动作的枚举值.
-    增加角色动作的资源文件.
-    增加角色动作的逻辑代码.
-    之前 move 动作是使用了 5 个方向的资源. 加上镜像, 一共8个方向.
-    攻击动作只有一个方向的资源, 加上镜像, 一共2个方向.
-    逻辑处理上,要和 move 相似. 就算之后增加更多攻击动作的方向, 不用修改逻辑代码.
+    显示位置: 怪物头顶上方.
+    显示方式: 红色的血条, 血条背景为灰色.
+    血条宽度: 和怪物的宽度一致.
+    血条高度: 5 个像素.
 # 可参考资料
-    增加了角色动作
-        C:\game\sa\proto\role.proto   RoleAction_AttackAxe = 4; // 攻击-斧头
-    增加了角色动作的资源 
-        C:\game\sa\client\res\role\1000101\role.1000101.attackAxe.left.json
-        C:\game\sa\client\res\role\1000101\role.1000101.attackAxe.left.png
+    怪物数据, 包含HP. 
+        C:\game\sa\client\src\user\arpg.enemy.go
+        当前hp(分子)  -> 	HP uint32       // 当前生命值
+        最大HP(分母)  -> 		BattleStats *ArpgEnemyBattleStats // 战斗属性    中的 func (p *ArpgEnemyBattleStats) GetHpMax() uint32 方法获取.
 # 任务
     给出方案.
 
