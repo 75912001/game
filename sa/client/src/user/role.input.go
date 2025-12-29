@@ -1,13 +1,12 @@
 package user
 
 import (
+	"github.com/hajimehoshi/ebiten/v2"
 	"log"
 	"saClient/src/cfg"
 	"saClient/src/common"
 	commoncamera "saClient/src/common/camera"
 	"saClient/src/proto"
-
-	"github.com/hajimehoshi/ebiten/v2"
 )
 
 // HandleInput 处理键盘输入
@@ -19,10 +18,15 @@ func (p *Role) HandleInput() {
 	left := ebiten.IsKeyPressed(ebiten.KeyA)
 	right := ebiten.IsKeyPressed(ebiten.KeyD)
 
-	// 无按键则不处理
-	if up || down || left || right { // 角色移动
+	// 移动输入优先级最高，立即打断其他动作
+	if up || down || left || right {
+		p.SetAction(proto.RoleAction_RoleAction_Move)
 		p.handleKeyMove(up, down, left, right)
 		return
+	}
+
+	if p.scene._map.IsArpgMap() { // 仅在 ARPG 地图中处理自动攻击
+		p.handleArpgAutoAttack()
 	}
 }
 
