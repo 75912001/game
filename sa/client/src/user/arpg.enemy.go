@@ -1,13 +1,27 @@
 package user
 
 import (
+	"fmt"
+	"image"
+	"image/color"
 	"saClient/src/cfg"
 	"saClient/src/common"
 	commoncamera "saClient/src/common/camera"
 	"saClient/src/proto"
+	resfont "saClient/src/res/font"
 
 	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
+	textv2 "github.com/hajimehoshi/ebiten/v2/text/v2"
 )
+
+var (
+	whiteImage    = ebitenv2.NewImage(3, 3)
+	whiteSubImage = whiteImage.SubImage(image.Rect(1, 1, 2, 2)).(*ebitenv2.Image)
+)
+
+func init() {
+	whiteImage.Fill(color.White)
+}
 
 // ArpgEnemy 怪物实体
 type ArpgEnemy struct {
@@ -76,7 +90,7 @@ func (p *ArpgEnemy) Draw(screen *ebitenv2.Image, camera *commoncamera.Camera) {
 
 	// 获取当前方向的动画帧
 	frames := p.GetCfg().Res.Move.Frames[p.Orientation]
-	image := frames[p.FrameIdx%uint32(len(frames))]
+	img := frames[p.FrameIdx%uint32(len(frames))]
 	// 获取帧信息
 	frameInfos := p.GetCfg().Res.Move.FrameInfo[p.Orientation]
 	frameInfo := frameInfos[p.FrameIdx%uint32(len(frameInfos))]
@@ -89,7 +103,56 @@ func (p *ArpgEnemy) Draw(screen *ebitenv2.Image, camera *commoncamera.Camera) {
 	// 绘制
 	op := &ebitenv2.DrawImageOptions{}
 	op.GeoM.Translate(float64(screenX), float64(screenY))
-	screen.DrawImage(image, op)
+	screen.DrawImage(img, op)
+
+	// 绘制血条
+	p.drawHPBar(screen, screenX, screenY, float32(frameInfo.Frame.W))
+}
+
+// drawHPBar 绘制血条
+func (p *ArpgEnemy) drawHPBar(screen *ebitenv2.Image, x, y, w float32) {
+	maxHP := p.BattleStats.GetHpMax()
+	if maxHP == 0 {
+		return
+	}
+	hpRatio := float64(p.HP) / float64(maxHP)
+	if hpRatio < 0 {
+		hpRatio = 0
+	} else if hpRatio > 1 {
+		hpRatio = 1
+	}
+
+	barW := float64(w)
+	barH := 5.0
+	barX := float64(x)
+	barY := float64(y) - barH - 2 // 位于头顶上方 2 像素
+
+	// 绘制背景 (灰色)
+	opBg := &ebitenv2.DrawImageOptions{}
+	opBg.GeoM.Scale(barW, barH)
+	opBg.GeoM.Translate(barX, barY)
+	opBg.ColorScale.ScaleWithColor(color.RGBA{100, 100, 100, 255})
+	screen.DrawImage(whiteSubImage, opBg)
+
+	// 绘制前景 (红色)
+	if hpRatio > 0 {
+		opFg := &ebitenv2.DrawImageOptions{}
+		opFg.GeoM.Scale(barW*hpRatio, barH)
+		opFg.GeoM.Translate(barX, barY)
+		opFg.ColorScale.ScaleWithColor(color.RGBA{255, 0, 0, 255})
+		screen.DrawImage(whiteSubImage, opFg)
+	}
+
+	// 绘制文字
+	text := fmt.Sprintf("[lv:%d] [hp:%d/%d]", p.Level, p.HP, maxHP)
+	textOp := &textv2.DrawOptions{}
+	textOp.GeoM.Translate(barX, barY-14) // 文字位于血条上方
+	textOp.ColorScale.ScaleWithColor(color.White)
+	// 居中显示
+	wText, _ := textv2.Measure(text, *resfont.GFace16, 0)
+	textOp.GeoM.Translate((barW-wText)/2, 0)
+
+	textv2.Draw(screen, text, *resfont.GFace16, textOp)
 }
 
 // TakeDamage 受到伤害

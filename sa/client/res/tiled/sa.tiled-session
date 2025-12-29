@@ -6,8 +6,8 @@
     "activeFile": "map/map.2000003.tmx",
     "expandedProjectPaths": [
         ".",
-        "map",
-        "tsx"
+        "tsx",
+        "map"
     ],
     "fileStates": {
         "": {
@@ -209,11 +209,11 @@
             "expandedObjectLayers": [
                 3
             ],
-            "scale": 1,
+            "scale": 0.25,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 1779,
-                "y": 389
+                "x": 2380,
+                "y": -324
             }
         },
         "map/ss.tsx": {

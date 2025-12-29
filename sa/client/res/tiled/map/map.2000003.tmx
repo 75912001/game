@@ -26,42 +26,6 @@
     <property name="blocked" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="41" name="刷怪点.1" x="1007.67" y="479">
-   <properties>
-    <property name="enemyGroupID" type="int" value="1"/>
-    <property name="patrolRadius" type="float" value="10000"/>
-    <property name="respawnSecond" type="int" value="10"/>
-    <property name="spawnRadius" type="float" value="500"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="42" name="刷怪点.1" x="1072.17" y="768.5">
-   <properties>
-    <property name="enemyGroupID" type="int" value="1"/>
-    <property name="patrolRadius" type="float" value="10000"/>
-    <property name="respawnSecond" type="int" value="10"/>
-    <property name="spawnRadius" type="float" value="500"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="43" name="刷怪点.1" x="999.167" y="1026.83">
-   <properties>
-    <property name="enemyGroupID" type="int" value="1"/>
-    <property name="patrolRadius" type="float" value="500"/>
-    <property name="respawnSecond" type="int" value="10"/>
-    <property name="spawnRadius" type="float" value="200"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="46" name="刷怪点.10" x="32" y="32">
-   <properties>
-    <property name="enemyGroupID" type="int" value="1"/>
-    <property name="patrolRadius" type="float" value="10000"/>
-    <property name="respawnSecond" type="int" value="10"/>
-    <property name="spawnRadius" type="float" value="500"/>
-   </properties>
-   <point/>
-  </object>
  </objectgroup>
  <layer id="4" name="Ground.1" class="Ground" width="50" height="50">
   <data encoding="csv">
