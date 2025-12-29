@@ -47,7 +47,7 @@ func NewRole(roleRecord *proto.RoleRecord) *Role {
 	tx := role.GetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_WX)
 	ty := role.GetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_WY)
 	role.doSwitchScene(common.AssetID(mapID), tx, ty)
-
+	role.sprite.orientation = proto.AssetOrientation(role.GetValueU64(proto.AssetIDRecord_AssetIDRecord_Orientation))
 	role.UpdateWithAction()
 
 	return role
@@ -56,9 +56,6 @@ func NewRole(roleRecord *proto.RoleRecord) *Role {
 // UpdateWithAction 更新角色状态和摄像机位置
 // 根据当前动作和方向更新角色显示的帧图像
 func (p *Role) UpdateWithAction() {
-	// 设置方向
-	p.sprite.orientation = proto.AssetOrientation(p.GetValueU64(proto.AssetIDRecord_AssetIDRecord_Orientation))
-
 	// 获取当前动作的数据
 	actionData := p.cfgRole.ResRole.Actions[p.sprite.action]
 	if actionData == nil {
