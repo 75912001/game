@@ -21,8 +21,8 @@ func (p *Scene) Update() {
 	p._map.Update()
 }
 
-// GetEnemies 获取场景中的所有敌人
-func (p *Scene) GetEnemies() []*ArpgEnemy {
+// GetArpgEnemies 获取 arpg 场景中的所有敌人
+func (p *Scene) GetArpgEnemies() []*ArpgEnemy {
 	return p._map.spawnManager.GetAllEnemies()
 }
 
