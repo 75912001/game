@@ -25,11 +25,14 @@ type Role struct {
 	pendingWY    float32 // 待切换的目标 World Y
 
 	BattleStats *RoleBattleStats
+
+	Arpg *RoleArpg
 }
 
 func NewRole(roleRecord *proto.RoleRecord) *Role {
 	role := &Role{
 		roleRecord: roleRecord,
+		Arpg:       NewRoleArpg(),
 	}
 	role.sprite.action = proto.RoleAction_RoleAction_Move // 默认动作-移动
 	role.BattleStats = NewRoleBattleStats(role)
