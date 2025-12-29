@@ -1,6 +1,7 @@
 package user
 
 import (
+	"fmt"
 	"saClient/src/cfg"
 	"saClient/src/common"
 	commoncamera "saClient/src/common/camera"
@@ -30,6 +31,7 @@ func NewRole(roleRecord *proto.RoleRecord) *Role {
 	role := &Role{
 		roleRecord: roleRecord,
 	}
+	role.sprite.action = proto.RoleAction_RoleAction_Move // 默认动作-移动
 	role.BattleStats = NewRoleBattleStats(role)
 	roleAssetID := role.GetAssetID()
 	role.cfgRole = cfg.GRoleMgr.Roles.Get(roleAssetID)
@@ -49,15 +51,22 @@ func NewRole(roleRecord *proto.RoleRecord) *Role {
 }
 
 // UpdateWithAction 更新角色状态和摄像机位置
+// 根据当前动作和方向更新角色显示的帧图像
 func (p *Role) UpdateWithAction() {
 	// 设置方向
 	p.sprite.orientation = proto.AssetOrientation(p.GetValueU64(proto.AssetIDRecord_AssetIDRecord_Orientation))
 
-	// 设置图像
-	images := p.cfgRole.ResRole.Move.Frames[p.sprite.orientation]
+	// 获取当前动作的数据
+	actionData := p.cfgRole.ResRole.Actions[p.sprite.action]
+	if actionData == nil {
+		panic(fmt.Sprintf("角色动作数据不存在 %v %v", p.GetAssetID(), p.sprite.action))
+	}
+
+	// 设置图像 (性能: 数组访问 O(1))
+	images := actionData.Frames[p.sprite.orientation]
 	p.sprite.image = images[p.frameIdx%uint32(len(images))]
 
-	frames := p.cfgRole.ResRole.Move.FrameInfo[p.sprite.orientation]
+	frames := actionData.FrameInfo[p.sprite.orientation]
 	p.sprite.roleImageSprite = frames[p.frameIdx%uint32(len(frames))]
 
 	// 更新角色中心 World 坐标 (脚底中心向上偏移半个角色高度)
@@ -121,4 +130,18 @@ func (p *Role) GetRoleNick() string {
 // GetWX 获取-角色世界坐标X
 func (p *Role) GetWX() float32 {
 	return p.sprite.actionAnchorPointWX
+}
+
+// SetAction 设置角色当前动作
+// 切换动作时自动重置帧索引, 从头播放新动作
+// 参数:
+//   - action: 要切换到的动作类型
+//
+// 性能: O(1) 赋值操作
+func (p *Role) SetAction(action proto.RoleAction) {
+	if p.sprite.action != action {
+		p.sprite.action = action
+		p.frameIdx = 0  // 重置帧索引, 从新动作的第一帧开始播放
+		p.frameTick = 0 // 重置帧计数器
+	}
 }
