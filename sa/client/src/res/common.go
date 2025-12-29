@@ -64,6 +64,7 @@ func GetNameByRoleAction(roleAction proto.RoleAction) string {
 
 // GetRoleActionByName 根据名称获取角色动作枚举值
 func GetRoleActionByName(name string) proto.RoleAction {
+	name = strings.ToLower(name)
 	for k, v := range proto.RoleAction_name {
 		str := v
 		if i := strings.Index(str, "_"); i >= 0 && i+1 < len(str) {
