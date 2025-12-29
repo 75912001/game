@@ -21,6 +21,11 @@ func (p *Scene) Update() {
 	p._map.Update()
 }
 
+// GetEnemies 获取场景中的所有敌人
+func (p *Scene) GetEnemies() []*ArpgEnemy {
+	return p._map.spawnManager.GetAllEnemies()
+}
+
 // GetMapTileSize 获取地图 tile 尺寸
 func (p *Scene) GetMapTileSize() (width, height int) {
 	return p._map.tiledMapCfg.TileCountW, p._map.tiledMapCfg.TileCountH
