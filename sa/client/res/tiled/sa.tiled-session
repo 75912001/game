@@ -6,8 +6,8 @@
     "activeFile": "map/map.2000003.tmx",
     "expandedProjectPaths": [
         ".",
-        "tsx",
-        "map"
+        "map",
+        "tsx"
     ],
     "fileStates": {
         "": {

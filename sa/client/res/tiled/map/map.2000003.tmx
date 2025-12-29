@@ -11,7 +11,7 @@
    <properties>
     <property name="enemyGroupID" type="int" value="1"/>
     <property name="patrolRadius" type="float" value="10000"/>
-    <property name="respawnSecond" type="int" value="10"/>
+    <property name="respawnSecond" type="int" value="3"/>
     <property name="spawnRadius" type="float" value="500"/>
    </properties>
    <point/>

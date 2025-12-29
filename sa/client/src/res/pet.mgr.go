@@ -98,22 +98,17 @@ func (p *PetMgr) Assemble() error {
 
 // checkPet8Directions 验证宠物8个方向是否完整
 func checkPet8Directions(pet *Pet) error {
-	// 需要验证的8个方向
-	directions := []proto.AssetOrientation{
-		proto.AssetOrientation_AssetOrientation_Up,
-		proto.AssetOrientation_AssetOrientation_UpRight,
-		proto.AssetOrientation_AssetOrientation_Right,
-		proto.AssetOrientation_AssetOrientation_DownRight,
-		proto.AssetOrientation_AssetOrientation_Down,
-		proto.AssetOrientation_AssetOrientation_DownLeft,
-		proto.AssetOrientation_AssetOrientation_Left,
-		proto.AssetOrientation_AssetOrientation_UpLeft,
-	}
-
-	// 验证 Move 动画的8个方向
-	for _, dir := range directions {
-		if len(pet.Move.Frames[dir]) == 0 {
-			return fmt.Errorf("宠物 %v 移动动画缺少方向 %v %v", pet.ID, GetNameByAssetOrientation(dir), xruntime.Location())
+	for _, value := range proto.AssetOrientation_value {
+		orientation := proto.AssetOrientation(value)
+		if orientation == proto.AssetOrientation_AssetOrientation_Unknow {
+			continue
+		}
+		if orientation == proto.AssetOrientation_AssetOrientation_Max {
+			continue
+		}
+		// 验证 Move 动画的8个方向
+		if len(pet.Move.Frames[orientation]) == 0 {
+			return fmt.Errorf("宠物 %v 移动动画缺少方向 %v %v", pet.ID, GetNameByAssetOrientation(orientation), xruntime.Location())
 		}
 	}
 

@@ -31,7 +31,7 @@ enemyGroups:
   # 普通怪组1: 固定等级范围，低概率出宝宝
   - id: 1
     name: 乌力斯坦巡逻队
-    countRange: [10, 10]
+    countRange: [1, 1]
     levelRange: [1, 5]
     captured: true
     babyRate: 500
