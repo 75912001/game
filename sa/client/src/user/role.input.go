@@ -91,12 +91,8 @@ func (p *Role) handleKeyMove(up, down, left, right bool) {
 	// 更新 World 坐标
 	newRoleSprite.actionAnchorPointWX = newWorldX
 	newRoleSprite.actionAnchorPointWY = newWorldY
-	// 更新动画帧
-	p.frameTick++
-	if common.FrameTickPerChange <= p.frameTick {
-		p.frameTick = 0
-		p.frameIdx++
-	}
+
+	p.animationFrame.Update()
 
 	// 是否使用预设的角色状态(用于回退)
 	var rollBack = false

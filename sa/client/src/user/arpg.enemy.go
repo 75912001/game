@@ -34,9 +34,7 @@ type ArpgEnemy struct {
 	WX, WY      float32                // 世界坐标 (脚底中心)
 	Orientation proto.AssetOrientation // 朝向
 
-	// 动画信息
-	FrameIdx  uint32 // 当前帧索引
-	FrameTick uint32 // 帧计时器
+	AnimationFrame common.AnimationFrame
 
 	AI *ArpgEnemyAI // AI 控制器
 	HP uint32       // 当前生命值
@@ -51,8 +49,6 @@ func NewArpgEnemy(spawnPoint *ArpgEnemySpawnPoint, generated *cfg.GeneratedEnemy
 		WX:          wx,
 		WY:          wy,
 		Orientation: proto.AssetOrientation_AssetOrientation_Down,
-		FrameIdx:    0,
-		FrameTick:   0,
 	}
 	enemy.BattleStats = NewArpgEnemyBattleStats(enemy)
 	enemy.AI = NewArpgEnemyAI(enemy)
@@ -90,10 +86,10 @@ func (p *ArpgEnemy) Draw(screen *ebitenv2.Image, camera *commoncamera.Camera) {
 
 	// 获取当前方向的动画帧
 	frames := p.GetCfg().Res.Move.Frames[p.Orientation]
-	img := frames[p.FrameIdx%uint32(len(frames))]
+	img := frames[p.AnimationFrame.FrameIdx%uint32(len(frames))]
 	// 获取帧信息
 	frameInfos := p.GetCfg().Res.Move.FrameInfo[p.Orientation]
-	frameInfo := frameInfos[p.FrameIdx%uint32(len(frameInfos))]
+	frameInfo := frameInfos[p.AnimationFrame.FrameIdx%uint32(len(frameInfos))]
 	// 计算屏幕坐标 (脚底中心为锚点)
 	screenX := p.WX - float32(camera.ViewportWX)
 	screenY := p.WY - float32(camera.ViewportWY)
@@ -164,14 +160,5 @@ func (p *ArpgEnemy) TakeDamage(damage uint32) {
 		p.HP -= damage
 	} else {
 		p.HP = 0
-	}
-}
-
-// UpdateAnimation 更新动画帧
-func (p *ArpgEnemy) UpdateAnimation() {
-	p.FrameTick++
-	if common.FrameTickPerChange <= p.FrameTick {
-		p.FrameTick = 0
-		p.FrameIdx++
 	}
 }

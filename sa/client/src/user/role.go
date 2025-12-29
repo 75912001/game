@@ -12,9 +12,8 @@ type Role struct {
 	roleRecord *proto.RoleRecord // 角色-记录
 	cfgRole    *cfg.Role         // 角色-配置
 
-	frameIdx  uint32     // 当前帧索引
-	frameTick uint32     // 帧计数器（用于控制动画速度）
-	sprite    RoleSprite // 角色-精灵
+	animationFrame common.AnimationFrame
+	sprite         RoleSprite // 角色-精灵
 
 	scene  *Scene               // 角色所在场景
 	camera *commoncamera.Camera // 角色摄像机
@@ -64,10 +63,10 @@ func (p *Role) UpdateWithAction() {
 
 	// 设置图像 (性能: 数组访问 O(1))
 	images := actionData.Frames[p.sprite.orientation]
-	p.sprite.image = images[p.frameIdx%uint32(len(images))]
+	p.sprite.image = images[p.animationFrame.FrameIdx%uint32(len(images))]
 
 	frames := actionData.FrameInfo[p.sprite.orientation]
-	p.sprite.roleImageSprite = frames[p.frameIdx%uint32(len(frames))]
+	p.sprite.roleImageSprite = frames[p.animationFrame.FrameIdx%uint32(len(frames))]
 
 	// 更新角色中心 World 坐标 (脚底中心向上偏移半个角色高度)
 	p.sprite.cameraAnchorPointWX = p.sprite.actionAnchorPointWX
@@ -141,7 +140,11 @@ func (p *Role) GetWX() float32 {
 func (p *Role) SetAction(action proto.RoleAction) {
 	if p.sprite.action != action {
 		p.sprite.action = action
-		p.frameIdx = 0  // 重置帧索引, 从新动作的第一帧开始播放
-		p.frameTick = 0 // 重置帧计数器
+		p.animationFrame.Reset()
 	}
+}
+
+// GetWeaponType 获取武器类型
+func (p *Role) GetWeaponType() proto.RoleWeaponType {
+	return proto.RoleWeaponType_RoleWeaponType_Axe // todo menglc , 先写死斧头
 }

@@ -134,7 +134,7 @@ func (p *ArpgEnemyAI) updatePatrol() {
 	enemy.Orientation = commonct.CalculateOrientation(dx, dy)
 
 	// 更新动画帧
-	enemy.UpdateAnimation()
+	enemy.AnimationFrame.Update()
 }
 
 // switchToIdle 切换到待机状态
@@ -261,7 +261,7 @@ func (p *ArpgEnemyAI) updateChaseWithAStar(targetWX, targetWY float32, mapCfg *c
 				enemy.WX = newWX
 				enemy.WY = newWY
 				enemy.Orientation = commonct.CalculateOrientation(dx, dy)
-				enemy.UpdateAnimation()
+				enemy.AnimationFrame.Update()
 			} else {
 				// 路径上遇到阻挡 (动态障碍物?), 重算路径
 				p.Path = nil

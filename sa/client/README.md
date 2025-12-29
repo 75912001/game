@@ -2,6 +2,12 @@
 
 # todo
 
+
+attackRange := cfg.GCommon.GetRoleArpgDefAttackRangeByWeaponType(proto.RoleWeaponType_RoleWeaponType_Axe)
+
+
+
+
 astar 寻路算法优化,
 敌人和角色之间
     中间无阻挡, 则直线移动过去, 不需要走寻路算法计算的路径.

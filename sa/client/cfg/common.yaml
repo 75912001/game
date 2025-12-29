@@ -10,8 +10,14 @@ roleCountMax: 5
 roleRebirthCountMax: 5
 # 角色-默认-移动速度
 roleDefMoveSpeed: 6.0
-# 角色-默认-视野范围
-roleDefViewRange: 300
+# 角色-arpg-默认-视野范围
+roleArpgDefViewRange: 300.0
+# 角色-arpg-默认-攻击范围-斧头
+roleArpgDefAttackRangeAxe: 50.0
+# 角色-arpg-默认-攻击范围-弓箭
+roleArpgDefAttackRangeBow: 200.0
+# 角色-arpg-默认-攻击范围-法杖
+roleArpgDefAttackRangeStaff: 150.0
 # 角色-默认-缩放比例
 roleDefScale: 1.0
 # 角色-每升一级,获得可用点数
