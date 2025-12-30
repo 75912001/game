@@ -9,15 +9,14 @@ import (
 
 // RoleSprite 角色-精灵
 type RoleSprite struct {
-	actionAnchorPointWX float32 // 动作锚点-脚底中心 World 坐标 X
-	actionAnchorPointWY float32 // 动作锚点-脚底中心 World 坐标 Y
+	wx float32 // 脚底中心 World 坐标 X
+	wy float32 // 脚底中心 World 坐标 Y
 
-	actionAnchorPointTX float32 // 动作锚点-脚底中心 Tile 坐标 X
-	actionAnchorPointTY float32 // 动作锚点-脚底中心 Tile 坐标 Y
+	tx float32 // 脚底中心 Tile 坐标 X
+	ty float32 // 脚底中心 Tile 坐标 Y
 
-	// 角色中心 World 坐标 (用于渲染和摄像机跟随)
-	cameraAnchorPointWX float32 // camera锚点-角色中心 World 坐标 X
-	cameraAnchorPointWY float32 // camera锚点-角色中心 World 坐标 Y
+	centerWX float32 // 角色中心 World 坐标 X
+	centerWY float32 // 角色中心 World 坐标 Y
 
 	action          proto.RoleAction       // 当前播放的动作 (Move, AttackAxe等)
 	orientation     proto.AssetOrientation // 方向

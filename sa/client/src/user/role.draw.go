@@ -26,13 +26,13 @@ func (p *Role) DrawAll(screen *ebitenv2.Image) {
 
 // GetWY 返回角色动作锚点的 World Y 坐标（用于Y-Sorting）
 func (p *Role) GetWY() float32 {
-	return p.sprite.actionAnchorPointWY
+	return p.sprite.wy
 }
 
 // Draw 仅绘制角色本身(实现 Renderable 接口)
 func (p *Role) Draw(screen *ebitenv2.Image, cam *commoncamera.Camera) {
-	screenX := p.sprite.cameraAnchorPointWX - float32(cam.ViewportWX) - float32(p.sprite.roleImageSprite.Frame.W/2)
-	screenY := p.sprite.cameraAnchorPointWY - float32(cam.ViewportWY) - float32(p.sprite.roleImageSprite.Frame.H/2)
+	screenX := p.sprite.centerWX - float32(cam.ViewportWX) - float32(p.sprite.roleImageSprite.Frame.W/2)
+	screenY := p.sprite.centerWY - float32(cam.ViewportWY) - float32(p.sprite.roleImageSprite.Frame.H/2)
 
 	op := &ebitenv2.DrawImageOptions{}
 	op.GeoM.Translate(float64(screenX), float64(screenY))

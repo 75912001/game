@@ -14,25 +14,25 @@ import (
 func (p *Role) drawDebugInfo(screen *ebitenv2.Image, cam *commoncamera.Camera) {
 	mapCfg := p.scene._map.tiledMapCfg
 	// 获取角色 Tile 坐标
-	tileX, tileY := mapCfg.IsometricCT.W2T(p.sprite.actionAnchorPointWX, p.sprite.actionAnchorPointWY)
+	tileX, tileY := mapCfg.IsometricCT.W2T(p.sprite.wx, p.sprite.wy)
 
 	// 获取角色 World 坐标
-	worldX := p.sprite.actionAnchorPointWX
-	worldY := p.sprite.actionAnchorPointWY
+	worldX := p.sprite.wx
+	worldY := p.sprite.wy
 
 	// 获取角色 Screen 坐标
-	roleScreenX := p.sprite.cameraAnchorPointWX - float32(p.camera.ViewportWX)
-	roleScreenY := p.sprite.cameraAnchorPointWY - float32(p.camera.ViewportWY)
+	roleScreenX := p.sprite.centerWX - float32(p.camera.ViewportWX)
+	roleScreenY := p.sprite.centerWY - float32(p.camera.ViewportWY)
 
 	if true {
 		// 绘制脚底中心点 (红色圆形)
-		bottomCenterScreenX := p.sprite.actionAnchorPointWX - float32(p.camera.ViewportWX)
-		bottomCenterScreenY := p.sprite.actionAnchorPointWY - float32(p.camera.ViewportWY)
+		bottomCenterScreenX := p.sprite.wx - float32(p.camera.ViewportWX)
+		bottomCenterScreenY := p.sprite.wy - float32(p.camera.ViewportWY)
 		vector.FillCircle(screen, bottomCenterScreenX, bottomCenterScreenY, 5, common.Colors_Red, false)
 
 		// 绘制角色中心点(蓝色圆形)
-		centerScreenX := p.sprite.cameraAnchorPointWX - float32(p.camera.ViewportWX)
-		centerScreenY := p.sprite.cameraAnchorPointWY - float32(p.camera.ViewportWY)
+		centerScreenX := p.sprite.centerWX - float32(p.camera.ViewportWX)
+		centerScreenY := p.sprite.centerWY - float32(p.camera.ViewportWY)
 		vector.FillCircle(screen, centerScreenX, centerScreenY, 5, common.Colors_Blue, false)
 
 		// 绘制视野范围 (红色虚线圆)

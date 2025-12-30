@@ -75,8 +75,8 @@ func (p *Role) handleKeyMove(up, down, left, right bool) {
 	// 移动速度 (像素/帧)
 	moveSpeed := cfg.GCommon.RoleDefMoveSpeed
 	// 计算新的 World 坐标
-	newWorldX := newRoleSprite.actionAnchorPointWX + dx*moveSpeed
-	newWorldY := newRoleSprite.actionAnchorPointWY + dy*moveSpeed
+	newWorldX := newRoleSprite.wx + dx*moveSpeed
+	newWorldY := newRoleSprite.wy + dy*moveSpeed
 	mapCfg := p.scene._map.tiledMapCfg
 
 	{ // 限制在菱形地图边界内 (World 坐标)
@@ -87,31 +87,31 @@ func (p *Role) handleKeyMove(up, down, left, right bool) {
 		newWorldX, newWorldY = clampedX, clampedY
 	}
 
-	newRoleSprite.actionAnchorPointTX, newRoleSprite.actionAnchorPointTY = mapCfg.IsometricCT.W2T(newWorldX, newWorldY)
+	newRoleSprite.tx, newRoleSprite.ty = mapCfg.IsometricCT.W2T(newWorldX, newWorldY)
 	// 更新 World 坐标
-	newRoleSprite.actionAnchorPointWX = newWorldX
-	newRoleSprite.actionAnchorPointWY = newWorldY
+	newRoleSprite.wx = newWorldX
+	newRoleSprite.wy = newWorldY
 
 	p.animationFrame.Update()
 
 	// 是否使用预设的角色状态(用于回退)
 	var rollBack = false
-	if portalObject, ok := mapCfg.FindPortalByObject(newRoleSprite.actionAnchorPointWX, newRoleSprite.actionAnchorPointWY); ok { // 判断角色 wx, wy 是否触发了-传送
-		log.Printf("Role HandleInput portal at world (%.3f, %.3f) portalObject:%+v", newRoleSprite.actionAnchorPointWX, newRoleSprite.actionAnchorPointWY, portalObject)
+	if portalObject, ok := mapCfg.FindPortalByObject(newRoleSprite.wx, newRoleSprite.wy); ok { // 判断角色 wx, wy 是否触发了-传送
+		log.Printf("Role HandleInput portal at world (%.3f, %.3f) portalObject:%+v", newRoleSprite.wx, newRoleSprite.wy, portalObject)
 		p.SwitchScene(portalObject.PortalCfg.MapID, portalObject.PortalCfg.WX, portalObject.PortalCfg.WY)
-	} else if mapCfg.TileBlocked.IsBlockedWithTF(newRoleSprite.actionAnchorPointTX, newRoleSprite.actionAnchorPointTY) { // 使用 tile 图层 图块 阻挡检测
-		log.Printf("Role HandleInput tile blocked at world (%.2f, %.2f)", newRoleSprite.actionAnchorPointWX, newRoleSprite.actionAnchorPointWY)
+	} else if mapCfg.TileBlocked.IsBlockedWithTF(newRoleSprite.tx, newRoleSprite.ty) { // 使用 tile 图层 图块 阻挡检测
+		log.Printf("Role HandleInput tile blocked at world (%.2f, %.2f)", newRoleSprite.wx, newRoleSprite.wy)
 		rollBack = true
-	} else if blockedObject, ok := mapCfg.FindBlockedByObject(newRoleSprite.actionAnchorPointWX, newRoleSprite.actionAnchorPointWY); ok { // 判断角色 wx, wy 是否触发了-阻挡
-		log.Printf("Role HandleInput blocked at world (%.2f, %.2f) blockedObject:%+v", newRoleSprite.actionAnchorPointWX, newRoleSprite.actionAnchorPointWY, blockedObject)
+	} else if blockedObject, ok := mapCfg.FindBlockedByObject(newRoleSprite.wx, newRoleSprite.wy); ok { // 判断角色 wx, wy 是否触发了-阻挡
+		log.Printf("Role HandleInput blocked at world (%.2f, %.2f) blockedObject:%+v", newRoleSprite.wx, newRoleSprite.wy, blockedObject)
 		// 回退到之前的位置
 		rollBack = true
 	}
 	if !rollBack { // 正常移动，更新动画帧索引
 		p.sprite = newRoleSprite
 		p.SetValueU64(proto.AssetIDRecord_AssetIDRecord_Orientation, uint64(newRoleSprite.orientation))
-		p.SetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_WX, newRoleSprite.actionAnchorPointWX)
-		p.SetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_WY, newRoleSprite.actionAnchorPointWY)
+		p.SetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_WX, newRoleSprite.wx)
+		p.SetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_WY, newRoleSprite.wy)
 	}
 	p.UpdateWithAction()
 }
@@ -137,5 +137,5 @@ func (p *Role) doSwitchScene(mapID common.AssetID, wx, wy float32) {
 	p.scene = NewScene(mapID)
 	p.camera = commoncamera.NewCamera()
 	// 初始化角色的 World 坐标
-	p.sprite.actionAnchorPointWX, p.sprite.actionAnchorPointWY = wx, wy
+	p.sprite.wx, p.sprite.wy = wx, wy
 }

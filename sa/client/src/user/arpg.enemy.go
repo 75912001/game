@@ -48,14 +48,27 @@ func NewArpgEnemy(spawnPoint *ArpgEnemySpawnPoint, generated *cfg.GeneratedEnemy
 		SpawnPoint:  spawnPoint,
 		Generated:   generated,
 		Level:       generated.Level,
-		WX:          wx,
-		WY:          wy,
 		Orientation: proto.AssetOrientation_AssetOrientation_Down,
 	}
 	enemy.BattleStats = NewArpgEnemyBattleStats(enemy)
 	enemy.AI = NewArpgEnemyAI(enemy)
 	enemy.HP = enemy.BattleStats.GetHpMax()
+	enemy.SetPosition(wx, wy)
 	return enemy
+}
+
+// SetPosition 设置怪物位置并更新中心点
+func (p *ArpgEnemy) SetPosition(wx, wy float32) {
+	p.WX = wx
+	p.WY = wy
+
+	// 计算中心点 (脚底中心向上偏移半个图像高度)
+	frameInfos := p.GetCfg().Res.Move.FrameInfo[p.Orientation]
+	frameInfo := frameInfos[p.AnimationFrame.FrameIdx%uint32(len(frameInfos))]
+	halfHeight := float32(frameInfo.Frame.H / 2)
+
+	p.CenterWX = wx
+	p.CenterWY = wy - halfHeight
 }
 
 func (p *ArpgEnemy) GetCfg() *cfg.Pet {
@@ -165,6 +178,16 @@ func (p *ArpgEnemy) DrawDebug(screen *ebitenv2.Image, camera *commoncamera.Camer
 
 	// 绘制视野范围 (红色虚线圆)
 	common.DrawDashedCircle(screen, screenX, screenY, cfg.GCommon.PetDefArpgViewRange, common.Colors_Red, 48, 0.5, 2.0)
+
+	// 绘制脚底中心点 (红色圆形)
+	bottomCenterScreenX := p.WX - float32(camera.ViewportWX)
+	bottomCenterScreenY := p.WY - float32(camera.ViewportWY)
+	vector.FillCircle(screen, bottomCenterScreenX, bottomCenterScreenY, 5, common.Colors_Red, false)
+
+	// 绘制角色中心点(蓝色圆形)
+	centerScreenX := p.CenterWX - float32(camera.ViewportWX)
+	centerScreenY := p.CenterWY - float32(camera.ViewportWY)
+	vector.FillCircle(screen, centerScreenX, centerScreenY, 5, common.Colors_Blue, false)
 }
 
 // drawDashedCircleEnemy 绘制虚线圆 (敌人专用)

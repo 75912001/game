@@ -131,9 +131,8 @@ func (p *ArpgEnemyAI) updatePatrol() {
 		return
 	}
 
-	// 更新位置
-	enemy.WX = newWX
-	enemy.WY = newWY
+	// 更新位置和中心点
+	enemy.SetPosition(newWX, newWY)
 
 	// 更新朝向
 	enemy.Orientation = commonct.CalculateOrientation(dx, dy)
@@ -257,8 +256,7 @@ func (p *ArpgEnemyAI) updateChaseWithAStar(targetWX, targetWY float32, mapCfg *c
 
 			newWX, newWY, blocked := mapCfg.IsBlocked(newWX, newWY)
 			if !blocked {
-				enemy.WX = newWX
-				enemy.WY = newWY
+				enemy.SetPosition(newWX, newWY)
 				enemy.Orientation = commonct.CalculateOrientation(dx, dy)
 				enemy.AnimationFrame.Update()
 			} else {

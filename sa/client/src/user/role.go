@@ -69,12 +69,12 @@ func (p *Role) UpdateWithAction() {
 	p.sprite.roleImageSprite = frames[p.animationFrame.FrameIdx%uint32(len(frames))]
 
 	// 更新角色中心 World 坐标 (脚底中心向上偏移半个角色高度)
-	p.sprite.cameraAnchorPointWX = p.sprite.actionAnchorPointWX
-	p.sprite.cameraAnchorPointWY = p.sprite.actionAnchorPointWY - float32(p.sprite.roleImageSprite.Frame.H/2)
+	p.sprite.centerWX = p.sprite.wx
+	p.sprite.centerWY = p.sprite.wy - float32(p.sprite.roleImageSprite.Frame.H/2)
 
 	// 更新摄像机跟随点 (World 坐标)
-	p.camera.FollowWX = int(p.sprite.cameraAnchorPointWX)
-	p.camera.FollowWY = int(p.sprite.cameraAnchorPointWY)
+	p.camera.FollowWX = int(p.sprite.centerWX)
+	p.camera.FollowWY = int(p.sprite.centerWY)
 
 	// 计算摄像机视口左上角 (World 坐标)
 	viewportX := p.camera.FollowWX - cfg.GCommon.ScreenMaxWidth/2
@@ -128,7 +128,7 @@ func (p *Role) GetRoleNick() string {
 
 // GetWX 获取-角色世界坐标X
 func (p *Role) GetWX() float32 {
-	return p.sprite.actionAnchorPointWX
+	return p.sprite.wx
 }
 
 // SetAction 设置角色当前动作
