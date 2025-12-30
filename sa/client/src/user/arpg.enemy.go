@@ -164,8 +164,7 @@ func (p *ArpgEnemy) DrawDebug(screen *ebitenv2.Image, camera *commoncamera.Camer
 	screenY := p.WY - float32(camera.ViewportWY)
 
 	// 绘制视野范围 (红色虚线圆)
-	colorView := color.RGBA{255, 0, 0, 200} // 红色
-	drawDashedCircleEnemy(screen, screenX, screenY, cfg.GCommon.PetDefArpgViewRange, colorView, 48, 0.5, 2.0)
+	common.DrawDashedCircle(screen, screenX, screenY, cfg.GCommon.PetDefArpgViewRange, common.Colors_Red, 48, 0.5, 2.0)
 }
 
 // drawDashedCircleEnemy 绘制虚线圆 (敌人专用)

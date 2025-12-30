@@ -154,12 +154,6 @@ func (p *Map) Update() {
 
 // DrawCollision 碰撞层
 func (p *Map) DrawCollision(screen *ebitenv2.Image, cam *commoncamera.Camera) {
-	if true { // 绘制调试边界
-		p.drawBorder(screen, cam)
-		p.drawPortal(screen, cam)
-		p.drawBlocked(screen, cam)
-		p.drawSpawnPointDebug(screen, cam) // 绘制刷怪点调试信息
-	}
 }
 
 // DrawGround 地面

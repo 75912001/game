@@ -5,9 +5,6 @@
 
 attackRange := cfg.GCommon.GetRoleArpgDefAttackRangeByWeaponType(proto.RoleWeaponType_RoleWeaponType_Axe)
 
-1. 角色超出敌人视野, 敌人开启巡逻模式
-2. 角色进入敌人视野, 敌人追击角色
-3. (巡逻半径)*(PetDefArpgChaseRadiusMultiplier 宠物-默认-arpg 追击半径乘数) < 角色距离怪物产生点距离
 
 记录角色最后手动移动的位置. 
 在arpg战斗地图中, 如果有怪物进入角色的视野范围, 则角色通过自动移动到可攻击范围能,然后进行攻击.
