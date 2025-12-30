@@ -257,11 +257,6 @@ func (p *Map) drawSpawnPointDebug(screen *ebitenv2.Image, cam *commoncamera.Came
 	camX := float32(cam.ViewportWX)
 	camY := float32(cam.ViewportWY)
 
-	// 颜色定义
-	colorSpawn := color.RGBA{255, 0, 0, 200}    // 红色 - 生成半径
-	colorPatrol := color.RGBA{255, 165, 0, 200} // 橙色 - 巡逻半径
-	colorChase := color.RGBA{255, 255, 0, 200}  // 黄色 - 追击半径
-
 	for _, sp := range p.spawnManager.GetSpawnPoints() {
 		obj := sp.Object
 		// 转换圆心到屏幕坐标
@@ -269,18 +264,18 @@ func (p *Map) drawSpawnPointDebug(screen *ebitenv2.Image, cam *commoncamera.Came
 
 		// 绘制生成半径 (红色)
 		if obj.SpawnRadius > 0 {
-			drawDashedCircle(screen, cx, cy, obj.SpawnRadius, colorSpawn, 48, 0.5, 2.0)
+			drawDashedCircle(screen, cx, cy, obj.SpawnRadius, common.Colors_Red, 48, 0.5, 2.0)
 		}
 
 		// 绘制巡逻半径 (橙色)
 		if obj.PatrolRadius > 0 {
-			drawDashedCircle(screen, cx, cy, obj.PatrolRadius, colorPatrol, 48, 0.5, 2.0)
+			drawDashedCircle(screen, cx, cy, obj.PatrolRadius, common.Colors_Orange, 48, 0.5, 2.0)
 		}
 
 		// 绘制追击半径 (黄色)
 		chaseRadius := obj.PatrolRadius * cfg.GCommon.PetDefArpgChaseRadiusMultiplier
 		if chaseRadius > 0 {
-			drawDashedCircle(screen, cx, cy, chaseRadius, colorChase, 48, 0.5, 2.0)
+			drawDashedCircle(screen, cx, cy, chaseRadius, common.Colors_Yellow, 48, 0.5, 2.0)
 		}
 	}
 }

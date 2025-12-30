@@ -1,7 +1,6 @@
 package user
 
 import (
-	"image/color"
 	"saClient/src/cfg"
 	"saClient/src/common"
 	commoncamera "saClient/src/common/camera"
@@ -28,8 +27,7 @@ func (p *Role) drawDebugInfo(screen *ebitenv2.Image, cam *commoncamera.Camera) {
 	if true { // 绘制脚底中心点 (红色圆形)
 		bottomCenterScreenX := p.sprite.actionAnchorPointWX - float32(p.camera.ViewportWX)
 		bottomCenterScreenY := p.sprite.actionAnchorPointWY - float32(p.camera.ViewportWY)
-		red := color.RGBA{R: 255, G: 0, B: 0, A: 255}
-		vector.FillCircle(screen, bottomCenterScreenX, bottomCenterScreenY, 5, red, false)
+		vector.FillCircle(screen, bottomCenterScreenX, bottomCenterScreenY, 5, common.Colors_Red, false)
 
 		// 绘制视野范围 (红色虚线圆)
 		common.DrawDashedCircle(screen, bottomCenterScreenX, bottomCenterScreenY, cfg.GCommon.RoleArpgDefViewRange, common.Colors_Red, 48, 0.5, 2.0)

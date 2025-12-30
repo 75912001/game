@@ -3,6 +3,7 @@ package user
 import (
 	"image/color"
 	"saClient/src/cfg"
+	"saClient/src/common"
 
 	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
@@ -99,8 +100,6 @@ func (t *SceneTransition) drawVertical(screen *ebitenv2.Image) {
 	screenH := float32(cfg.GCommon.ScreenMaxHeight)
 	halfH := screenH / 2
 
-	black := color.RGBA{R: 0, G: 0, B: 0, A: 255}
-
 	var topHeight, bottomY float32
 
 	if t.state == TransitionClosing { // 黑幕从上下向中间合拢
@@ -113,13 +112,13 @@ func (t *SceneTransition) drawVertical(screen *ebitenv2.Image) {
 
 	// 绘制上半部分黑幕
 	if topHeight > 0 {
-		vector.FillRect(screen, 0, 0, screenW, topHeight, black, false)
+		vector.FillRect(screen, 0, 0, screenW, topHeight, common.Colors_Black, false)
 	}
 
 	// 绘制下半部分黑幕
 	bottomHeight := screenH - bottomY
 	if bottomHeight > 0 {
-		vector.FillRect(screen, 0, bottomY, screenW, bottomHeight, black, false)
+		vector.FillRect(screen, 0, bottomY, screenW, bottomHeight, common.Colors_Black, false)
 	}
 }
 
@@ -128,8 +127,6 @@ func (t *SceneTransition) drawHorizontal(screen *ebitenv2.Image) {
 	screenW := float32(cfg.GCommon.ScreenMaxWidth)
 	screenH := float32(cfg.GCommon.ScreenMaxHeight)
 	halfW := screenW / 2
-
-	black := color.RGBA{R: 0, G: 0, B: 0, A: 255}
 
 	var leftWidth, rightX float32
 
@@ -143,13 +140,13 @@ func (t *SceneTransition) drawHorizontal(screen *ebitenv2.Image) {
 
 	// 绘制左半部分黑幕
 	if leftWidth > 0 {
-		vector.FillRect(screen, 0, 0, leftWidth, screenH, black, false)
+		vector.FillRect(screen, 0, 0, leftWidth, screenH, common.Colors_Black, false)
 	}
 
 	// 绘制右半部分黑幕
 	rightWidth := screenW - rightX
 	if rightWidth > 0 {
-		vector.FillRect(screen, rightX, 0, rightWidth, screenH, black, false)
+		vector.FillRect(screen, rightX, 0, rightWidth, screenH, common.Colors_Black, false)
 	}
 }
 

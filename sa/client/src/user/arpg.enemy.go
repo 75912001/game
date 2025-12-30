@@ -129,7 +129,7 @@ func (p *ArpgEnemy) drawHPBar(screen *ebitenv2.Image, x, y, w float32) {
 	opBg := &ebitenv2.DrawImageOptions{}
 	opBg.GeoM.Scale(barW, barH)
 	opBg.GeoM.Translate(barX, barY)
-	opBg.ColorScale.ScaleWithColor(color.RGBA{100, 100, 100, 255})
+	opBg.ColorScale.ScaleWithColor(common.Colors_Gray)
 	screen.DrawImage(whiteSubImage, opBg)
 
 	// 绘制前景 (红色)
@@ -137,7 +137,7 @@ func (p *ArpgEnemy) drawHPBar(screen *ebitenv2.Image, x, y, w float32) {
 		opFg := &ebitenv2.DrawImageOptions{}
 		opFg.GeoM.Scale(barW*hpRatio, barH)
 		opFg.GeoM.Translate(barX, barY)
-		opFg.ColorScale.ScaleWithColor(color.RGBA{255, 0, 0, 255})
+		opFg.ColorScale.ScaleWithColor(common.Colors_Red)
 		screen.DrawImage(whiteSubImage, opFg)
 	}
 
