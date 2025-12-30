@@ -20,6 +20,9 @@ type Common struct {
 	RoleArpgDefAttackRangeAxe   float32 `yaml:"roleArpgDefAttackRangeAxe"`   // 角色-arpg-默认-攻击范围-斧头
 	RoleArpgDefAttackRangeBow   float32 `yaml:"roleArpgDefAttackRangeBow"`   // 角色-arpg-默认-攻击范围-弓箭
 	RoleArpgDefAttackRangeStaff float32 `yaml:"roleArpgDefAttackRangeStaff"` // 角色-arpg-默认-攻击范围-法杖
+	RoleArpgDefCdTimeMsAxe      int64   `yaml:"roleArpgDefCdTimeMsAxe"`      // 角色-arpg-默认-cd时间-毫秒-斧头
+	RoleArpgDefCdTimeMsBow      int64   `yaml:"roleArpgDefCdTimeMsBow"`      // 角色-arpg-默认-cd时间-毫秒-弓箭
+	RoleArpgDefCdTimeMsStaff    int64   `yaml:"roleArpgDefCdTimeMsStaff"`    // 角色-arpg-默认-cd时间-毫秒-法杖
 	RoleDefScale                float32 `yaml:"roleDefScale"`                // 角色默认缩放比例
 	RoleLevelUpAvailablePoint   uint32  `yaml:"roleLevelUpAvailablePoint"`   // 角色每升一级,获得可用点数
 	RoleMPMax                   uint32  `yaml:"roleMPMax"`                   // 角色属性-魔法值最大值
@@ -78,6 +81,7 @@ func (p *Common) Assemble() error {
 	return nil
 }
 
+// GetRoleArpgDefAttackRangeByWeaponType 获取-角色-arpg-默认-攻击范围-根据武器类型
 func (p *Common) GetRoleArpgDefAttackRangeByWeaponType(weaponType proto.RoleWeaponType) float32 {
 	switch weaponType {
 	case proto.RoleWeaponType_RoleWeaponType_Axe:
@@ -88,5 +92,19 @@ func (p *Common) GetRoleArpgDefAttackRangeByWeaponType(weaponType proto.RoleWeap
 		return p.RoleArpgDefAttackRangeStaff
 	default:
 		return p.RoleArpgDefAttackRangeAxe
+	}
+}
+
+// GetRoleArpgDefCdTimeMsByWeaponType 获取-角色-arpg-默认-cd时间-毫秒-根据武器类型
+func (p *Common) GetRoleArpgDefCdTimeMsByWeaponType(weaponType proto.RoleWeaponType) int64 {
+	switch weaponType {
+	case proto.RoleWeaponType_RoleWeaponType_Axe:
+		return p.RoleArpgDefCdTimeMsAxe
+	case proto.RoleWeaponType_RoleWeaponType_Bow:
+		return p.RoleArpgDefCdTimeMsBow
+	case proto.RoleWeaponType_RoleWeaponType_Staff:
+		return p.RoleArpgDefCdTimeMsStaff
+	default:
+		return p.RoleArpgDefCdTimeMsAxe
 	}
 }

@@ -31,8 +31,8 @@ type Role struct {
 func NewRole(roleRecord *proto.RoleRecord) *Role {
 	role := &Role{
 		roleRecord: roleRecord,
-		Arpg:       NewRoleArpg(),
 	}
+	role.Arpg = NewRoleArpg(role)
 	role.sprite.action = proto.RoleAction_RoleAction_Move // 默认动作-移动
 	role.BattleStats = NewRoleBattleStats(role)
 	roleAssetID := role.GetAssetID()
@@ -142,9 +142,4 @@ func (p *Role) SetAction(action proto.RoleAction) {
 		p.sprite.action = action
 		p.animationFrame.Reset()
 	}
-}
-
-// GetWeaponType 获取武器类型
-func (p *Role) GetWeaponType() proto.RoleWeaponType {
-	return proto.RoleWeaponType_RoleWeaponType_Axe // todo menglc , 先写死斧头
 }

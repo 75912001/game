@@ -18,6 +18,12 @@ roleArpgDefAttackRangeAxe: 50.0
 roleArpgDefAttackRangeBow: 200.0
 # 角色-arpg-默认-攻击范围-法杖
 roleArpgDefAttackRangeStaff: 150.0
+# 角色-arpg-默认-cd时间-毫秒-斧头
+roleArpgDefCdTimeMsAxe: 1000
+# 角色-arpg-默认-cd时间-毫秒-弓箭
+roleArpgDefCdTimeMsBow: 1200
+# 角色-arpg-默认-cd时间-毫秒-法杖
+roleArpgDefCdTimeMsStaff: 1500
 # 角色-默认-缩放比例
 roleDefScale: 1.0
 # 角色-每升一级,获得可用点数

@@ -21,10 +21,11 @@ const (
 
 // 追击相关常量
 const (
-	chasePathRecalcIntervalSec = 1    // 路径重计算间隔 (秒)
-	chaseTargetMoveThreshold   = 50.0 // 目标移动阈值 (超过则重算路径)
-	chaseAttackRange           = 30.0 // 攻击范围
-	chaseArriveThreshold       = 5.0  // 到达路径点阈值
+	chasePathRecalcIntervalSec int64   = 1    // 路径重计算间隔 (秒)
+	chaseTargetMoveThreshold   float32 = 50.0 // 目标移动阈值 (超过则重算路径)
+	chaseAttackRange           float32 = 30.0 // 攻击范围
+	chaseArriveThreshold       float32 = 5.0  // 到达路径点阈值
+	chaseRadiusMultiplier      float32 = 2.0  // 追击半径乘数,是巡逻半径的倍数 [1.0, MaxFloat32]
 )
 
 // ArpgEnemyAI 怪物 AI 控制器
@@ -167,12 +168,12 @@ func (p *ArpgEnemyAI) updateChase() {
 	targetWX := target.GetWX()
 	targetWY := target.GetWY()
 
-	// 检查是否超出追击范围 (2倍巡逻半径)
+	// 检查是否超出追击范围(2倍巡逻半径)
 	distToSpawn := float32(math.Sqrt(float64(
 		(targetWX-spawnPoint.Object.WX)*(targetWX-spawnPoint.Object.WX) +
 			(targetWY-spawnPoint.Object.WY)*(targetWY-spawnPoint.Object.WY))))
 
-	if distToSpawn > spawnPoint.Object.PatrolRadius*2 {
+	if spawnPoint.Object.PatrolRadius*chaseRadiusMultiplier < distToSpawn {
 		p.switchToPatrol()
 		return
 	}

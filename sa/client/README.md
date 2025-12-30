@@ -5,6 +5,17 @@
 
 attackRange := cfg.GCommon.GetRoleArpgDefAttackRangeByWeaponType(proto.RoleWeaponType_RoleWeaponType_Axe)
 
+画出生成怪物半径的圆(红颜色)
+画出巡逻半径的圆(橙颜色)
+画出追击半径的圆(黄颜色)
+
+创造武器配置
+制造武器
+    通过材料合成武器, 使用宠物,合成技能
+装备武器
+卸载武器
+拆解武器
+
 
 
 

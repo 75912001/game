@@ -26,7 +26,7 @@ func (p *Role) HandleInput() {
 	}
 
 	if p.scene._map.IsArpgMap() { // 仅在 ARPG 地图中处理自动攻击
-		p.handleArpgAutoAttack()
+		p.Arpg.handleAutoAttack()
 	}
 }
 
