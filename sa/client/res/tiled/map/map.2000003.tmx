@@ -10,7 +10,7 @@
   <object id="3" name="刷怪点.1" x="608" y="608">
    <properties>
     <property name="enemyGroupID" type="int" value="1"/>
-    <property name="patrolRadius" type="float" value="400"/>
+    <property name="patrolRadius" type="float" value="300"/>
     <property name="respawnSecond" type="int" value="3"/>
     <property name="spawnRadius" type="float" value="200"/>
    </properties>

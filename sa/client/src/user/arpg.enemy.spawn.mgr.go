@@ -43,3 +43,8 @@ func (p *ArpgEnemySpawnMgr) GetAllEnemies() []*ArpgEnemy {
 	}
 	return result
 }
+
+// GetSpawnPoints 获取所有刷怪点
+func (p *ArpgEnemySpawnMgr) GetSpawnPoints() []*ArpgEnemySpawnPoint {
+	return p.spawnPoints
+}

@@ -7,6 +7,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/vector"
 	"image"
 	"image/color"
+	"math"
 	"saClient/src/cfg"
 	"saClient/src/common"
 	commoncamera "saClient/src/common/camera"
@@ -157,6 +158,7 @@ func (p *Map) DrawCollision(screen *ebitenv2.Image, cam *commoncamera.Camera) {
 		p.drawBorder(screen, cam)
 		p.drawPortal(screen, cam)
 		p.drawBlocked(screen, cam)
+		p.drawSpawnPointDebug(screen, cam) // 绘制刷怪点调试信息
 	}
 }
 
@@ -253,6 +255,68 @@ func (p *Map) drawBlocked(screen *ebitenv2.Image, cam *commoncamera.Camera) {
 			}
 			p.drawTiledObjectRect(screen, obj, camX, camY, common.Colors_Red, 3.0)
 		}
+	}
+}
+
+// drawSpawnPointDebug 绘制刷怪点调试信息(调试用)
+func (p *Map) drawSpawnPointDebug(screen *ebitenv2.Image, cam *commoncamera.Camera) {
+	camX := float32(cam.ViewportWX)
+	camY := float32(cam.ViewportWY)
+
+	// 颜色定义
+	colorSpawn := color.RGBA{255, 0, 0, 200}    // 红色 - 生成半径
+	colorPatrol := color.RGBA{255, 165, 0, 200} // 橙色 - 巡逻半径
+	colorChase := color.RGBA{255, 255, 0, 200}  // 黄色 - 追击半径
+
+	for _, sp := range p.spawnManager.GetSpawnPoints() {
+		obj := sp.Object
+		// 转换圆心到屏幕坐标
+		cx, cy := p.tiledMapCfg.IsometricCT.W2S(obj.WX, obj.WY, camX, camY)
+
+		// 绘制生成半径 (红色)
+		if obj.SpawnRadius > 0 {
+			drawDashedCircle(screen, cx, cy, obj.SpawnRadius, colorSpawn, 48, 0.5, 2.0)
+		}
+
+		// 绘制巡逻半径 (橙色)
+		if obj.PatrolRadius > 0 {
+			drawDashedCircle(screen, cx, cy, obj.PatrolRadius, colorPatrol, 48, 0.5, 2.0)
+		}
+
+		// 绘制追击半径 (黄色)
+		chaseRadius := obj.PatrolRadius * cfg.GCommon.PetDefArpgChaseRadiusMultiplier
+		if chaseRadius > 0 {
+			drawDashedCircle(screen, cx, cy, chaseRadius, colorChase, 48, 0.5, 2.0)
+		}
+	}
+}
+
+// drawDashedCircle 绘制虚线圆
+// cx, cy: 圆心屏幕坐标
+// radius: 半径（世界坐标单位）
+// clr: 颜色
+// dashCount: 虚线段数量
+// dashRatio: 实线占比（0.5 表示实线和空白各占一半）
+// strokeWidth: 线宽
+func drawDashedCircle(screen *ebitenv2.Image, cx, cy, radius float32, clr color.RGBA, dashCount int, dashRatio float32, strokeWidth float32) {
+	if dashCount <= 0 || radius <= 0 {
+		return
+	}
+
+	angleStep := 2 * math.Pi / float64(dashCount)
+	dashAngle := angleStep * float64(dashRatio)
+
+	for i := 0; i < dashCount; i++ {
+		startAngle := float64(i) * angleStep
+		endAngle := startAngle + dashAngle
+
+		// 计算起点和终点
+		x1 := cx + radius*float32(math.Cos(startAngle))
+		y1 := cy + radius*float32(math.Sin(startAngle))
+		x2 := cx + radius*float32(math.Cos(endAngle))
+		y2 := cy + radius*float32(math.Sin(endAngle))
+
+		vector.StrokeLine(screen, x1, y1, x2, y2, strokeWidth, clr, false)
 	}
 }
 

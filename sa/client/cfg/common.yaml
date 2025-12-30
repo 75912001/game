@@ -55,11 +55,12 @@ petRebirthCountMax: 3
 petDefMoveSpeed: 5.0
 # 宠物-MP最大值
 petMPMax: 100
-# 宠物-默认-视野范围
-petDefViewRange: 200
+# 宠物-默认-arpg视野范围
+petDefArpgViewRange: 300
 # 宠物-默认-arpg中移动速度
 petDefArpgMoveSpeed: 1.0
-
+# 宠物-默认-arpg 追击半径乘数 [1.0, ∞) 追击半径 = 巡逻半径 * 追击半径乘数
+petDefArpgChaseRadiusMultiplier: 1.2
 # 宠物-默认-暴击率 范围[0,1]
 petDefCritRate: 0.10
 # 角色-默认-反击率 范围[0,1]
@@ -72,6 +73,9 @@ petDefHitRate: 0.90
 petDefCritDamageBonusRate: 0.50
 # 角色-默认-异常状态抗性比率 范围[0,1]
 petDefStatusResistRate: 0.20
+  
+  
+
 
 ############################################################
 # 系统 system

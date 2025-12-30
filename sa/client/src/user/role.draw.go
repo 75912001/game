@@ -29,6 +29,11 @@ func (p *Role) DrawAll(screen *ebitenv2.Image) {
 	p.scene._map.DrawOverhead(screen, p.camera)
 	p.scene._map.DrawCollision(screen, p.camera)
 
+	// 绘制敌人调试信息 (视野范围)
+	for _, enemy := range p.scene._map.spawnManager.GetAllEnemies() {
+		enemy.DrawDebug(screen, p.camera)
+	}
+
 	// 绘制过渡效果 (最上层)
 	p.scene.transition.Draw(screen)
 

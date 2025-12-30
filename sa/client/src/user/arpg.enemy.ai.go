@@ -25,7 +25,6 @@ const (
 	chaseTargetMoveThreshold   float32 = 50.0 // 目标移动阈值 (超过则重算路径)
 	chaseAttackRange           float32 = 30.0 // 攻击范围
 	chaseArriveThreshold       float32 = 5.0  // 到达路径点阈值
-	chaseRadiusMultiplier      float32 = 2.0  // 追击半径乘数,是巡逻半径的倍数 [1.0, MaxFloat32]
 )
 
 // ArpgEnemyAI 怪物 AI 控制器
@@ -68,9 +67,11 @@ func (p *ArpgEnemyAI) Update() {
 
 // updateIdle 待机状态更新
 func (p *ArpgEnemyAI) updateIdle() {
-	// 检查视野
-	if p.checkVision() {
-		return
+	if p.isTargetInChaseRange() { // 目标在追击范围内
+		if p.isTargetInVisionRange() { // 目标在视野范围内
+			p.switchToChase()
+			return
+		}
 	}
 
 	// Idle 超时后切换到 Patrol
@@ -95,8 +96,11 @@ func (p *ArpgEnemyAI) switchToPatrol() {
 // updatePatrol 巡逻状态更新
 func (p *ArpgEnemyAI) updatePatrol() {
 	// 检查视野
-	if p.checkVision() {
-		return
+	if p.isTargetInChaseRange() { // 目标在追击范围内
+		if p.isTargetInVisionRange() { // 目标在视野范围内
+			p.switchToChase()
+			return
+		}
 	}
 
 	enemy := p.Enemy
@@ -141,7 +145,7 @@ func (p *ArpgEnemyAI) updatePatrol() {
 // switchToIdle 切换到待机状态
 func (p *ArpgEnemyAI) switchToIdle() {
 	p.State = ArpgEnemyAIState_Idle
-	p.IdleEndTime = xtime.GTimeMgr.ShadowTimestamp() + xutil.RandomInt64(1, 1)
+	p.IdleEndTime = xtime.GTimeMgr.ShadowTimestamp() + xutil.RandomInt64(1, 2)
 }
 
 // switchToChase 切换到追击状态
@@ -160,6 +164,11 @@ func (p *ArpgEnemyAI) switchToChase() {
 
 // updateChase 追击状态更新
 func (p *ArpgEnemyAI) updateChase() {
+	if !p.isTargetInChaseRange() { // 目标不在追击范围内
+		p.switchToPatrol()
+		return
+	}
+
 	enemy := p.Enemy
 	spawnPoint := enemy.SpawnPoint
 	mapCfg := spawnPoint.TiledMapCfg
@@ -167,17 +176,6 @@ func (p *ArpgEnemyAI) updateChase() {
 	target := GUser.role
 	targetWX := target.GetWX()
 	targetWY := target.GetWY()
-
-	// 检查是否超出追击范围(2倍巡逻半径)
-	distToSpawn := float32(math.Sqrt(float64(
-		(targetWX-spawnPoint.Object.WX)*(targetWX-spawnPoint.Object.WX) +
-			(targetWY-spawnPoint.Object.WY)*(targetWY-spawnPoint.Object.WY))))
-
-	if spawnPoint.Object.PatrolRadius*chaseRadiusMultiplier < distToSpawn {
-		p.switchToPatrol()
-		return
-	}
-
 	// 计算与目标的距离
 	dx := targetWX - enemy.WX
 	dy := targetWY - enemy.WY
@@ -271,19 +269,25 @@ func (p *ArpgEnemyAI) updateChaseWithAStar(targetWX, targetWY float32, mapCfg *c
 	}
 }
 
-// checkVision 检查视野
-func (p *ArpgEnemyAI) checkVision() bool {
+// 检查目标是否在视野范围内
+func (p *ArpgEnemyAI) isTargetInVisionRange() bool {
 	target := GUser.role
 
 	// 检查距离
 	dx := target.GetWX() - p.Enemy.WX
 	dy := target.GetWY() - p.Enemy.WY
 	distSq := dx*dx + dy*dy
-	viewRange := cfg.GCommon.PetDefViewRange
+	return distSq <= cfg.GCommon.PetDefArpgViewRange*cfg.GCommon.PetDefArpgViewRange
+}
 
-	if distSq <= viewRange*viewRange {
-		p.switchToChase()
-		return true
-	}
-	return false
+// 检查目标是否在追击范围内
+func (p *ArpgEnemyAI) isTargetInChaseRange() bool {
+	target := GUser.role
+	spawnPoint := p.Enemy.SpawnPoint
+
+	distToSpawn := float32(math.Sqrt(float64(
+		(target.GetWX()-spawnPoint.Object.WX)*(target.GetWX()-spawnPoint.Object.WX) +
+			(target.GetWY()-spawnPoint.Object.WY)*(target.GetWY()-spawnPoint.Object.WY))))
+
+	return distToSpawn <= spawnPoint.Object.PatrolRadius*cfg.GCommon.PetDefArpgChaseRadiusMultiplier
 }

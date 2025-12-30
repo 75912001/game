@@ -34,17 +34,18 @@ type Common struct {
 	RoleDefCritDamageBonusRate  float32 `yaml:"roleDefCritDamageBonusRate"`  // 角色-默认-暴击伤害加成倍数
 	RoleDefStatusResistRate     float32 `yaml:"roleDefStatusResistRate"`     // 角色-默认-异常状态抗性比率
 
-	PetRebirthCountMax        uint32  `yaml:"petRebirthCountMax"`        // 宠物最大转生次数
-	PetDefMoveSpeed           float32 `yaml:"petDefMoveSpeed"`           // 宠物默认移动速度
-	PetMPMax                  uint32  `yaml:"petMPMax"`                  // 宠物属性-MP最大值
-	PetDefViewRange           float32 `yaml:"petDefViewRange"`           // 宠物-默认-视野范围
-	PetDefArpgMoveSpeed       float32 `yaml:"petDefArpgMoveSpeed"`       // 宠物-默认-战斗中移动速度
-	PetDefCritRate            float32 `yaml:"petDefCritRate"`            // 宠物-默认-暴击率
-	PetDefCounterRate         float32 `yaml:"petDefCounterRate"`         // 宠物-默认-反击率
-	PetDefDodgeRate           float32 `yaml:"petDefDodgeRate"`           // 宠物-默认-闪避率
-	PetDefHitRate             float32 `yaml:"petDefHitRate"`             // 宠物-默认-命中率
-	PetDefCritDamageBonusRate float32 `yaml:"petDefCritDamageBonusRate"` // 宠物-默认-暴击伤害加成倍数
-	PetDefStatusResistRate    float32 `yaml:"petDefStatusResistRate"`    // 宠物-默认-异常状态抗性比率
+	PetRebirthCountMax              uint32  `yaml:"petRebirthCountMax"`              // 宠物最大转生次数
+	PetDefMoveSpeed                 float32 `yaml:"petDefMoveSpeed"`                 // 宠物默认移动速度
+	PetMPMax                        uint32  `yaml:"petMPMax"`                        // 宠物属性-MP最大值
+	PetDefArpgViewRange             float32 `yaml:"petDefArpgViewRange"`             // 宠物-默认-Arpg视野范围
+	PetDefArpgMoveSpeed             float32 `yaml:"petDefArpgMoveSpeed"`             // 宠物-默认-Arpg战斗中移动速度
+	PetDefArpgChaseRadiusMultiplier float32 `yaml:"petDefArpgChaseRadiusMultiplier"` // 宠物-默认-arpg 追击半径乘数 [1.0, ∞) 追击半径 = 巡逻半径 * 追击半径乘数
+	PetDefCritRate                  float32 `yaml:"petDefCritRate"`                  // 宠物-默认-暴击率
+	PetDefCounterRate               float32 `yaml:"petDefCounterRate"`               // 宠物-默认-反击率
+	PetDefDodgeRate                 float32 `yaml:"petDefDodgeRate"`                 // 宠物-默认-闪避率
+	PetDefHitRate                   float32 `yaml:"petDefHitRate"`                   // 宠物-默认-命中率
+	PetDefCritDamageBonusRate       float32 `yaml:"petDefCritDamageBonusRate"`       // 宠物-默认-暴击伤害加成倍数
+	PetDefStatusResistRate          float32 `yaml:"petDefStatusResistRate"`          // 宠物-默认-异常状态抗性比率
 
 	WindowDefWidth  int `yaml:"windowDefWidth"`  // 窗口默认宽度
 	WindowDefHeight int `yaml:"windowDefHeight"` // 窗口默认高度

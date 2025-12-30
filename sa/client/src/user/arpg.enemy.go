@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"image"
 	"image/color"
+	"math"
 	"saClient/src/cfg"
 	"saClient/src/common"
 	commoncamera "saClient/src/common/camera"
@@ -12,6 +13,7 @@ import (
 
 	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
 	textv2 "github.com/hajimehoshi/ebiten/v2/text/v2"
+	"github.com/hajimehoshi/ebiten/v2/vector"
 )
 
 var (
@@ -149,6 +151,44 @@ func (p *ArpgEnemy) drawHPBar(screen *ebitenv2.Image, x, y, w float32) {
 	textOp.GeoM.Translate((barW-wText)/2, 0)
 
 	textv2.Draw(screen, text, *resfont.GFace16, textOp)
+}
+
+// DrawDebug 绘制调试信息 (视野范围)
+func (p *ArpgEnemy) DrawDebug(screen *ebitenv2.Image, camera *commoncamera.Camera) {
+	if p.IsDead() {
+		return
+	}
+
+	// 计算屏幕坐标 (怪物中心)
+	screenX := p.WX - float32(camera.ViewportWX)
+	screenY := p.WY - float32(camera.ViewportWY)
+
+	// 绘制视野范围 (红色虚线圆)
+	colorView := color.RGBA{255, 0, 0, 200} // 红色
+	drawDashedCircleEnemy(screen, screenX, screenY, cfg.GCommon.PetDefArpgViewRange, colorView, 48, 0.5, 2.0)
+}
+
+// drawDashedCircleEnemy 绘制虚线圆 (敌人专用)
+func drawDashedCircleEnemy(screen *ebitenv2.Image, cx, cy, radius float32, clr color.RGBA, dashCount int, dashRatio float32, strokeWidth float32) {
+	if dashCount <= 0 || radius <= 0 {
+		return
+	}
+
+	angleStep := 2 * math.Pi / float64(dashCount)
+	dashAngle := angleStep * float64(dashRatio)
+
+	for i := 0; i < dashCount; i++ {
+		startAngle := float64(i) * angleStep
+		endAngle := startAngle + dashAngle
+
+		// 计算起点和终点
+		x1 := cx + radius*float32(math.Cos(startAngle))
+		y1 := cy + radius*float32(math.Sin(startAngle))
+		x2 := cx + radius*float32(math.Cos(endAngle))
+		y2 := cy + radius*float32(math.Sin(endAngle))
+
+		vector.StrokeLine(screen, x1, y1, x2, y2, strokeWidth, clr, false)
+	}
 }
 
 // TakeDamage 受到伤害
