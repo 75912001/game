@@ -3,15 +3,11 @@ package user
 import (
 	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
 	"saClient/src/cfg"
-	"saClient/src/common"
 	commoncamera "saClient/src/common/camera"
 	commonrenderable "saClient/src/common/renderable"
 )
 
 func (p *Role) DrawAll(screen *ebitenv2.Image) {
-	// 填充草地一样的绿色背景
-	screen.Fill(common.Colors_Green)
-
 	p.scene._map.DrawGround(screen, p.camera)
 
 	renderables := p.collectRenderables()

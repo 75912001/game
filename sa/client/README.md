@@ -6,10 +6,6 @@
 attackRange := cfg.GCommon.GetRoleArpgDefAttackRangeByWeaponType(proto.RoleWeaponType_RoleWeaponType_Axe)
 
 
-记录角色最后手动移动的位置. 
-在arpg战斗地图中, 如果有怪物进入角色的视野范围, 则角色通过自动移动到可攻击范围能,然后进行攻击.
-在没有攻击目标后, 角色自动移动回最后手动移动的位置.
-
 创造武器配置
 制造武器
     通过材料合成武器, 使用宠物,合成技能

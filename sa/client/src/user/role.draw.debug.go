@@ -24,10 +24,16 @@ func (p *Role) drawDebugInfo(screen *ebitenv2.Image, cam *commoncamera.Camera) {
 	roleScreenX := p.sprite.cameraAnchorPointWX - float32(p.camera.ViewportWX)
 	roleScreenY := p.sprite.cameraAnchorPointWY - float32(p.camera.ViewportWY)
 
-	if true { // 绘制脚底中心点 (红色圆形)
+	if true {
+		// 绘制脚底中心点 (红色圆形)
 		bottomCenterScreenX := p.sprite.actionAnchorPointWX - float32(p.camera.ViewportWX)
 		bottomCenterScreenY := p.sprite.actionAnchorPointWY - float32(p.camera.ViewportWY)
 		vector.FillCircle(screen, bottomCenterScreenX, bottomCenterScreenY, 5, common.Colors_Red, false)
+
+		// 绘制角色中心点(蓝色圆形)
+		centerScreenX := p.sprite.cameraAnchorPointWX - float32(p.camera.ViewportWX)
+		centerScreenY := p.sprite.cameraAnchorPointWY - float32(p.camera.ViewportWY)
+		vector.FillCircle(screen, centerScreenX, centerScreenY, 5, common.Colors_Blue, false)
 
 		// 绘制视野范围 (红色虚线圆)
 		common.DrawDashedCircle(screen, bottomCenterScreenX, bottomCenterScreenY, cfg.GCommon.RoleArpgDefViewRange, common.Colors_Red, 48, 0.5, 2.0)

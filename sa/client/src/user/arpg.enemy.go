@@ -32,9 +32,9 @@ type ArpgEnemy struct {
 	Level       uint32
 	BattleStats *ArpgEnemyBattleStats // 战斗属性
 
-	// 位置信息
-	WX, WY      float32                // 世界坐标 (脚底中心)
-	Orientation proto.AssetOrientation // 朝向
+	WX, WY             float32                // 世界坐标 (脚底中心)
+	CenterWX, CenterWY float32                // 世界坐标 (中心点)
+	Orientation        proto.AssetOrientation // 朝向
 
 	AnimationFrame common.AnimationFrame
 
