@@ -32,7 +32,7 @@ func (p *Role) drawDebugInfo(screen *ebitenv2.Image, cam *commoncamera.Camera) {
 		vector.FillCircle(screen, bottomCenterScreenX, bottomCenterScreenY, 5, red, false)
 
 		// 绘制视野范围 (红色虚线圆)
-		common.DrawDashedCircle(screen, bottomCenterScreenX, bottomCenterScreenY, cfg.GCommon.PetDefArpgViewRange, common.Colors_Red, 48, 0.5, 2.0)
+		common.DrawDashedCircle(screen, bottomCenterScreenX, bottomCenterScreenY, cfg.GCommon.RoleArpgDefViewRange, common.Colors_Red, 48, 0.5, 2.0)
 	}
 
 	if true { // 绘制调试边界
