@@ -41,6 +41,11 @@ type ArpgRoleAI struct {
 	Target       *ArpgEnemy // 目标
 	NextAttackMs int64      // 下一次攻击时间戳 (毫秒)
 
+	// 攻击伤害延迟相关
+	IsAttacking  bool       // 是否正在攻击动画中
+	DamageDealt  bool       // 本次攻击是否已造成伤害
+	AttackTarget *ArpgEnemy // 攻击锁定目标 (攻击开始时锁定)
+
 	// 寻路相关
 	Pathfinder   *AStarPathfinder  // A*寻路器
 	Path         []AStarWorldPoint // 当前路径
@@ -434,13 +439,31 @@ func (p *ArpgRoleAI) doMove(dx, dy, distance float32, mapCfg *cfg.TiledMap) {
 // performAttack 执行攻击
 func (p *ArpgRoleAI) performAttack() {
 	// 检查攻击动画状态
-	if p.Role.sprite.action == proto.RoleAction_RoleAction_AttackAxe {
+	if p.IsAttacking {
 		p.Role.animationFrame.Update()
 
 		actionData := p.Role.cfgRole.ResRole.Actions[p.Role.sprite.action]
 		frames := actionData.Frames[p.Role.sprite.orientation]
+		frameInfos := actionData.FrameInfo[p.Role.sprite.orientation]
+		currentFrameIdx := p.Role.animationFrame.FrameIdx % uint32(len(frames))
+
+		// 检查当前帧是否为命中帧，且尚未造成伤害
+		if !p.DamageDealt && currentFrameIdx < uint32(len(frameInfos)) {
+			if frameInfos[currentFrameIdx].HitFrame {
+				// 命中帧触发伤害
+				if p.AttackTarget != nil && !p.AttackTarget.IsDead() {
+					p.AttackTarget.TakeDamage(p.GetAttack())
+				}
+				p.DamageDealt = true
+			}
+		}
+
+		// 检查动画是否播放完毕
 		if p.Role.animationFrame.FrameIdx >= uint32(len(frames))-1 {
 			p.Role.SetAction(proto.RoleAction_RoleAction_Move)
+			p.IsAttacking = false
+			p.DamageDealt = false
+			p.AttackTarget = nil
 			p.Role.UpdateWithAction()
 		} else {
 			p.Role.UpdateWithAction()
@@ -458,7 +481,7 @@ func (p *ArpgRoleAI) performAttack() {
 		return
 	}
 
-	// 设置攻击动作
+	// 开始新的攻击
 	p.Role.SetAction(proto.RoleAction_RoleAction_AttackAxe)
 
 	// 面向目标
@@ -466,8 +489,10 @@ func (p *ArpgRoleAI) performAttack() {
 	dy := p.Target.WY - (p.Role.GetWY() - float32(p.Role.sprite.roleImageSprite.Frame.H/2))
 	p.Role.sprite.orientation = commonct.CalculateOrientation(dx, dy)
 
-	// 造成伤害
-	p.Target.TakeDamage(p.GetAttack())
+	// 设置攻击状态
+	p.IsAttacking = true
+	p.DamageDealt = false
+	p.AttackTarget = p.Target // 锁定攻击目标
 
 	// 设置冷却
 	p.NextAttackMs = nowMs + cfg.GCommon.GetRoleArpgDefCdTimeMsByWeaponType(p.GetWeaponType())

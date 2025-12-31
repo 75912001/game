@@ -38,7 +38,8 @@
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":150,"h":200},
-	"sourceSize": {"w":150,"h":200}
+	"sourceSize": {"w":150,"h":200},
+	"hitFrame": true
 },
 "role.1000101.attackAxe.left.006":
 {

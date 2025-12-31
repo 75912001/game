@@ -23,7 +23,8 @@ type RoleJson struct {
 
 // RoleImageSprite 角色-精灵
 type RoleImageSprite struct {
-	Frame *Rect `json:"frame"` // 在大图中的位置和尺寸
+	Frame    *Rect `json:"frame"`              // 在大图中的位置和尺寸
+	HitFrame bool  `json:"hitFrame,omitempty"` // 是否 命中帧
 }
 
 // 加载单个配置文件
