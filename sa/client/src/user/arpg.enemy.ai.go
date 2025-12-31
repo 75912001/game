@@ -6,6 +6,7 @@ import (
 	"math"
 	"saClient/src/cfg"
 	commonct "saClient/src/common/coordinatetransform"
+	"saClient/src/proto"
 )
 
 // ArpgEnemyAIState 怪物 AI 状态
@@ -15,8 +16,7 @@ const (
 	ArpgEnemyAIState_Idle   ArpgEnemyAIState = iota // 待机
 	ArpgEnemyAIState_Patrol                         // 巡逻
 	ArpgEnemyAIState_Chase                          // 追击
-	// 后续扩展
-	// ArpgEnemyAIState_Attack                  // 攻击
+	ArpgEnemyAIState_Attack                         // 攻击
 )
 
 // 追击相关常量
@@ -33,6 +33,11 @@ type ArpgEnemyAI struct {
 	TargetWX    float32          // 目标点 X
 	TargetWY    float32          // 目标点 Y
 	IdleEndTime int64            // Idle 状态结束时间 (秒)
+
+	// 攻击相关
+	IsAttacking  bool  // 是否正在攻击动画中
+	DamageDealt  bool  // 本次攻击是否已造成伤害
+	NextAttackMs int64 // 下一次攻击时间戳 (毫秒)
 
 	// 追击寻路相关
 	Pathfinder   *AStarPathfinder  // A* 寻路器
@@ -61,6 +66,8 @@ func (p *ArpgEnemyAI) Update() {
 		p.updatePatrol()
 	case ArpgEnemyAIState_Chase:
 		p.updateChase()
+	case ArpgEnemyAIState_Attack:
+		p.updateAttack()
 	}
 }
 
@@ -107,8 +114,8 @@ func (p *ArpgEnemyAI) updatePatrol() {
 	mapCfg := spawnPoint.TiledMapCfg
 
 	// 计算移动方向
-	dx := p.TargetWX - enemy.WX
-	dy := p.TargetWY - enemy.WY
+	dx := p.TargetWX - enemy.Sprite.GetWX()
+	dy := p.TargetWY - enemy.Sprite.GetWY()
 	distance := float32(math.Sqrt(float64(dx*dx + dy*dy)))
 
 	// 检查是否到达目标
@@ -121,8 +128,8 @@ func (p *ArpgEnemyAI) updatePatrol() {
 	dx = dx / distance * cfg.GCommon.PetDefArpgMoveSpeed
 	dy = dy / distance * cfg.GCommon.PetDefArpgMoveSpeed
 
-	newWX := enemy.WX + dx
-	newWY := enemy.WY + dy
+	newWX := enemy.Sprite.GetWX() + dx
+	newWY := enemy.Sprite.GetWY() + dy
 
 	newWX, newWY, blocked := mapCfg.IsBlocked(newWX, newWY)
 	if blocked { // 阻挡
@@ -134,7 +141,7 @@ func (p *ArpgEnemyAI) updatePatrol() {
 	enemy.SetPosition(newWX, newWY)
 
 	// 更新朝向
-	enemy.Orientation = commonct.CalculateOrientation(dx, dy)
+	enemy.Sprite.SetOrientation(commonct.CalculateOrientation(dx, dy))
 
 	// 更新动画帧
 	enemy.AnimationFrame.Update()
@@ -175,13 +182,13 @@ func (p *ArpgEnemyAI) updateChase() {
 	targetWX := target.GetWX()
 	targetWY := target.GetWY()
 	// 计算与目标的距离
-	dx := targetWX - enemy.WX
-	dy := targetWY - enemy.WY
+	dx := targetWX - enemy.Sprite.GetWX()
+	dy := targetWY - enemy.Sprite.GetWY()
 	distance := float32(math.Sqrt(float64(dx*dx + dy*dy)))
 
 	// 检查是否到达目标 (攻击范围)
 	if distance < cfg.GCommon.PetArpgDefAttackRange {
-		// todo 切换到攻击状态
+		p.switchToAttack()
 		return
 	}
 
@@ -213,7 +220,7 @@ func (p *ArpgEnemyAI) updateChaseWithAStar(targetWX, targetWY float32, mapCfg *c
 
 	// 重新计算路径
 	if needRecalc {
-		p.Path = p.Pathfinder.FindPath(enemy.WX, enemy.WY, targetWX, targetWY)
+		p.Path = p.Pathfinder.FindPath(enemy.Sprite.GetWX(), enemy.Sprite.GetWY(), targetWX, targetWY)
 		p.PathIndex = 0
 		p.LastPathTime = now
 		p.LastTargetWX = targetWX
@@ -228,8 +235,8 @@ func (p *ArpgEnemyAI) updateChaseWithAStar(targetWX, targetWY float32, mapCfg *c
 	// 沿路径移动
 	if p.PathIndex < len(p.Path) {
 		waypoint := p.Path[p.PathIndex]
-		dx := waypoint.WX - enemy.WX
-		dy := waypoint.WY - enemy.WY
+		dx := waypoint.WX - enemy.Sprite.GetWX()
+		dy := waypoint.WY - enemy.Sprite.GetWY()
 		distance := float32(math.Sqrt(float64(dx*dx + dy*dy)))
 
 		// 检查是否到达当前路径点
@@ -240,8 +247,8 @@ func (p *ArpgEnemyAI) updateChaseWithAStar(targetWX, targetWY float32, mapCfg *c
 			}
 			// 继续移动到下一个点
 			waypoint = p.Path[p.PathIndex]
-			dx = waypoint.WX - enemy.WX
-			dy = waypoint.WY - enemy.WY
+			dx = waypoint.WX - enemy.Sprite.GetWX()
+			dy = waypoint.WY - enemy.Sprite.GetWY()
 			distance = float32(math.Sqrt(float64(dx*dx + dy*dy)))
 		}
 
@@ -250,13 +257,13 @@ func (p *ArpgEnemyAI) updateChaseWithAStar(targetWX, targetWY float32, mapCfg *c
 			dx = dx / distance * cfg.GCommon.PetDefArpgMoveSpeed
 			dy = dy / distance * cfg.GCommon.PetDefArpgMoveSpeed
 
-			newWX := enemy.WX + dx
-			newWY := enemy.WY + dy
+			newWX := enemy.Sprite.GetWX() + dx
+			newWY := enemy.Sprite.GetWY() + dy
 
 			newWX, newWY, blocked := mapCfg.IsBlocked(newWX, newWY)
 			if !blocked {
 				enemy.SetPosition(newWX, newWY)
-				enemy.Orientation = commonct.CalculateOrientation(dx, dy)
+				enemy.Sprite.SetOrientation(commonct.CalculateOrientation(dx, dy))
 				enemy.AnimationFrame.Update()
 			} else {
 				// 路径上遇到阻挡 (动态障碍物?), 重算路径
@@ -271,8 +278,8 @@ func (p *ArpgEnemyAI) isTargetInVisionRange() bool {
 	target := GUser.role
 
 	// 检查距离
-	dx := target.GetWX() - p.Enemy.WX
-	dy := target.GetWY() - p.Enemy.WY
+	dx := target.GetWX() - p.Enemy.Sprite.GetWX()
+	dy := target.GetWY() - p.Enemy.Sprite.GetWY()
 	distSq := dx*dx + dy*dy
 	return distSq <= cfg.GCommon.PetDefArpgViewRange*cfg.GCommon.PetDefArpgViewRange
 }
@@ -287,4 +294,103 @@ func (p *ArpgEnemyAI) isTargetInChaseRange() bool {
 			(target.GetWY()-spawnPoint.Object.WY)*(target.GetWY()-spawnPoint.Object.WY))))
 
 	return distToSpawn <= spawnPoint.Object.PatrolRadius*cfg.GCommon.PetDefArpgChaseRadiusMultiplier
+}
+
+// switchToAttack 切换到攻击状态
+func (p *ArpgEnemyAI) switchToAttack() {
+	p.State = ArpgEnemyAIState_Attack
+	p.IsAttacking = false
+	p.DamageDealt = false
+}
+
+// updateAttack 攻击状态更新
+func (p *ArpgEnemyAI) updateAttack() {
+	enemy := p.Enemy
+	target := GUser.role
+
+	// 检查目标是否离开追击范围
+	if !p.isTargetInChaseRange() {
+		p.IsAttacking = false
+		p.DamageDealt = false
+		enemy.SetAction(proto.PetAction_PetAction_Move)
+		p.switchToPatrol()
+		return
+	}
+
+	// 计算与目标的距离
+	dx := target.GetWX() - enemy.Sprite.GetWX()
+	dy := target.GetWY() - enemy.Sprite.GetWY()
+	distance := float32(math.Sqrt(float64(dx*dx + dy*dy)))
+
+	// 如果目标逃出攻击范围，切回追击
+	if distance > cfg.GCommon.PetArpgDefAttackRange {
+		p.IsAttacking = false
+		p.DamageDealt = false
+		enemy.SetAction(proto.PetAction_PetAction_Move)
+		p.switchToChase()
+		return
+	}
+
+	// 检查攻击动画状态
+	if p.IsAttacking {
+		enemy.AnimationFrame.Update()
+
+		// 获取攻击动画帧信息
+		attackData := enemy.GetCfg().Res.Attack
+		if attackData == nil {
+			// 没有攻击动画，直接造成伤害并切回待机
+			GUser.role.TakeDamage(enemy.BattleStats.GetAttack())
+			p.switchToIdle()
+			return
+		}
+
+		orientation := enemy.Sprite.GetOrientation()
+		frames := attackData.Frames[orientation]
+		frameInfos := attackData.FrameInfo[orientation]
+		if len(frames) == 0 {
+			// 没有该方向的攻击动画
+			p.IsAttacking = false
+			p.switchToIdle()
+			return
+		}
+
+		currentFrameIdx := enemy.AnimationFrame.FrameIdx % uint32(len(frames))
+
+		// 检查当前帧是否为命中帧，且尚未造成伤害
+		if !p.DamageDealt && currentFrameIdx < uint32(len(frameInfos)) {
+			if frameInfos[currentFrameIdx].HitFrame {
+				// 命中帧触发伤害
+				GUser.role.TakeDamage(enemy.BattleStats.GetAttack())
+				p.DamageDealt = true
+			}
+		}
+
+		// 检查动画是否播放完毕
+		if enemy.AnimationFrame.FrameIdx >= uint32(len(frames))-1 {
+			enemy.SetAction(proto.PetAction_PetAction_Move)
+			p.IsAttacking = false
+			p.DamageDealt = false
+		}
+		return
+	}
+
+	// 检查冷却
+	nowMs := xtime.GTimeMgr.GetMillisecond()
+	if p.NextAttackMs > nowMs {
+		return
+	}
+
+	// 开始新的攻击
+	enemy.SetAction(proto.PetAction_PetAction_Attack)
+	enemy.AnimationFrame.Reset()
+
+	// 面向目标
+	enemy.Sprite.SetOrientation(commonct.CalculateOrientation(dx, dy))
+
+	// 设置攻击状态
+	p.IsAttacking = true
+	p.DamageDealt = false
+
+	// 设置冷却
+	p.NextAttackMs = nowMs + cfg.GCommon.PetArpgDefCdTimeMs
 }

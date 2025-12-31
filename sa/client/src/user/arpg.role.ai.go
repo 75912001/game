@@ -280,8 +280,8 @@ func (p *ArpgRoleAI) distanceToEnemy(enemy *ArpgEnemy) float32 {
 	roleWX := p.Role.GetWX()
 	roleWY := p.Role.GetWY() - float32(p.Role.sprite.roleImageSprite.Frame.H/2) // 角色中心Y
 
-	enemyWX := enemy.WX
-	enemyWY := enemy.WY - float32(enemy.GetCfg().Res.Move.FrameInfo[proto.AssetOrientation_AssetOrientation_Down][0].Frame.H/2) // 敌人中心Y
+	enemyWX := enemy.Sprite.GetWX()
+	enemyWY := enemy.Sprite.GetWY() - float32(enemy.GetCfg().Res.Move.FrameInfo[proto.AssetOrientation_AssetOrientation_Down][0].Frame.H/2) // 敌人中心Y
 
 	dx := roleWX - enemyWX
 	dy := roleWY - enemyWY
@@ -303,8 +303,8 @@ func (p *ArpgRoleAI) moveToTarget() {
 		return
 	}
 
-	targetWX := p.Target.WX
-	targetWY := p.Target.WY
+	targetWX := p.Target.Sprite.GetWX()
+	targetWY := p.Target.Sprite.GetWY()
 	mapCfg := p.Role.scene._map.tiledMapCfg
 
 	p.updatePathAndMove(targetWX, targetWY, mapCfg)
@@ -485,8 +485,8 @@ func (p *ArpgRoleAI) performAttack() {
 	p.Role.SetAction(proto.RoleAction_RoleAction_AttackAxe)
 
 	// 面向目标
-	dx := p.Target.WX - p.Role.GetWX()
-	dy := p.Target.WY - (p.Role.GetWY() - float32(p.Role.sprite.roleImageSprite.Frame.H/2))
+	dx := p.Target.Sprite.GetWX() - p.Role.GetWX()
+	dy := p.Target.Sprite.GetWY() - (p.Role.GetWY() - float32(p.Role.sprite.roleImageSprite.Frame.H/2))
 	p.Role.sprite.orientation = commonct.CalculateOrientation(dx, dy)
 
 	// 设置攻击状态

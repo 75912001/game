@@ -9,6 +9,7 @@ import (
 	"saClient/src/common"
 	commoncamera "saClient/src/common/camera"
 	"saClient/src/proto"
+	"saClient/src/res"
 	resfont "saClient/src/res/font"
 
 	ebitenv2 "github.com/hajimehoshi/ebiten/v2"
@@ -32,9 +33,7 @@ type ArpgEnemy struct {
 	Level       uint32
 	BattleStats *ArpgEnemyBattleStats // 战斗属性
 
-	WX, WY             float32                // 世界坐标 (脚底中心)
-	CenterWX, CenterWY float32                // 世界坐标 (中心点)
-	Orientation        proto.AssetOrientation // 朝向
+	Sprite PetSprite // 精灵
 
 	AnimationFrame common.AnimationFrame
 
@@ -45,11 +44,11 @@ type ArpgEnemy struct {
 // NewArpgEnemy 创建怪物实体
 func NewArpgEnemy(spawnPoint *ArpgEnemySpawnPoint, generated *cfg.GeneratedEnemy, wx, wy float32) *ArpgEnemy {
 	enemy := &ArpgEnemy{
-		SpawnPoint:  spawnPoint,
-		Generated:   generated,
-		Level:       generated.Level,
-		Orientation: proto.AssetOrientation_AssetOrientation_Down,
+		SpawnPoint: spawnPoint,
+		Generated:  generated,
+		Level:      generated.Level,
 	}
+	enemy.Sprite.SetOrientation(proto.AssetOrientation_AssetOrientation_Down)
 	enemy.BattleStats = NewArpgEnemyBattleStats(enemy)
 	enemy.AI = NewArpgEnemyAI(enemy)
 	enemy.HP = enemy.BattleStats.GetHpMax()
@@ -59,16 +58,16 @@ func NewArpgEnemy(spawnPoint *ArpgEnemySpawnPoint, generated *cfg.GeneratedEnemy
 
 // SetPosition 设置怪物位置并更新中心点
 func (p *ArpgEnemy) SetPosition(wx, wy float32) {
-	p.WX = wx
-	p.WY = wy
+	p.Sprite.SetWX(wx)
+	p.Sprite.SetWY(wy)
 
 	// 计算中心点 (脚底中心向上偏移半个图像高度)
-	frameInfos := p.GetCfg().Res.Move.FrameInfo[p.Orientation]
+	frameInfos := p.GetCfg().Res.Move.FrameInfo[p.Sprite.GetOrientation()]
 	frameInfo := frameInfos[p.AnimationFrame.FrameIdx%uint32(len(frameInfos))]
 	halfHeight := float32(frameInfo.Frame.H / 2)
 
-	p.CenterWX = wx
-	p.CenterWY = wy - halfHeight
+	p.Sprite.SetCenterWX(wx)
+	p.Sprite.SetCenterWY(wy - halfHeight)
 }
 
 func (p *ArpgEnemy) GetCfg() *cfg.Pet {
@@ -77,6 +76,14 @@ func (p *ArpgEnemy) GetCfg() *cfg.Pet {
 
 func (p *ArpgEnemy) IsDead() bool {
 	return p.HP <= 0
+}
+
+// SetAction 设置动作并重置动画帧
+func (p *ArpgEnemy) SetAction(action proto.PetAction) {
+	if p.Sprite.GetAction() != action {
+		p.Sprite.SetAction(action)
+		p.AnimationFrame.Reset()
+	}
 }
 
 // Update 每帧更新
@@ -90,7 +97,7 @@ func (p *ArpgEnemy) Update() {
 
 // GetWY 实现 IRenderable 接口 - 获取用于 Y-Sorting 的坐标
 func (p *ArpgEnemy) GetWY() float32 {
-	return p.WY
+	return p.Sprite.GetWY()
 }
 
 // Draw 实现 IRenderable 接口 - 绘制怪物
@@ -99,15 +106,34 @@ func (p *ArpgEnemy) Draw(screen *ebitenv2.Image, camera *commoncamera.Camera) {
 		return
 	}
 
+	// 根据动作选择动画数据
+	var frames []*ebitenv2.Image
+	var frameInfos []*res.PetImageSprite
+
+	petCfg := p.GetCfg()
+	orientation := p.Sprite.GetOrientation()
+	switch p.Sprite.GetAction() {
+	case proto.PetAction_PetAction_Attack:
+		if petCfg.Res.Attack != nil && len(petCfg.Res.Attack.Frames[orientation]) > 0 {
+			frames = petCfg.Res.Attack.Frames[orientation]
+			frameInfos = petCfg.Res.Attack.FrameInfo[orientation]
+		} else {
+			return
+		}
+	case proto.PetAction_PetAction_Move:
+		frames = petCfg.Res.Move.Frames[orientation]
+		frameInfos = petCfg.Res.Move.FrameInfo[orientation]
+	default:
+		return
+	}
+
 	// 获取当前方向的动画帧
-	frames := p.GetCfg().Res.Move.Frames[p.Orientation]
 	img := frames[p.AnimationFrame.FrameIdx%uint32(len(frames))]
 	// 获取帧信息
-	frameInfos := p.GetCfg().Res.Move.FrameInfo[p.Orientation]
 	frameInfo := frameInfos[p.AnimationFrame.FrameIdx%uint32(len(frameInfos))]
 	// 计算屏幕坐标 (脚底中心为锚点)
-	screenX := p.WX - float32(camera.ViewportWX)
-	screenY := p.WY - float32(camera.ViewportWY)
+	screenX := p.Sprite.GetWX() - float32(camera.ViewportWX)
+	screenY := p.Sprite.GetWY() - float32(camera.ViewportWY)
 	// 调整到图像左上角 (脚底中心 -> 图像左上角)
 	screenX -= float32(frameInfo.Frame.W / 2)
 	screenY -= float32(frameInfo.Frame.H)
@@ -173,20 +199,20 @@ func (p *ArpgEnemy) DrawDebug(screen *ebitenv2.Image, camera *commoncamera.Camer
 	}
 
 	// 计算屏幕坐标 (怪物中心)
-	screenX := p.WX - float32(camera.ViewportWX)
-	screenY := p.WY - float32(camera.ViewportWY)
+	screenX := p.Sprite.GetWX() - float32(camera.ViewportWX)
+	screenY := p.Sprite.GetWY() - float32(camera.ViewportWY)
 
 	// 绘制视野范围 (红色虚线圆)
 	common.DrawDashedCircle(screen, screenX, screenY, cfg.GCommon.PetDefArpgViewRange, common.Colors_Red, 48, 0.5, 2.0)
 
 	// 绘制脚底中心点 (红色圆形)
-	bottomCenterScreenX := p.WX - float32(camera.ViewportWX)
-	bottomCenterScreenY := p.WY - float32(camera.ViewportWY)
+	bottomCenterScreenX := p.Sprite.GetWX() - float32(camera.ViewportWX)
+	bottomCenterScreenY := p.Sprite.GetWY() - float32(camera.ViewportWY)
 	vector.FillCircle(screen, bottomCenterScreenX, bottomCenterScreenY, 5, common.Colors_Red, false)
 
 	// 绘制角色中心点(蓝色圆形)
-	centerScreenX := p.CenterWX - float32(camera.ViewportWX)
-	centerScreenY := p.CenterWY - float32(camera.ViewportWY)
+	centerScreenX := p.Sprite.GetCenterWX() - float32(camera.ViewportWX)
+	centerScreenY := p.Sprite.GetCenterWY() - float32(camera.ViewportWY)
 	vector.FillCircle(screen, centerScreenX, centerScreenY, 5, common.Colors_Blue, false)
 }
 

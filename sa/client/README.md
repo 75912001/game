@@ -5,6 +5,9 @@
 
 attackRange := cfg.GCommon.GetRoleArpgDefAttackRangeByWeaponType(proto.RoleWeaponType_RoleWeaponType_Axe)
 
+被攻击掉血的时候, 敌人 加一个红色-蒙板.
+
+ui界面
 
 创造武器配置
 制造武器
