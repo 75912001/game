@@ -66,6 +66,8 @@ petDefArpgMoveSpeed: 1.0
 petDefArpgChaseRadiusMultiplier: 1.2
 # 宠物-arpg-默认-攻击范围
 petArpgDefAttackRange: 100.0
+# 宠物-arpg-默认-攻击冷却时间(毫秒)
+petArpgDefCdTimeMs: 1500
 
 # 宠物-默认-暴击率 范围[0,1]
 petDefCritRate: 0.10
