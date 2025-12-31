@@ -40,6 +40,8 @@ type Common struct {
 	PetDefArpgViewRange             float32 `yaml:"petDefArpgViewRange"`             // 宠物-默认-Arpg视野范围
 	PetDefArpgMoveSpeed             float32 `yaml:"petDefArpgMoveSpeed"`             // 宠物-默认-Arpg战斗中移动速度
 	PetDefArpgChaseRadiusMultiplier float32 `yaml:"petDefArpgChaseRadiusMultiplier"` // 宠物-默认-arpg 追击半径乘数 [1.0, ∞) 追击半径 = 巡逻半径 * 追击半径乘数
+	PetArpgDefAttackRange           float32 `yaml:"petArpgDefAttackRange"`           // 宠物-arpg-默认-攻击范围
+	PetDefScale                     float32 `yaml:"petDefScale"`                     // 宠物默认缩放比例
 	PetDefCritRate                  float32 `yaml:"petDefCritRate"`                  // 宠物-默认-暴击率
 	PetDefCounterRate               float32 `yaml:"petDefCounterRate"`               // 宠物-默认-反击率
 	PetDefDodgeRate                 float32 `yaml:"petDefDodgeRate"`                 // 宠物-默认-闪避率

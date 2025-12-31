@@ -25,8 +25,9 @@ func (p *Role) HandleInput() {
 		return
 	}
 
-	if p.scene._map.IsArpgMap() { // 仅在 ARPG 地图中处理自动攻击
-		p.Arpg.handleAutoAttack()
+	if p.scene._map.IsArpgMap() { // 仅在 ARPG 地图中处理自动战斗
+		// 无手动输入时，由AI接管
+		p.ArpgAI.Update()
 	}
 }
 
@@ -112,6 +113,8 @@ func (p *Role) handleKeyMove(up, down, left, right bool) {
 		p.SetValueU64(proto.AssetIDRecord_AssetIDRecord_Orientation, uint64(newRoleSprite.orientation))
 		p.SetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_WX, newRoleSprite.wx)
 		p.SetValueF32(proto.AssetIDRecord_AssetIDRecord_BottomCenter_WY, newRoleSprite.wy)
+		// 通知AI手动移动，更新归位点
+		p.ArpgAI.OnManualMove(newRoleSprite.wx, newRoleSprite.wy)
 	}
 	p.UpdateWithAction()
 }

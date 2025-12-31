@@ -21,10 +21,9 @@ const (
 
 // 追击相关常量
 const (
-	chasePathRecalcIntervalSec int64   = 1    // 路径重计算间隔 (秒)
-	chaseTargetMoveThreshold   float32 = 50.0 // 目标移动阈值 (超过则重算路径)
-	chaseAttackRange           float32 = 30.0 // 攻击范围
-	chaseArriveThreshold       float32 = 5.0  // 到达路径点阈值
+	arpgEnemyChasePathRecalcIntervalSec int64   = 1    // 路径重计算间隔 (秒)
+	arpgEnemyChaseTargetMoveThreshold   float32 = 50.0 // 目标移动阈值 (超过则重算路径)
+	arpgEnemyChaseArriveThreshold       float32 = 5.0  // 到达路径点阈值
 )
 
 // ArpgEnemyAI 怪物 AI 控制器
@@ -181,7 +180,7 @@ func (p *ArpgEnemyAI) updateChase() {
 	distance := float32(math.Sqrt(float64(dx*dx + dy*dy)))
 
 	// 检查是否到达目标 (攻击范围)
-	if distance < chaseAttackRange {
+	if distance < cfg.GCommon.PetArpgDefAttackRange {
 		// todo 切换到攻击状态
 		return
 	}
@@ -203,11 +202,11 @@ func (p *ArpgEnemyAI) updateChaseWithAStar(targetWX, targetWY float32, mapCfg *c
 		needRecalc = true // 无路径
 	} else if p.PathIndex >= len(p.Path) {
 		needRecalc = true // 路径走完
-	} else if now-p.LastPathTime >= chasePathRecalcIntervalSec {
+	} else if now-p.LastPathTime >= arpgEnemyChasePathRecalcIntervalSec {
 		// 定时刷新: 检查目标是否移动超过阈值
 		dx := targetWX - p.LastTargetWX
 		dy := targetWY - p.LastTargetWY
-		if dx*dx+dy*dy > chaseTargetMoveThreshold*chaseTargetMoveThreshold {
+		if dx*dx+dy*dy > arpgEnemyChaseTargetMoveThreshold*arpgEnemyChaseTargetMoveThreshold {
 			needRecalc = true
 		}
 	}
@@ -234,7 +233,7 @@ func (p *ArpgEnemyAI) updateChaseWithAStar(targetWX, targetWY float32, mapCfg *c
 		distance := float32(math.Sqrt(float64(dx*dx + dy*dy)))
 
 		// 检查是否到达当前路径点
-		if distance < chaseArriveThreshold {
+		if distance < arpgEnemyChaseArriveThreshold {
 			p.PathIndex++
 			if p.PathIndex >= len(p.Path) {
 				return // 路径走完
