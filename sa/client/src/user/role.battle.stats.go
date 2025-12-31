@@ -17,16 +17,17 @@ func NewRoleBattleStats(role *Role) *RoleBattleStats {
 
 // GetHpMax 获取血量上限
 func (p *RoleBattleStats) GetHpMax() uint32 {
-	strength := uint32(p.role.roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Role_AttributesStrength)])
-	endurance := uint32(p.role.roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Role_AttributesEndurance)])
-	agility := uint32(p.role.roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Role_AttributesAgility)])
-	stamina := uint32(p.role.roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Role_AttributesStamina)])
-	return strength*1 + endurance*1 + agility*1 + stamina*4
+	return 1000000
+	//strength := uint32(p.role.roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Role_AttributesStrength)])
+	//endurance := uint32(p.role.roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Role_AttributesEndurance)])
+	//agility := uint32(p.role.roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Role_AttributesAgility)])
+	//stamina := uint32(p.role.roleRecord.AssetIDRecordMap[uint32(proto.AssetIDRecord_AssetIDRecord_Role_AttributesStamina)])
+	//return strength*1 + endurance*1 + agility*1 + stamina*4
 }
 
 // GetMpMax 获取魔法上限
 func (p *RoleBattleStats) GetMpMax() uint32 {
-	return 100
+	return 1000
 }
 
 // GetAttack 获取攻击力

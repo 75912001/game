@@ -49,6 +49,7 @@ func NewArpgEnemy(spawnPoint *ArpgEnemySpawnPoint, generated *cfg.GeneratedEnemy
 		Level:      generated.Level,
 	}
 	enemy.Sprite.SetOrientation(proto.AssetOrientation_AssetOrientation_Down)
+	enemy.Sprite.SetAction(proto.PetAction_PetAction_Move) // 初始化为移动动作
 	enemy.BattleStats = NewArpgEnemyBattleStats(enemy)
 	enemy.AI = NewArpgEnemyAI(enemy)
 	enemy.HP = enemy.BattleStats.GetHpMax()
