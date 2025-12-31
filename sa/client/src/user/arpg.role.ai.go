@@ -38,7 +38,8 @@ type ArpgRoleAI struct {
 	ReturnWY       float32
 	HasReturnPoint bool
 
-	Target *ArpgEnemy // 目标
+	Target       *ArpgEnemy // 目标
+	NextAttackMs int64      // 下一次攻击时间戳 (毫秒)
 
 	// 寻路相关
 	Pathfinder   *AStarPathfinder  // A*寻路器
@@ -103,7 +104,7 @@ func (p *ArpgRoleAI) updateChase() {
 
 	// 检查是否在攻击范围内
 	dist := p.distanceToTarget()
-	attackRange := cfg.GCommon.GetRoleArpgDefAttackRangeByWeaponType(p.Role.Arpg.GetWeaponType())
+	attackRange := cfg.GCommon.GetRoleArpgDefAttackRangeByWeaponType(p.GetWeaponType())
 	if dist <= attackRange {
 		p.switchToAttack()
 		return
@@ -123,7 +124,7 @@ func (p *ArpgRoleAI) updateAttack() {
 			p.Target = newTarget
 			// 检查新目标是否在攻击范围内
 			dist := p.distanceToTarget()
-			attackRange := cfg.GCommon.GetRoleArpgDefAttackRangeByWeaponType(p.Role.Arpg.GetWeaponType())
+			attackRange := cfg.GCommon.GetRoleArpgDefAttackRangeByWeaponType(p.GetWeaponType())
 			if dist > attackRange {
 				p.switchToChase()
 				return
@@ -136,7 +137,7 @@ func (p *ArpgRoleAI) updateAttack() {
 
 	// 检查目标是否逃出攻击范围
 	dist := p.distanceToTarget()
-	attackRange := cfg.GCommon.GetRoleArpgDefAttackRangeByWeaponType(p.Role.Arpg.GetWeaponType())
+	attackRange := cfg.GCommon.GetRoleArpgDefAttackRangeByWeaponType(p.GetWeaponType())
 	if dist > attackRange {
 		p.switchToChase()
 		return
@@ -453,7 +454,7 @@ func (p *ArpgRoleAI) performAttack() {
 
 	// 检查冷却
 	nowMs := xtime.GTimeMgr.GetMillisecond()
-	if p.Role.Arpg.NextAttackMs > nowMs {
+	if p.NextAttackMs > nowMs {
 		return
 	}
 
@@ -466,13 +467,10 @@ func (p *ArpgRoleAI) performAttack() {
 	p.Role.sprite.orientation = commonct.CalculateOrientation(dx, dy)
 
 	// 造成伤害
-	p.Target.TakeDamage(p.Role.Arpg.GetAttack())
+	p.Target.TakeDamage(p.GetAttack())
 
 	// 设置冷却
-	p.Role.Arpg.NextAttackMs = nowMs + cfg.GCommon.GetRoleArpgDefCdTimeMsByWeaponType(p.Role.Arpg.GetWeaponType())
-
-	// 同步攻击目标到RoleArpg
-	p.Role.Arpg.TargetEnemy = p.Target
+	p.NextAttackMs = nowMs + cfg.GCommon.GetRoleArpgDefCdTimeMsByWeaponType(p.GetWeaponType())
 
 	p.Role.UpdateWithAction()
 }
@@ -499,4 +497,14 @@ func (p *ArpgRoleAI) SetEnabled(enabled bool) {
 // IsAutoMoving 是否正在自动移动 (用于判断是否需要响应手动输入)
 func (p *ArpgRoleAI) IsAutoMoving() bool {
 	return p.Enabled && (p.State == ArpgRoleAIState_Chase || p.State == ArpgRoleAIState_Return)
+}
+
+// GetWeaponType 获取武器类型
+func (p *ArpgRoleAI) GetWeaponType() proto.RoleWeaponType {
+	return proto.RoleWeaponType_RoleWeaponType_Axe // todo menglc , 先写死斧头
+}
+
+// 获取攻击力
+func (p *ArpgRoleAI) GetAttack() uint32 {
+	return p.Role.BattleStats.GetAttack() + 10 // todo menglc , 先加个固定值,模拟装备攻击力
 }

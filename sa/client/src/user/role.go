@@ -25,7 +25,6 @@ type Role struct {
 
 	BattleStats *RoleBattleStats
 
-	Arpg   *RoleArpg
 	ArpgAI *ArpgRoleAI // 角色战斗AI
 }
 
@@ -33,7 +32,6 @@ func NewRole(roleRecord *proto.RoleRecord) *Role {
 	role := &Role{
 		roleRecord: roleRecord,
 	}
-	role.Arpg = NewRoleArpg(role)
 	role.ArpgAI = NewArpgRoleAI(role)                     // 初始化战斗AI
 	role.sprite.action = proto.RoleAction_RoleAction_Move // 默认动作-移动
 	role.BattleStats = NewRoleBattleStats(role)
