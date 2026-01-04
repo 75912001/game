@@ -39,6 +39,11 @@ type ArpgEnemy struct {
 
 	AI *ArpgEnemyAI // AI 控制器
 	HP uint32       // 当前生命值
+
+	// 受伤闪烁效果
+	HitFlashTick      uint32  // 当前闪烁计时（每帧递增）
+	HitFlashDuration  uint32  // 闪烁总时长（帧数）
+	HitFlashIntensity float32 // 红色强度（0-1，基于伤害比例）
 }
 
 // NewArpgEnemy 创建怪物实体
@@ -93,6 +98,11 @@ func (p *ArpgEnemy) Update() {
 		return
 	}
 
+	// 更新受伤闪烁计时
+	if p.HitFlashTick < p.HitFlashDuration {
+		p.HitFlashTick++
+	}
+
 	p.AI.Update()
 }
 
@@ -141,6 +151,17 @@ func (p *ArpgEnemy) Draw(screen *ebitenv2.Image, camera *commoncamera.Camera) {
 	// 绘制
 	op := &ebitenv2.DrawImageOptions{}
 	op.GeoM.Translate(float64(screenX), float64(screenY))
+
+	// 受伤闪烁效果：红色叠加
+	if p.HitFlashTick < p.HitFlashDuration {
+		progress := float32(p.HitFlashTick) / float32(p.HitFlashDuration)
+		alpha := p.HitFlashIntensity * (1 - progress) // 线性衰减
+		// 降低G/B通道实现红色效果
+		g := 1 - alpha*0.7
+		b := 1 - alpha*0.7
+		op.ColorScale.Scale(1, g, b, 1)
+	}
+
 	screen.DrawImage(img, op)
 
 	// 绘制血条
@@ -250,4 +271,15 @@ func (p *ArpgEnemy) TakeDamage(damage uint32) {
 	} else {
 		p.HP = 0
 	}
+
+	// 触发受伤闪烁效果
+	maxHP := p.BattleStats.GetHpMax()
+	if maxHP > 0 {
+		p.HitFlashIntensity = float32(damage) / float32(maxHP)
+		if p.HitFlashIntensity > 1 {
+			p.HitFlashIntensity = 1
+		}
+	}
+	p.HitFlashTick = 0
+	p.HitFlashDuration = 10 // 约10帧（~167ms @60fps）
 }
