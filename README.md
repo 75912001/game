@@ -26,3 +26,17 @@
 | 🧩     | 拼图（Puzzle）     | 模块、插件                                 |
 | 🕒     | 时钟（Clock）      | 时间相关                                   |
 | 🧨     | 爆炸（Boom）       | 危险、大变动                               |
+
+
+
+
+## claude
+### /init
+    初始化对话上下文
+### /compact
+    紧凑模式，减少上下文长度
+
+### /think
+    /think hard
+    /think harder
+    /ultrathink

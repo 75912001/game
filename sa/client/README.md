@@ -3,10 +3,6 @@
 # todo
 
 
-attackRange := cfg.GCommon.GetRoleArpgDefAttackRangeByWeaponType(proto.RoleWeaponType_RoleWeaponType_Axe)
-
-被攻击掉血的时候, 敌人 加一个红色-蒙板.
-
 ui界面
 
 创造武器配置
@@ -19,20 +15,8 @@ ui界面
 
 
 
-astar 寻路算法优化,
-敌人和角色之间
-    中间无阻挡, 则直线移动过去, 不需要走寻路算法计算的路径.
-    中间有阻挡, 则走寻路算法计算的路径.
 
 
-地图调整为 16*16 的网格单位. 会有敌人卡主. 好像是出生地点,是blocked区域.???
-C:\game\sa\client\src\user\arpg.enemy.ai.go
-
-
-
-用户移动时候. 能跨越很窄的阻挡区域. 
-敌人移动的时候. 也能跨越很窄的阻挡区域. 
-原因: 一次移动的距离大于阻挡区域的宽度
 
     随机触发遇敌,并在不离开地图的情况下. 切换到战斗场景. 战斗结束之后.
     再切换回刚才遇敌的场景. 
@@ -163,3 +147,5 @@ C:\game\sa\client\src\user\arpg.enemy.ai.go
 
 #### 其他
     1. 使用透明图块, 设置为blocked区域
+
+

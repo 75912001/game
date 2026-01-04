@@ -1,0 +1,108 @@
+# UI配置文件
+# 任何修改此文件的行为都需要通知客户端和服务端开发人员
+
+############################################################
+# 全局UI配置
+############################################################
+global:
+  # 动画默认参数
+  animation:
+    speed: 12.0           # 默认动画速度（像素/帧）
+    staggerDelay: 5       # 依次弹出延迟（帧）
+    easing: "easeOutQuad" # 缓动函数: linear, easeOutQuad, easeOutBack
+
+  # 按钮默认样式
+  buttonStyle:
+    width: 60             # 按钮宽度
+    height: 60            # 按钮高度
+    spacing: 10           # 按钮间距
+    margin: 20            # 边缘距离
+
+############################################################
+# 弹出菜单配置
+############################################################
+popupMenus:
+  - id: 1
+    name: "主菜单"
+    describe: "右下角主功能菜单"
+
+    # 位置锚点: topLeft, topRight, bottomLeft, bottomRight, center
+    anchor: "bottomRight"
+    offsetX: -20          # 相对锚点的X偏移（负值向左）
+    offsetY: -20          # 相对锚点的Y偏移（负值向上）
+
+    # 展开方向: left, right, up, down
+    expandDirection: "left"
+
+    # 动画配置（覆盖全局默认值）
+    animation:
+      openType: "stagger"       # stagger(依次), simultaneous(同时)
+      closeType: "simultaneous" # 收起时同时消失
+      speed: 15.0               # 动画速度（像素/帧）
+      staggerDelay: 4           # 依次弹出延迟（帧）
+
+    # 切换按钮配置
+    toggleButton:
+      expandIcon: "res/ui/icon.menu.expand.png"
+      collapseIcon: "res/ui/icon.menu.collapse.png"
+      width: 50
+      height: 50
+
+    # 菜单项列表（按展开顺序排列，从右向左依次弹出）
+    items:
+      - id: 10001
+      - id: 10002
+
+############################################################
+# UI元素定义
+############################################################
+elements:
+  #-----------------------------------------------------------
+  # 系统图标 [1-999]
+  #-----------------------------------------------------------
+  - id: 1
+    type: "icon"
+    name: "展开菜单"
+    describe: "展开主菜单"
+    iconPath: "res/ui/icon.menu.expand.png"
+
+  - id: 2
+    type: "icon"
+    name: "收起菜单"
+    describe: "收起主菜单"
+    iconPath: "res/ui/icon.menu.collapse.png"
+
+  #-----------------------------------------------------------
+  # 功能按钮 [10001-19999]
+  #-----------------------------------------------------------
+  - id: 10001
+    type: "menuItem"
+    name: "背包"
+    describe: "打开背包界面"
+    iconPath: "res/ui/icon.bag.png"
+    action: "openBag"
+    hotkey: "B"
+
+  - id: 10002
+    type: "menuItem"
+    name: "宠物"
+    describe: "打开宠物界面"
+    iconPath: "res/ui/icon.pet.png"
+    action: "openPet"
+    hotkey: "P"
+
+  # - id: 10003
+  #   type: "menuItem"
+  #   name: "任务"
+  #   describe: "打开任务界面"
+  #   iconPath: "res/ui/icon.quest.png"
+  #   action: "openQuest"
+  #   hotkey: "Q"
+
+  # - id: 10004
+  #   type: "menuItem"
+  #   name: "设置"
+  #   describe: "打开设置界面"
+  #   iconPath: "res/ui/icon.settings.png"
+  #   action: "openSettings"
+  #   hotkey: "Escape"

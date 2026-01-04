@@ -54,7 +54,7 @@ func LoadCfg() error {
 		return errors.WithMessagef(err, "load enemy group error %v", xruntime.Location())
 	}
 	// 加载 UI 配置
-	err = cfg.GUICfgMgr.Load()
+	err = cfg.GUIMgr.Load()
 	if err != nil {
 		return errors.WithMessagef(err, "load ui cfg error %v", xruntime.Location())
 	}
@@ -107,7 +107,7 @@ func CheckCfg() error {
 		return errors.WithMessagef(err, "check enemy group error %v", xruntime.Location())
 	}
 	// 检查 UI 配置
-	err = cfg.GUICfgMgr.Check()
+	err = cfg.GUIMgr.Check()
 	if err != nil {
 		return errors.WithMessagef(err, "check ui cfg error %v", xruntime.Location())
 	}
@@ -160,7 +160,7 @@ func AssembleCfg() error {
 		return errors.WithMessagef(err, "Assemble enemy group error %v", xruntime.Location())
 	}
 	// 装配 UI 配置
-	err = cfg.GUICfgMgr.Assemble()
+	err = cfg.GUIMgr.Assemble()
 	if err != nil {
 		return errors.WithMessagef(err, "Assemble ui cfg error %v", xruntime.Location())
 	}
