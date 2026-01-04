@@ -43,7 +43,7 @@ const Float32Ratio uint32 = 1000
 // float64 比率
 const Float64Ratio uint32 = 1000000
 
-const FrameTickPerChange = 6 // 每 6 tick 切换一帧
+var FrameTickPerChange uint32 // 每 x tick 切换一帧
 
 type AssetMap map[AssetID]AssetQuantity // 资产映射
 

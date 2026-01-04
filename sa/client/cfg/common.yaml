@@ -97,3 +97,6 @@ windowDefHeight: 1080
 screenMaxWidth: 1920
 # 屏幕最大高度
 screenMaxHeight: 1080
+
+# 每 6 tick 切换一帧 范围 [1,60]
+frameTickPerChange: 6

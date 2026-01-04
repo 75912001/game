@@ -1,6 +1,7 @@
 package cfg
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"saClient/src/common"
@@ -54,6 +55,8 @@ type Common struct {
 	WindowDefHeight int `yaml:"windowDefHeight"` // 窗口默认高度
 	ScreenMaxWidth  int `yaml:"screenMaxWidth"`  // 屏幕最大宽度
 	ScreenMaxHeight int `yaml:"screenMaxHeight"` // 屏幕最大高度
+
+	FrameTickPerChange uint32 `yaml:"frameTickPerChange"` // 每 x tick 切换一帧
 }
 
 var GCommon = &Common{}
@@ -72,6 +75,10 @@ func (p *Common) Load() error {
 	if err != nil {
 		return errors.WithMessagef(err, "解析通用配置文件失败: %v %v", cfgPath, xruntime.Location())
 	}
+	if p.FrameTickPerChange < 1 || 60 < p.FrameTickPerChange {
+		return fmt.Errorf("通用配置文件错误,frameTickPerChange 超出范围 [1,60]: %v %v", p.FrameTickPerChange, xruntime.Location())
+	}
+	common.FrameTickPerChange = p.FrameTickPerChange
 	return nil
 }
 
