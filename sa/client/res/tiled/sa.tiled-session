@@ -152,8 +152,16 @@
             "scaleInDock": 1,
             "scaleInEditor": 1
         },
+        "map/Generated Image January 04, 2026 - 4_14PM_pixian_ai (1).tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
         "map/backgroundTower.tsx": {
             "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "map/batch_Generated Image January 04, 2026 - 4_14PM_pixian_ai (1).tsx": {
             "scaleInDock": 1,
             "scaleInEditor": 1
         },
@@ -184,9 +192,9 @@
                 7
             ],
             "scale": 0.75,
-            "selectedLayer": 0,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 1600,
+                "x": 1231.3333333333333,
                 "y": 799.9999999999999
             }
         },
@@ -201,7 +209,7 @@
             "scale": 0.75,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 3199.9999999999995,
+                "x": 2831.333333333333,
                 "y": 1600
             }
         },
@@ -212,7 +220,7 @@
             "scale": 0.75,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 1601.3333333333335,
+                "x": 1232.6666666666665,
                 "y": 669.3333333333333
             }
         },
@@ -227,7 +235,7 @@
         }
     },
     "last.exportedFilePath": "C:/game/sa/client/res/tiled/map",
-    "last.imagePath": "C:/game/sa/client/res/building",
+    "last.imagePath": "C:/game/sa/client/res/资产",
     "map.fixedSize": true,
     "map.height": 20,
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
@@ -243,6 +251,8 @@
     "project": "sa.tiled-project",
     "property.type": "bool",
     "recentFiles": [
+        "map/batch_Generated Image January 04, 2026 - 4_14PM_pixian_ai (1).tsx",
+        "map/Generated Image January 04, 2026 - 4_14PM_pixian_ai (1).tsx",
         "map/map.2000001.tmx",
         "map/map.2000002.tmx",
         "map/map.2000003.tmx",
@@ -252,14 +262,12 @@
         "map/backgroundTower.tsx",
         "map/64x64.empty.tsx",
         "map/4937_pixian_ai.tsx",
-        "map/ss.tsx",
-        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_001.tmx",
-        "C:/Users/75912/Desktop/examples - 副本/sewer_automap/rule_002.tmx"
+        "map/ss.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {
-        "height": 328,
-        "width": 355
+        "height": 32,
+        "width": 64
     },
     "tileset.type": 0
 }
