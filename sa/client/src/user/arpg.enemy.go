@@ -176,7 +176,7 @@ func (p *ArpgEnemy) drawHPBar(screen *ebitenv2.Image, x, y, w float32) {
 	if hpRatio > 0 {
 		opFg := &ebitenv2.DrawImageOptions{}
 		opFg.GeoM.Scale(barW*hpRatio, barH)
-		opFg.GeoM.Translate(barX, barY)
+		opFg.GeoM.Translate(barX+barW*(1-hpRatio), barY)
 		opFg.ColorScale.ScaleWithColor(common.Colors_Red)
 		screen.DrawImage(whiteSubImage, opFg)
 	}
